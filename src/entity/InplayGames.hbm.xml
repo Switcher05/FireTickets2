@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 18, 2015 10:35:28 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="fire_tickets" name="entity.InplayGames" optimistic-lock="version" table="inplay_games">
+    <composite-id class="entity.InplayGamesId" name="id">
+      <key-property name="serial" type="string">
+        <column length="12" name="Serial"/>
+      </key-property>
+      <key-property name="datePlaced" type="date">
+        <column length="10" name="Date_placed"/>
+      </key-property>
+      <key-property name="dateRemoved" type="date">
+        <column length="10" name="Date_removed"/>
+      </key-property>
+      <key-property name="unsoldAmt" type="java.lang.Integer">
+        <column name="Unsold_amt"/>
+      </key-property>
+      <key-property name="actualGross" type="java.lang.Integer">
+        <column name="Actual_gross"/>
+      </key-property>
+      <key-property name="actualPrizes" type="java.lang.Integer">
+        <column name="Actual_prizes"/>
+      </key-property>
+      <key-property name="actualNet" type="java.lang.Integer">
+        <column name="Actual_net"/>
+      </key-property>
+      <key-property name="bin" type="java.lang.Integer">
+        <column name="Bin"/>
+      </key-property>
+      <key-property name="inplay" type="java.lang.Boolean">
+        <column name="Inplay"/>
+      </key-property>
+      <key-property name="closed" type="java.lang.Integer">
+        <column name="Closed"/>
+      </key-property>
+      <key-property name="unsoldTickets" type="java.lang.Integer">
+        <column name="Unsold_tickets"/>
+      </key-property>
+      <key-property name="lastSaleRem" type="java.lang.Byte">
+        <column name="Last_sale_rem"/>
+      </key-property>
+      <key-property name="prizeRem1" type="java.lang.Integer">
+        <column name="Prize_rem1"/>
+      </key-property>
+      <key-property name="prizeRem2" type="java.lang.Integer">
+        <column name="Prize_rem2"/>
+      </key-property>
+      <key-property name="prizeRem3" type="java.lang.Integer">
+        <column name="Prize_rem3"/>
+      </key-property>
+      <key-property name="prizeRem4" type="java.lang.Integer">
+        <column name="Prize_rem4"/>
+      </key-property>
+      <key-property name="prizeRem5" type="java.lang.Integer">
+        <column name="Prize_rem5"/>
+      </key-property>
+      <key-property name="prizeRem6" type="java.lang.Integer">
+        <column name="Prize_rem6"/>
+      </key-property>
+      <key-property name="prizeRem7" type="java.lang.Integer">
+        <column name="Prize_rem7"/>
+      </key-property>
+      <key-property name="prizeRem8" type="java.lang.Integer">
+        <column name="Prize_rem8"/>
+      </key-property>
+      <key-property name="prizeRem9" type="java.lang.Integer">
+        <column name="Prize_rem9"/>
+      </key-property>
+      <key-property name="prizeRem10" type="java.lang.Integer">
+        <column name="Prize_rem10"/>
+      </key-property>
+      <key-property name="prizeRem11" type="java.lang.Integer">
+        <column name="Prize_rem11"/>
+      </key-property>
+      <key-property name="prizeRem12" type="java.lang.Integer">
+        <column name="Prize_rem12"/>
+      </key-property>
+      <key-property name="prizeRem13" type="java.lang.Integer">
+        <column name="Prize_rem13"/>
+      </key-property>
+      <key-property name="prizeRem14" type="java.lang.Integer">
+        <column name="Prize_rem14"/>
+      </key-property>
+      <key-property name="prizeRem15" type="java.lang.Integer">
+        <column name="Prize_rem15"/>
+      </key-property>
+      <key-property name="gameTemplatesPartNum" type="string">
+        <column length="12" name="game_templates_part_num"/>
+      </key-property>
+      <key-property name="datePurch" type="date">
+        <column length="10" name="date_purch"/>
+      </key-property>
+      <key-property name="invoiceNum" type="string">
+        <column length="10" name="invoice_num"/>
+      </key-property>
+    </composite-id>
+  </class>
+</hibernate-mapping>

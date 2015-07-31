@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 18, 2015 10:35:28 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="fire_tickets" name="entity.TillTape" optimistic-lock="version" table="till_tape">
+    <composite-id class="entity.TillTapeId" name="id">
+      <key-property name="TId" type="int">
+        <column name="t_id"/>
+      </key-property>
+      <key-property name="usersUserId" type="int">
+        <column name="users_user_id"/>
+      </key-property>
+      <key-property name="customersCustId" type="int">
+        <column name="customers_cust_id"/>
+      </key-property>
+      <key-property name="locationsLocId" type="int">
+        <column name="locations_loc_id"/>
+      </key-property>
+    </composite-id>
+    <many-to-one class="entity.Customers" fetch="select" insert="false" name="customers" update="false">
+      <column name="customers_cust_id" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="entity.Locations" fetch="select" insert="false" name="locations" update="false">
+      <column name="locations_loc_id" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="entity.Users" fetch="select" insert="false" name="users" update="false">
+      <column name="users_user_id" not-null="true"/>
+    </many-to-one>
+    <property name="serial" type="string">
+      <column length="12" name="serial"/>
+    </property>
+    <property name="name" type="string">
+      <column length="20" name="name"/>
+    </property>
+    <property name="time" type="timestamp">
+      <column length="19" name="time"/>
+    </property>
+    <property name="saleAmount" type="java.lang.Integer">
+      <column name="sale_amount"/>
+    </property>
+    <property name="prizeAmount" type="java.lang.Integer">
+      <column name="prize_amount"/>
+    </property>
+    <property name="saleClosed" type="java.lang.Boolean">
+      <column name="sale_closed"/>
+    </property>
+    <property name="invoice" type="int">
+      <column name="invoice" not-null="true"/>
+    </property>
+    <property name="void_" type="java.lang.Integer">
+      <column name="void"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="bigWinnerses" table="big_winners">
+      <key>
+        <column name="till_tape_t_id" not-null="true"/>
+        <column name="till_tape_users_user_id" not-null="true"/>
+        <column name="till_tape_customers_cust_id" not-null="true"/>
+        <column name="till_tape_locations_loc_id" not-null="true"/>
+      </key>
+      <one-to-many class="entity.BigWinners"/>
+    </set>
+  </class>
+</hibernate-mapping>

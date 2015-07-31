@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 18, 2015 10:35:28 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="fire_tickets" name="entity.Locations" optimistic-lock="version" table="locations">
+    <id name="locId" type="java.lang.Integer">
+      <column name="loc_id"/>
+      <generator class="identity"/>
+    </id>
+    <property name="name" type="string">
+      <column length="30" name="name"/>
+    </property>
+    <property name="address" type="string">
+      <column length="30" name="address"/>
+    </property>
+    <property name="state" type="string">
+      <column length="30" name="state"/>
+    </property>
+    <property name="city" type="string">
+      <column length="30" name="city"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="tillTapes" table="till_tape">
+      <key>
+        <column name="locations_loc_id" not-null="true"/>
+      </key>
+      <one-to-many class="entity.TillTape"/>
+    </set>
+  </class>
+</hibernate-mapping>

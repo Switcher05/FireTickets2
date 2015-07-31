@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 18, 2015 10:35:28 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="fire_tickets" name="entity.GameTemplates" optimistic-lock="version" table="game_templates">
+    <composite-id class="entity.GameTemplatesId" name="id">
+      <key-property name="partNum" type="string">
+        <column length="12" name="part_num"/>
+      </key-property>
+      <key-property name="distsIdDistId" type="int">
+        <column name="dists_id_dist_id"/>
+      </key-property>
+      <key-property name="mfgIdMfgId" type="int">
+        <column name="mfg_id_mfg_id"/>
+      </key-property>
+    </composite-id>
+    <many-to-one class="entity.DistsId" fetch="select" insert="false" name="distsId" update="false">
+      <column name="dists_id_dist_id" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="entity.MfgId" fetch="select" insert="false" name="mfgId" update="false">
+      <column name="mfg_id_mfg_id" not-null="true"/>
+    </many-to-one>
+    <property name="gameName" type="string">
+      <column length="20" name="game_name"/>
+    </property>
+    <property name="gameCost" type="java.lang.Double">
+      <column name="game_cost" precision="22" scale="0"/>
+    </property>
+    <property name="ticketCost" type="java.lang.Double">
+      <column name="ticket_cost" precision="22" scale="0"/>
+    </property>
+    <property name="numTickets" type="java.lang.Integer">
+      <column name="num_tickets"/>
+    </property>
+    <property name="ideaGross" type="java.lang.Integer">
+      <column name="idea_gross"/>
+    </property>
+    <property name="ideaPrizes" type="java.lang.Integer">
+      <column name="idea_prizes"/>
+    </property>
+    <property name="ideaNet" type="java.lang.Integer">
+      <column name="idea_net"/>
+    </property>
+    <property name="lastSale" type="java.lang.Integer">
+      <column name="Last_sale"/>
+    </property>
+    <property name="lastSaleAllow" type="java.lang.Byte">
+      <column name="Last_sale_allow"/>
+    </property>
+    <property name="prizeAmt1" type="java.lang.Integer">
+      <column name="Prize_amt1"/>
+    </property>
+    <property name="prizeAmt2" type="java.lang.Integer">
+      <column name="Prize_amt2"/>
+    </property>
+    <property name="prizeAmt3" type="java.lang.Integer">
+      <column name="Prize_amt3"/>
+    </property>
+    <property name="prizeAmt4" type="java.lang.Integer">
+      <column name="Prize_amt4"/>
+    </property>
+    <property name="prizeAmt5" type="java.lang.Integer">
+      <column name="Prize_amt5"/>
+    </property>
+    <property name="prizeAmt6" type="java.lang.Integer">
+      <column name="Prize_amt6"/>
+    </property>
+    <property name="prizeAmt7" type="java.lang.Integer">
+      <column name="Prize_amt7"/>
+    </property>
+    <property name="prizeAmt8" type="java.lang.Integer">
+      <column name="Prize_amt8"/>
+    </property>
+    <property name="prizeAmt9" type="java.lang.Integer">
+      <column name="Prize_amt9"/>
+    </property>
+    <property name="prizeAmt10" type="java.lang.Integer">
+      <column name="Prize_amt10"/>
+    </property>
+    <property name="prizeAmt11" type="java.lang.Integer">
+      <column name="Prize_amt11"/>
+    </property>
+    <property name="prizeAmt12" type="java.lang.Integer">
+      <column name="Prize_amt12"/>
+    </property>
+    <property name="prizeAmt13" type="java.lang.Integer">
+      <column name="Prize_amt13"/>
+    </property>
+    <property name="prizeAmt14" type="java.lang.Integer">
+      <column name="Prize_amt14"/>
+    </property>
+    <property name="prizeAmt15" type="java.lang.Integer">
+      <column name="Prize_amt15"/>
+    </property>
+    <property name="prizeAll1" type="java.lang.Integer">
+      <column name="Prize_all1"/>
+    </property>
+    <property name="prizeAll2" type="java.lang.Integer">
+      <column name="Prize_all2"/>
+    </property>
+    <property name="prizeAll3" type="java.lang.Integer">
+      <column name="Prize_all3"/>
+    </property>
+    <property name="prizeAll4" type="java.lang.Integer">
+      <column name="Prize_all4"/>
+    </property>
+    <property name="prizeAll5" type="java.lang.Integer">
+      <column name="Prize_all5"/>
+    </property>
+    <property name="prizeAll6" type="java.lang.Integer">
+      <column name="Prize_all6"/>
+    </property>
+    <property name="prizeAll7" type="java.lang.Integer">
+      <column name="Prize_all7"/>
+    </property>
+    <property name="prizeAll8" type="java.lang.Integer">
+      <column name="Prize_all8"/>
+    </property>
+    <property name="prizeAll9" type="java.lang.Integer">
+      <column name="Prize_all9"/>
+    </property>
+    <property name="prizeAll10" type="java.lang.Integer">
+      <column name="Prize_all10"/>
+    </property>
+    <property name="prizeAll11" type="java.lang.Integer">
+      <column name="Prize_all11"/>
+    </property>
+    <property name="prizeAll12" type="java.lang.Integer">
+      <column name="Prize_all12"/>
+    </property>
+    <property name="prizeAll13" type="java.lang.Integer">
+      <column name="Prize_all13"/>
+    </property>
+    <property name="prizeAll14" type="java.lang.Integer">
+      <column name="Prize_all14"/>
+    </property>
+    <property name="prizeAll15" type="java.lang.Integer">
+      <column name="Prize_all15"/>
+    </property>
+  </class>
+</hibernate-mapping>

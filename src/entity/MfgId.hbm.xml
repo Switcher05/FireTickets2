@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 18, 2015 10:35:28 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="fire_tickets" name="entity.MfgId" optimistic-lock="version" table="mfg_id">
+    <id name="mfgId" type="java.lang.Integer">
+      <column name="mfg_id"/>
+      <generator class="identity"/>
+    </id>
+    <property name="name" type="string">
+      <column length="20" name="name"/>
+    </property>
+    <property name="mfgAbr" type="string">
+      <column length="12" name="mfg_abr"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="gameTemplateses" table="game_templates">
+      <key>
+        <column name="mfg_id_mfg_id" not-null="true"/>
+      </key>
+      <one-to-many class="entity.GameTemplates"/>
+    </set>
+  </class>
+</hibernate-mapping>

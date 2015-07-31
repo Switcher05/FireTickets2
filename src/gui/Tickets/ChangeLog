@@ -1,0 +1,33 @@
+FIRE TICKETS CHANGELOG
+=========================
+
+V0.1.0
+-----
+First version
+To do list:
+Fix user select
+Thermal printer on sale
+Link till tape to transaction numbers - create new database
+Start bank, closing bank
+Reports
+Properties file with db info
+Log all to file
+Program auth keys
+Icons
+Error if game is not select, error if amount is not inputed
+Jasper Reports
+
+TODO:
+Fix prize button
+message if there is not enough tickets left
+multiple prizes
+hibernate integration
+reverse last sale
+
+Fix prize close to subtract prize amount 
+Add multiple prizes amount
+Reciept printer
+Customers
+When refreshing the game is staying and not clearing.
+Checking connection
+entering amount and pressing sale will set the total box
