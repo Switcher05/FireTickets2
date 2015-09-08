@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 1, 2015 5:45:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="gui.PmaFavorite" table="pma__favorite" catalog="fire_tickets" optimistic-lock="version">
+        <id name="username" type="string">
+            <column name="username" length="64" />
+            <generator class="assigned" />
+        </id>
+        <property name="tables" type="string">
+            <column name="tables" length="65535" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

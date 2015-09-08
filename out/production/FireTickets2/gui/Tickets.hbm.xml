@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 1, 2015 5:45:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="gui.Tickets" table="tickets" catalog="fire_tickets" optimistic-lock="version">
+        <composite-id name="id" class="gui.TicketsId">
+            <key-property name="serial" type="string">
+                <column name="Serial" length="12" />
+            </key-property>
+            <key-property name="gameTemplatesPartNum" type="string">
+                <column name="game_templates_part_num" length="12" />
+            </key-property>
+        </composite-id>
+        <property name="datePlaced" type="date">
+            <column name="Date_placed" length="10" />
+        </property>
+        <property name="dateRemoved" type="date">
+            <column name="Date_removed" length="10" />
+        </property>
+        <property name="unsoldAmt" type="java.lang.Integer">
+            <column name="Unsold_amt" />
+        </property>
+        <property name="actualGross" type="java.lang.Integer">
+            <column name="Actual_gross" />
+        </property>
+        <property name="actualPrizes" type="java.lang.Integer">
+            <column name="Actual_prizes" />
+        </property>
+        <property name="actualNet" type="java.lang.Integer">
+            <column name="Actual_net" />
+        </property>
+        <property name="bin" type="java.lang.Integer">
+            <column name="Bin" />
+        </property>
+        <property name="inplay" type="java.lang.Boolean">
+            <column name="Inplay" />
+        </property>
+        <property name="closed" type="java.lang.Integer">
+            <column name="Closed" />
+        </property>
+        <property name="unsoldTickets" type="java.lang.Integer">
+            <column name="Unsold_tickets" />
+        </property>
+        <property name="lastSaleRem" type="java.lang.Byte">
+            <column name="Last_sale_rem" />
+        </property>
+        <property name="prizeRem1" type="java.lang.Integer">
+            <column name="Prize_rem1" />
+        </property>
+        <property name="prizeRem2" type="java.lang.Integer">
+            <column name="Prize_rem2" />
+        </property>
+        <property name="prizeRem3" type="java.lang.Integer">
+            <column name="Prize_rem3" />
+        </property>
+        <property name="prizeRem4" type="java.lang.Integer">
+            <column name="Prize_rem4" />
+        </property>
+        <property name="prizeRem5" type="java.lang.Integer">
+            <column name="Prize_rem5" />
+        </property>
+        <property name="prizeRem6" type="java.lang.Integer">
+            <column name="Prize_rem6" />
+        </property>
+        <property name="prizeRem7" type="java.lang.Integer">
+            <column name="Prize_rem7" />
+        </property>
+        <property name="prizeRem8" type="java.lang.Integer">
+            <column name="Prize_rem8" />
+        </property>
+        <property name="prizeRem9" type="java.lang.Integer">
+            <column name="Prize_rem9" />
+        </property>
+        <property name="prizeRem10" type="java.lang.Integer">
+            <column name="Prize_rem10" />
+        </property>
+        <property name="prizeRem11" type="java.lang.Integer">
+            <column name="Prize_rem11" />
+        </property>
+        <property name="prizeRem12" type="java.lang.Integer">
+            <column name="Prize_rem12" />
+        </property>
+        <property name="prizeRem13" type="java.lang.Integer">
+            <column name="Prize_rem13" />
+        </property>
+        <property name="prizeRem14" type="java.lang.Integer">
+            <column name="Prize_rem14" />
+        </property>
+        <property name="prizeRem15" type="java.lang.Integer">
+            <column name="Prize_rem15" />
+        </property>
+        <property name="datePurch" type="date">
+            <column name="date_purch" length="10" />
+        </property>
+        <property name="invoiceNum" type="string">
+            <column name="invoice_num" length="10" />
+        </property>
+    </class>
+</hibernate-mapping>

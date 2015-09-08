@@ -3,24 +3,18 @@
  * and open the template in the editor.
  */
 /*TODO:
-Need to create game template first then add to tickets table.
-*/
+ Need to create game template first then add to tickets table.
+ */
 package Tickets.TicketEditor;
 
-
 import Util.timeThread;
-import entity.Game_Templates;
-import entity.GameTemplatesId;
 import db.HibernateUtil;
 import entity.GameTemplates;
-import java.util.Iterator;
+import entity.Tickets;
 import java.util.List;
-import java.util.Set;
-import java.util.Vector;
 import javax.swing.JOptionPane;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 
 /**
@@ -28,8 +22,11 @@ import org.hibernate.Session;
  * @author Switcher
  */
 public class TicketsEditor extends javax.swing.JFrame {
-    private int rowId =0;
+
+    private int rowId = 0;
     private List<GameTemplates> gtlist;
+    private List<Tickets> tlist;
+
     public TicketsEditor() {
         initComponents();
         //Load all the values on line 1
@@ -52,39 +49,34 @@ public class TicketsEditor extends javax.swing.JFrame {
 //          
 //        session.close();  
 //               
-        executeHQLQuery(QUERY_FIRST_ROW);
+
     }
 
-    private static String QUERY_BASED_ON_GT = "from GameTemplates where game_name like '";
-    private static String QUERY_FIRST_ROW = "from GameTemplates order by game_name";
-    private void runQueryBasedOnGameName(){
-        executeHQLQuery(QUERY_BASED_ON_GT + searchText.getText() + "%'");
-    }
-    private void runQueryFirstRow(){
-        executeHQLQuery(QUERY_FIRST_ROW);
-    }
-    private void executeHQLQuery(String hql){
-        try{
+    private static final String QUERY_BASED_ON_GT = "from GameTemplates where game_name like '";
+    private static final String QUERY_FIRST_ROW = "from GameTemplates order by game_name";
+    private static final String QUERY_INPLAY = "SELECT * FROM GameTemplates LEFT JOIN Tickets ORDER BY bin";
+    private static final String QUERY_TICKETS = "from Tickets where inplay = 1 order by bin";
+
+    private List executeHQLQuery(String hql) {
+        List resultList = null;
+        try {
             Session session = HibernateUtil.getSessionFactory().openSession();
-           session.beginTransaction();
+            session.beginTransaction();
             Query q = session.createQuery(hql);
-            gtlist = q.list();
-            System.out.println(gtlist.get(0).getGameName());
-            loadValuesGT(gtlist,rowId);
-            //displayResult(resultList);
+            resultList = q.list();
             session.getTransaction().commit();
         } catch (HibernateException he) {
             he.printStackTrace();
         }
+        return resultList;
     }
 
-    private void loadValuesGT(List<GameTemplates> resultList, int row){
-        
+    private void loadValuesGT(List<GameTemplates> resultList, int row) {
         textGame.setText(resultList.get(row).getGameName());
         textPartNum.setText(resultList.get(row).getId().getPartNum());
         textGameCost.setText(String.valueOf(resultList.get(row).getGameCost().toString()));
 //        textCostTicket.setText(resultList.get(row).getTicketCost().toString());
-        textCostTicket.setText((String.valueOf("" +resultList.get(row).getTicketCost().toString())));
+        textCostTicket.setText((String.valueOf("" + resultList.get(row).getTicketCost().toString())));
         textNumTickets.setText(resultList.get(row).getNumTickets().toString());
         textIdealGross.setText(resultList.get(row).getIdeaGross().toString());
         textIdealPrizes.setText(resultList.get(row).getIdeaPrizes().toString());
@@ -115,48 +107,87 @@ public class TicketsEditor extends javax.swing.JFrame {
         textAll8.setText(resultList.get(row).getPrizeAll8().toString());
         textAll9.setText(resultList.get(row).getPrizeAll9().toString());
         textAll10.setText(resultList.get(row).getPrizeAll10().toString());
-        
-        
-        
-        
     }
-    private void displayResult(List resultList){
-        Vector<String> tableHeaders = new Vector<String>();
-        Vector tableData = new Vector();
-        tableHeaders.add("num_ticket");
-        tableHeaders.add("game_name");
-        tableHeaders.add("game_cost");
-        tableHeaders.add("ticket_cost");
-        for (Object o : resultList){
-            //GameTemplatesId = (GameTemplatesID) o;
-            GameTemplates gt = (GameTemplates) o;
-            Vector<Object> oneRow = new Vector<Object>();
-            oneRow.add(gt.getNumTickets());
-            oneRow.add(gt.getGameName());
-            oneRow.add(gt.getGameCost());
-            
-            oneRow.add(gt.getTicketCost());
-            tableData.add(oneRow);
-             for (int i = 0; i < tableData.size(); i++) {
-            System.out.println("Line: " + i + tableData.get(i));
-            
-        }
-        System.out.println("Gamename: " + tableData.get(0));
-        System.out.println("Gamename: " + tableData.get(0));
-        System.out.println("Gamename: " + oneRow.get(0));
-        }
-        //Updates text 
-        for (int i = 0; i < tableData.size(); i++) {
-            System.out.println("Line: " + i + tableData.get(i));
-            
-        }
-        System.out.println("Gamename: " + tableData.get(0));
-        System.out.println("Gamename: " + tableData.get(1));
-        System.out.println("Gamename: " + oneRow.get(0));
-        
-        //System.out.println("Ideal gross: " + tableData.get(0));
-        //textGame.setText(tableData.get(0).toString());
+
+    private void loadValuesT(List<Tickets> resultList, int row) {
+        textSerial.setText(resultList.get(row).getId().getSerial());
+        textBin.setText(resultList.get(row).getBin().toString());
+        textUnsoldValue.setText(resultList.get(row).getUnsoldAmt().toString());
+        textActualGross.setText(resultList.get(row).getActualGross().toString());
+        textActualPrizes.setText(resultList.get(row).getActualPrizes().toString());
+        textActualNet.setText(resultList.get(row).getActualNet().toString());
+        cbInplay.setSelected(resultList.get(row).getInplay());
+        textUnsoldTickets.setText(resultList.get(row).getUnsoldTickets().toString());
+        textLastRem.setText(resultList.get(row).getLastSaleRem().toString());
+        textRem1.setText(resultList.get(row).getPrizeRem1().toString());
+        textRem2.setText(resultList.get(row).getPrizeRem2().toString());
+        textRem3.setText(resultList.get(row).getPrizeRem3().toString());
+        textRem4.setText(resultList.get(row).getPrizeRem4().toString());
+        textRem5.setText(resultList.get(row).getPrizeRem5().toString());
+        textRem6.setText(resultList.get(row).getPrizeRem6().toString());
+        textRem7.setText(resultList.get(row).getPrizeRem7().toString());
+        textRem8.setText(resultList.get(row).getPrizeRem8().toString());
+        textRem9.setText(resultList.get(row).getPrizeRem9().toString());
+        textRem10.setText(resultList.get(row).getPrizeRem10().toString());
+
     }
+
+    private void clearFields() {
+
+        textGame.setText("");
+        textPartNum.setText("");
+        textGameCost.setText("");
+        textCostTicket.setText("");
+        textCostTicket.setText("");
+        textNumTickets.setText("");
+        textIdealGross.setText("");
+        textIdealPrizes.setText("");
+        textIdealNet.setText("");
+        textDistID.setText("");
+        textManID.setText("");
+        textLastSale.setText("");
+        textLastRem.setText("");
+        textAmt1.setText("");
+        textAmt2.setText("");
+        textAmt3.setText("");
+        textAmt4.setText("");
+        textAmt5.setText("");
+        textAmt6.setText("");
+        textAmt7.setText("");
+        textAmt8.setText("");
+        textAmt9.setText("");
+        textAmt10.setText("");
+        textAll1.setText("");
+        textAll2.setText("");
+        textAll3.setText("");
+        textAll4.setText("");
+        textAll5.setText("");
+        textAll6.setText("");
+        textAll7.setText("");
+        textAll8.setText("");
+        textAll9.setText("");
+        textAll10.setText("");
+        textSerial.setText("");
+        textBin.setText("");
+        textUnsoldValue.setText("");
+        textActualGross.setText("");
+        textActualPrizes.setText("");
+        textActualNet.setText("");
+        cbInplay.setSelected(false);
+        textUnsoldTickets.setText("");
+        textLastRem.setText("");
+        textRem1.setText("");
+        textRem2.setText("");
+        textRem3.setText("");
+        textRem4.setText("");
+        textRem5.setText("");
+        textRem6.setText("");
+        textRem7.setText("");
+        textRem8.setText("");
+        textRem9.setText("");
+        textRem10.setText("");
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -297,6 +328,9 @@ public class TicketsEditor extends javax.swing.JFrame {
         searchText = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        cbInplay = new javax.swing.JCheckBox();
+        btnInplay = new javax.swing.JButton();
+        btnGT = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
@@ -430,7 +464,6 @@ public class TicketsEditor extends javax.swing.JFrame {
         btnDelete.setEnabled(false);
 
         btnNew.setText("New");
-        btnNew.setEnabled(false);
         btnNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNewActionPerformed(evt);
@@ -537,6 +570,22 @@ public class TicketsEditor extends javax.swing.JFrame {
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
+            }
+        });
+
+        cbInplay.setText("Inplay?");
+
+        btnInplay.setText("In play");
+        btnInplay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInplayActionPerformed(evt);
+            }
+        });
+
+        btnGT.setText("Game Templates");
+        btnGT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGTActionPerformed(evt);
             }
         });
 
@@ -691,63 +740,74 @@ public class TicketsEditor extends javax.swing.JFrame {
                             .addComponent(textRem11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(textGame, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(27, 27, 27)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(textSerial, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel22)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(textBin, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(textGameType, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(searchText)
-                                                .addComponent(btnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnFirst, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnPrevious, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnLast, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(8, 8, 8)
-                                        .addComponent(jButton5))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(48, 48, 48)
-                                        .addComponent(jButton6))))
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(94, 94, 94)
-                                .addComponent(jLabel24)))
-                        .addGap(276, 276, 276)))
+                                .addComponent(jLabel24)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbInplay)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(160, 160, 160)
+                                        .addComponent(btnInplay, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(searchText)
+                                                        .addComponent(btnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(btnFirst, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnPrevious, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnLast, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(8, 8, 8)
+                                                .addComponent(jButton5))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(18, 18, 18)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(48, 48, 48)
+                                                .addComponent(jButton6))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(textGame, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(27, 27, 27)
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(textSerial, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel22)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(textBin, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel9)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(textGameType, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(btnGT, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(86, 86, 86)))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -788,11 +848,19 @@ public class TicketsEditor extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel24)
-                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel24)
+                        .addGap(19, 19, 19))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnGT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnInplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbInplay)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -949,8 +1017,8 @@ public class TicketsEditor extends javax.swing.JFrame {
                                     .addComponent(btnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(62, 62, 62))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton6)
                                 .addGap(43, 43, 43)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1036,34 +1104,34 @@ public class TicketsEditor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
-        rowId=0;
-        loadValuesGT(gtlist,rowId);
+        rowId = 0;
+        loadValuesT(tlist, rowId);
     }//GEN-LAST:event_btnFirstActionPerformed
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
-        if (rowId <= gtlist.size()) {
+        if (rowId <= tlist.size()) {
             rowId++;
-            loadValuesGT(gtlist,rowId);
-        }else{
+            loadValuesT(tlist, rowId);
+        } else {
             JOptionPane.showMessageDialog(null, ("Last"));
         }
-        
-            
+
+
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
         if (rowId > 0) {
-        rowId--;
-        loadValuesGT(gtlist,rowId);
-        }else{
+            rowId--;
+            loadValuesT(tlist, rowId);
+        } else {
             JOptionPane.showMessageDialog(null, ("First"));
         }
 
     }//GEN-LAST:event_btnPreviousActionPerformed
 
     private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
-        rowId = gtlist.size() - 1;
-        loadValuesGT(gtlist,rowId);
+        rowId = tlist.size() - 1;
+        loadValuesT(tlist, rowId);
     }//GEN-LAST:event_btnLastActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
@@ -1071,51 +1139,29 @@ public class TicketsEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
-        btnFirst.setEnabled( false );
-        btnPrevious.setEnabled( false ) ;
-        btnNext.setEnabled( false );
-        btnLast.setEnabled( false );
-        btnUpdate.setEnabled( false );
-        btnDelete.setEnabled( false );
-        btnNew.setEnabled( false );
+        btnFirst.setEnabled(false);
+        btnPrevious.setEnabled(false);
+        btnNext.setEnabled(false);
+        btnLast.setEnabled(false);
+        btnUpdate.setEnabled(false);
+        btnDelete.setEnabled(false);
+        btnNew.setEnabled(false);
 
-        btnSave.setEnabled( true );
-        btnCancel.setEnabled( true );
-        textGame.setText("");
-        textID.setText("");
-        textSerial.setText("");
-        textPartNum.setText("");
-        textManID.setText("");
-        textDistID.setText("");
-        textGameType.setText("");
-        textInvoiceNum.setText("");
-        textInvoiceDate.setText("");
-        textDatePlaced.setText("");
-        textDateRem.setText("");
-        textCostTicket.setText("");
-        textNumTickets.setText("");
-        textIdealGross.setText("");
-        textIdealPrizes.setText("");
-        textUnsoldValue.setText("");
-        textActualGross.setText("");
-        textActualPrizes.setText("");
-        textActualNet.setText("");
-        textBin.setText("");
-        textUnsoldTickets.setText("");
-        textIdealNet.setText("");
-        textGameCost.setText("");
+        btnSave.setEnabled(true);
+        btnCancel.setEnabled(true);
+        clearFields();
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        btnFirst.setEnabled( true );
-        btnPrevious.setEnabled( true ) ;
-        btnNext.setEnabled( true );
-        btnLast.setEnabled( true );
-        btnUpdate.setEnabled( true );
-        btnDelete.setEnabled( true );
-        btnNew.setEnabled( true );
-        btnSave.setEnabled( false );
-        btnCancel.setEnabled( false );
+        btnFirst.setEnabled(true);
+        btnPrevious.setEnabled(true);
+        btnNext.setEnabled(true);
+        btnLast.setEnabled(true);
+        btnUpdate.setEnabled(true);
+        btnDelete.setEnabled(true);
+        btnNew.setEnabled(true);
+        btnSave.setEnabled(false);
+        btnCancel.setEnabled(false);
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -1127,8 +1173,46 @@ public class TicketsEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-    
-       
+        try {
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
+            GameTemplates gt = new GameTemplates();
+            gt.setGameName(textGame.getText());
+            gt.setGameCost(Double.valueOf(textGameCost.getText()));
+            gt.setTicketCost(Double.parseDouble(textCostTicket.getText()));
+            gt.setNumTickets(Integer.parseInt(textNumTickets.getText()));
+            gt.setIdeaGross(Integer.parseInt(textIdealGross.getText()));
+            gt.setIdeaPrizes(Integer.parseInt(textIdealPrizes.getText()));
+            gt.setIdeaNet(Integer.parseInt(textIdealNet.getText()));
+            gt.setLastSale(Integer.parseInt(textLastSale.getText()));
+            gt.setLastSaleAllow(Integer.parseInt(textAllLast.getText()));
+            gt.setPrizeAmt1(Integer.parseInt(textAmt1.getText()));
+            gt.setPrizeAmt2(Integer.parseInt(textAmt2.getText()));
+            gt.setPrizeAmt3(Integer.parseInt(textAmt3.getText()));
+            gt.setPrizeAmt4(Integer.parseInt(textAmt4.getText()));
+            gt.setPrizeAmt5(Integer.parseInt(textAmt5.getText()));
+            gt.setPrizeAmt6(Integer.parseInt(textAmt6.getText()));
+            gt.setPrizeAmt7(Integer.parseInt(textAmt7.getText()));
+            gt.setPrizeAmt8(Integer.parseInt(textAmt8.getText()));
+            gt.setPrizeAmt9(Integer.parseInt(textAmt9.getText()));
+            gt.setPrizeAmt10(Integer.parseInt(textAmt10.getText()));
+            gt.setPrizeAll1(Integer.parseInt(textAll1.getText()));
+            gt.setPrizeAll2(Integer.parseInt(textAll2.getText()));
+            gt.setPrizeAll3(Integer.parseInt(textAll3.getText()));
+            gt.setPrizeAll4(Integer.parseInt(textAll4.getText()));
+            gt.setPrizeAll5(Integer.parseInt(textAll5.getText()));
+            gt.setPrizeAll6(Integer.parseInt(textAll6.getText()));
+            gt.setPrizeAll7(Integer.parseInt(textAll7.getText()));
+            gt.setPrizeAll8(Integer.parseInt(textAll8.getText()));
+            gt.setPrizeAll9(Integer.parseInt(textAll9.getText()));
+            gt.setPrizeAll10(Integer.parseInt(textAll10.getText()));
+
+            session.getTransaction().commit();
+            session.close();
+        } catch (HibernateException he) {
+            he.printStackTrace();
+        }
+
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void textIdealNetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textIdealNetActionPerformed
@@ -1147,25 +1231,41 @@ public class TicketsEditor extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         if (!searchText.getText().trim().equals("")) {
-            runQueryBasedOnGameName();
-            
+            gtlist = executeHQLQuery(QUERY_BASED_ON_GT + searchText.getText() + "%'");
+            rowId = 0;
+            loadValuesGT(gtlist, rowId);
+
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
-        timeThread T1 = new timeThread( "Thread-1");
-      T1.start();
-      
-      timeThread T2 = new timeThread( "Thread-2");
-      T2.start();
+        timeThread T1 = new timeThread("Thread-1");
+        T1.start();
+
+        timeThread T2 = new timeThread("Thread-2");
+        T2.start();
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void btnInplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInplayActionPerformed
+        // TODO add your handling code here:
+        clearFields();
+        tlist = executeHQLQuery(QUERY_TICKETS);
+        loadValuesT(tlist, rowId);
+    }//GEN-LAST:event_btnInplayActionPerformed
+
+    private void btnGTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGTActionPerformed
+        // TODO add your handling code here:
+        clearFields();
+        gtlist = executeHQLQuery(QUERY_FIRST_ROW);
+        loadValuesGT(gtlist, rowId);
+    }//GEN-LAST:event_btnGTActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1202,12 +1302,15 @@ public class TicketsEditor extends javax.swing.JFrame {
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnFirst;
+    private javax.swing.JButton btnGT;
+    private javax.swing.JButton btnInplay;
     private javax.swing.JButton btnLast;
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JCheckBox cbInplay;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
