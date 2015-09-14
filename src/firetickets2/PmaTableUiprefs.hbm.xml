@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 8, 2015 7:01:43 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="firetickets2.PmaTableUiprefs" table="pma__table_uiprefs" catalog="fire_tickets" optimistic-lock="version">
+        <composite-id name="id" class="firetickets2.PmaTableUiprefsId">
+            <key-property name="username" type="string">
+                <column name="username" length="64" />
+            </key-property>
+            <key-property name="dbName" type="string">
+                <column name="db_name" length="64" />
+            </key-property>
+            <key-property name="tableName" type="string">
+                <column name="table_name" length="64" />
+            </key-property>
+        </composite-id>
+        <property name="prefs" type="string">
+            <column name="prefs" length="65535" not-null="true" />
+        </property>
+        <property name="lastUpdate" type="timestamp">
+            <column name="last_update" length="19" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

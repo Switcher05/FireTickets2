@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 1, 2015 5:45:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.DistsId" table="dists_id" catalog="fire_tickets">
+        <id name="distId" type="java.lang.Integer">
+            <column name="dist_id" />
+            <generator class="identity"></generator>
+        </id>
+        <property name="distAbbr" type="string">
+            <column name="dist_abbr" length="10" />
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="30" />
+        </property>
+        <property name="address" type="string">
+            <column name="address" length="30" />
+        </property>
+        <property name="city" type="string">
+            <column name="city" length="30" />
+        </property>
+        <property name="state" type="string">
+            <column name="state" length="30" />
+        </property>
+        <property name="licenseNum" type="string">
+            <column name="license_num" length="12" />
+        </property>
+        <set name="gameTemplateses" table="game_templates" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dists_id_dist_id" not-null="true" />
+            </key>
+            <one-to-many class="entity.GameTemplates" />
+        </set>
+    </class>
+</hibernate-mapping>

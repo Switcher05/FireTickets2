@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 1, 2015 5:45:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="gui.SaleSessions" table="sale_sessions" catalog="fire_tickets" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="startBank" type="string">
+            <column name="start_bank" length="12" />
+        </property>
+        <property name="grossSales" type="string">
+            <column name="gross_sales" length="12" />
+        </property>
+        <property name="grossPrizes" type="string">
+            <column name="gross_prizes" length="12" />
+        </property>
+        <property name="grossNet" type="string">
+            <column name="gross_net" length="12" />
+        </property>
+        <property name="currentbank" type="java.lang.Double">
+            <column name="currentbank" precision="22" scale="0" />
+        </property>
+        <property name="endingbank" type="java.lang.Double">
+            <column name="endingbank" precision="22" scale="0" />
+        </property>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

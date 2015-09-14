@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 1, 2015 5:45:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="gui.PmaCentralColumns" table="pma__central_columns" catalog="fire_tickets" optimistic-lock="version">
+        <composite-id name="id" class="gui.PmaCentralColumnsId">
+            <key-property name="dbName" type="string">
+                <column name="db_name" length="64" />
+            </key-property>
+            <key-property name="colName" type="string">
+                <column name="col_name" length="64" />
+            </key-property>
+        </composite-id>
+        <property name="colType" type="string">
+            <column name="col_type" length="64" not-null="true" />
+        </property>
+        <property name="colLength" type="string">
+            <column name="col_length" length="65535" />
+        </property>
+        <property name="colCollation" type="string">
+            <column name="col_collation" length="64" not-null="true" />
+        </property>
+        <property name="colIsNull" type="boolean">
+            <column name="col_isNull" not-null="true" />
+        </property>
+        <property name="colExtra" type="string">
+            <column name="col_extra" />
+        </property>
+        <property name="colDefault" type="string">
+            <column name="col_default" length="65535" />
+        </property>
+    </class>
+</hibernate-mapping>

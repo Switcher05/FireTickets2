@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 1, 2015 5:45:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="gui.PmaColumnInfo" table="pma__column_info" catalog="fire_tickets" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="dbName" type="string">
+            <column name="db_name" length="64" not-null="true" />
+        </property>
+        <property name="tableName" type="string">
+            <column name="table_name" length="64" not-null="true" />
+        </property>
+        <property name="columnName" type="string">
+            <column name="column_name" length="64" not-null="true" />
+        </property>
+        <property name="comment" type="string">
+            <column name="comment" not-null="true" />
+        </property>
+        <property name="mimetype" type="string">
+            <column name="mimetype" not-null="true" />
+        </property>
+        <property name="transformation" type="string">
+            <column name="transformation" not-null="true" />
+        </property>
+        <property name="transformationOptions" type="string">
+            <column name="transformation_options" not-null="true" />
+        </property>
+        <property name="inputTransformation" type="string">
+            <column name="input_transformation" not-null="true" />
+        </property>
+        <property name="inputTransformationOptions" type="string">
+            <column name="input_transformation_options" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
