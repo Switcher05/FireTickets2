@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 1, 2015 5:45:52 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated Sep 8, 2015 7:01:43 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="entity.GameTemplates" table="game_templates" catalog="fire_tickets">
         <composite-id name="id" class="entity.GameTemplatesId">

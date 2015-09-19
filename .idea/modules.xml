@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FireTickets2.iml" filepath="$PROJECT_DIR$/FireTickets2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jooq/jooq.iml" filepath="$PROJECT_DIR$/jooq/jooq.iml" />
     </modules>
   </component>
 </project>

@@ -10,6 +10,10 @@ package db;
  * @author Switcher
  */
 
+import java.util.List;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -32,4 +36,5 @@ public class HibernateUtil {
          
         return sessionFactory;
     }
+    
 }

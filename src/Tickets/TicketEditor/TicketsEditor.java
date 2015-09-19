@@ -1239,12 +1239,9 @@ public class TicketsEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-        timeThread T1 = new timeThread("Thread-1");
-        T1.start();
-
-        timeThread T2 = new timeThread("Thread-2");
-        T2.start();
+       clearFields();
+       tlist = executeHQLQuery(QUERY_INPLAY);
+       loadValuesT(tlist,rowId);
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void btnInplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInplayActionPerformed
