@@ -1,6 +1,9 @@
 package entity;
 // Generated Sep 8, 2015 7:01:42 PM by Hibernate Tools 4.3.1
 
+import java.util.Objects;
+
+
 
 
 /**
@@ -42,6 +45,41 @@ public class GameTemplatesId  implements java.io.Serializable {
     
     public void setMfgIdMfgId(int mfgIdMfgId) {
         this.mfgIdMfgId = mfgIdMfgId;
+    }
+
+    @Override
+    public String toString() {
+        return "GameTemplatesId{" + "partNum=" + partNum + ", distsIdDistId=" + distsIdDistId + ", mfgIdMfgId=" + mfgIdMfgId + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.partNum);
+        hash = 97 * hash + this.distsIdDistId;
+        hash = 97 * hash + this.mfgIdMfgId;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final GameTemplatesId other = (GameTemplatesId) obj;
+        if (!Objects.equals(this.partNum, other.partNum)) {
+            return false;
+        }
+        if (this.distsIdDistId != other.distsIdDistId) {
+            return false;
+        }
+        if (this.mfgIdMfgId != other.mfgIdMfgId) {
+            return false;
+        }
+        return true;
     }
 
 

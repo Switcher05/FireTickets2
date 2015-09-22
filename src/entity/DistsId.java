@@ -3,6 +3,7 @@ package entity;
 
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -88,6 +89,61 @@ public class DistsId  implements java.io.Serializable {
     
     public void setGameTemplateses(Set gameTemplateses) {
         this.gameTemplateses = gameTemplateses;
+    }
+
+    @Override
+    public String toString() {
+        return "DistsId{" + "distId=" + distId + ", distAbbr=" + distAbbr + ", name=" + name + ", address=" + address + ", city=" + city + ", state=" + state + ", licenseNum=" + licenseNum + ", gameTemplateses=" + gameTemplateses + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 79 * hash + Objects.hashCode(this.distId);
+        hash = 79 * hash + Objects.hashCode(this.distAbbr);
+        hash = 79 * hash + Objects.hashCode(this.name);
+        hash = 79 * hash + Objects.hashCode(this.address);
+        hash = 79 * hash + Objects.hashCode(this.city);
+        hash = 79 * hash + Objects.hashCode(this.state);
+        hash = 79 * hash + Objects.hashCode(this.licenseNum);
+        hash = 79 * hash + Objects.hashCode(this.gameTemplateses);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DistsId other = (DistsId) obj;
+        if (!Objects.equals(this.distId, other.distId)) {
+            return false;
+        }
+        if (!Objects.equals(this.distAbbr, other.distAbbr)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.address, other.address)) {
+            return false;
+        }
+        if (!Objects.equals(this.city, other.city)) {
+            return false;
+        }
+        if (!Objects.equals(this.state, other.state)) {
+            return false;
+        }
+        if (!Objects.equals(this.licenseNum, other.licenseNum)) {
+            return false;
+        }
+        if (!Objects.equals(this.gameTemplateses, other.gameTemplateses)) {
+            return false;
+        }
+        return true;
     }
 
 

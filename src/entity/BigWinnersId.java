@@ -62,6 +62,49 @@ public class BigWinnersId  implements java.io.Serializable {
         this.tillTapeLocationsLocId = tillTapeLocationsLocId;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 73 * hash + this.bwId;
+        hash = 73 * hash + this.tillTapeTId;
+        hash = 73 * hash + this.tillTapeUsersUserId;
+        hash = 73 * hash + this.tillTapeCustomersCustId;
+        hash = 73 * hash + this.tillTapeLocationsLocId;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BigWinnersId other = (BigWinnersId) obj;
+        if (this.bwId != other.bwId) {
+            return false;
+        }
+        if (this.tillTapeTId != other.tillTapeTId) {
+            return false;
+        }
+        if (this.tillTapeUsersUserId != other.tillTapeUsersUserId) {
+            return false;
+        }
+        if (this.tillTapeCustomersCustId != other.tillTapeCustomersCustId) {
+            return false;
+        }
+        if (this.tillTapeLocationsLocId != other.tillTapeLocationsLocId) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "BigWinnersId{" + "bwId=" + bwId + ", tillTapeTId=" + tillTapeTId + ", tillTapeUsersUserId=" + tillTapeUsersUserId + ", tillTapeCustomersCustId=" + tillTapeCustomersCustId + ", tillTapeLocationsLocId=" + tillTapeLocationsLocId + '}';
+    }
+
 
 
 

@@ -8,11 +8,13 @@
 package Tickets.TicketEditor;
 
 import Util.timeThread;
+import dao.GameTemplateDAO;
 import db.HibernateUtil;
 import entity.GameTemplates;
 import entity.Tickets;
 import java.util.List;
-import javax.swing.JOptionPane;
+import javax.swing.*;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -22,115 +24,144 @@ import org.hibernate.Session;
  * @author Switcher
  */
 public class TicketsEditor extends javax.swing.JFrame {
-
-    private int rowId = 0;
-    private List<GameTemplates> gtlist;
-    private List<Tickets> tlist;
-
+        
     public TicketsEditor() {
-        initComponents();
-        //Load all the values on line 1
-//        SessionFactory sessFact = HibernateUtil.getSessionFactory();
-//        Session session = sessFact.openSession();
-//        session.beginTransaction();
-//        Query q = session.createQuery("from GameTemplates");
-//        List<GameTemplates> l = q.list();
-//        Iterator<GameTemplates> itr = l.iterator();
-//        while(itr.hasNext()){
-//            System.out.println(itr.next().getGameName());
+        initComponents();          
+        
+        
+    }
+
+    private void setFields(String gn, String pn, String gc, String ct, String nt, String ig, String ip, String in,
+                           String di, String mi, String LS, String lsrem, String am1, String am2, String am3, String am4,
+                           String am5, String am6, String am7, String am8, String am9, String am10, String am11,
+                           String am12, String am13, String am14, String am15,
+                           String al1, String al2, String al3, String al4, String al5, String al6, String al7,
+                           String al8, String al9, String al10, String al11, String al12, String al13, String al14, String al15){
+        textGame.setText(gn);
+        textPartNum.setText(pn);
+        textGameCost.setText(gc);
+        textCostTicket.setText(ct);
+        textNumTickets.setText(nt);
+        textIdealGross.setText(ig);
+        textIdealPrizes.setText(ip);
+        textIdealNet.setText(in);
+        textDistID.setText(di);
+        textManID.setText(mi);
+        textLastSale.setText(LS);
+        textLastRem.setText(lsrem);
+        textAmt1.setText(am1);
+        textAmt2.setText(am2);
+        textAmt3.setText(am3);
+        textAmt4.setText(am4);
+        textAmt5.setText(am5);
+        textAmt6.setText(am6);
+        textAmt7.setText(am7);
+        textAmt8.setText(am8);
+        textAmt9.setText(am9);
+        textAmt10.setText(am10);
+        textAmt11.setText(am11);
+        textAmt12.setText(am12);
+        textAmt13.setText(am13);
+        textAmt14.setText(am14);
+        textAmt15.setText(am15);
+        textAll1.setText(al1);
+        textAll2.setText(al2);
+        textAll3.setText(al3);
+        textAll4.setText(al4);
+        textAll5.setText(al5);
+        textAll6.setText(al6);
+        textAll7.setText(al7);
+        textAll8.setText(al8);
+        textAll9.setText(al9);
+        textAll10.setText(al10);
+        textAll11.setText(al11);
+        textAll12.setText(al12);
+        textAll13.setText(al13);
+        textAll14.setText(al14);
+        textAll15.setText(al15);
+    }
+
+
+  
+//    private static final String QUERY_BASED_ON_GT = "from GameTemplates where game_name like '";
+//    private static final String QUERY_FIRST_ROW = "from GameTemplates order by game_name";
+//    private static final String QUERY_INPLAY = "SELECT * FROM GameTemplates LEFT JOIN Tickets ORDER BY bin";
+//    private static final String QUERY_TICKETS = "from Tickets where inplay = 1 order by bin";
+//
+//    private List executeHQLQuery(String hql) {
+//        List resultList = null;
+//        try {
+//            Session session = HibernateUtil.getSessionFactory().openSession();
+//            session.beginTransaction();
+//            Query q = session.createQuery(hql);
+//            resultList = q.list();
+//            session.getTransaction().commit();
+//        } catch (HibernateException he) {
+//            he.printStackTrace();
 //        }
-//        GameTemplates gt = (GameTemplates) session.get(GameTemplates.class, "part_num");
-//        String gamename= gt.getGameName();
-//        System.out.println("game name" + gamename);
-//        textGame.setText(gamename);
-//        runQueryFirstRow();
-//        session.save(gt);
-//        session.getTransaction().commit();  
-//          
-//        session.close();  
-//               
-
-    }
-
-    private static final String QUERY_BASED_ON_GT = "from GameTemplates where game_name like '";
-    private static final String QUERY_FIRST_ROW = "from GameTemplates order by game_name";
-    private static final String QUERY_INPLAY = "SELECT * FROM GameTemplates LEFT JOIN Tickets ORDER BY bin";
-    private static final String QUERY_TICKETS = "from Tickets where inplay = 1 order by bin";
-
-    private List executeHQLQuery(String hql) {
-        List resultList = null;
-        try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
-            Query q = session.createQuery(hql);
-            resultList = q.list();
-            session.getTransaction().commit();
-        } catch (HibernateException he) {
-            he.printStackTrace();
-        }
-        return resultList;
-    }
-
-    private void loadValuesGT(List<GameTemplates> resultList, int row) {
-        textGame.setText(resultList.get(row).getGameName());
-        textPartNum.setText(resultList.get(row).getId().getPartNum());
-        textGameCost.setText(String.valueOf(resultList.get(row).getGameCost().toString()));
-//        textCostTicket.setText(resultList.get(row).getTicketCost().toString());
-        textCostTicket.setText((String.valueOf("" + resultList.get(row).getTicketCost().toString())));
-        textNumTickets.setText(resultList.get(row).getNumTickets().toString());
-        textIdealGross.setText(resultList.get(row).getIdeaGross().toString());
-        textIdealPrizes.setText(resultList.get(row).getIdeaPrizes().toString());
-        textIdealNet.setText(resultList.get(row).getIdeaNet().toString());
-        int dist = resultList.get(row).getId().getDistsIdDistId();
-        textDistID.setText(String.valueOf(dist));
-        int man = resultList.get(row).getId().getMfgIdMfgId();
-        textManID.setText(String.valueOf(man));
-        textLastSale.setText(resultList.get(row).getLastSale().toString());
-        textLastRem.setText(resultList.get(row).getLastSaleAllow().toString());
-        textAmt1.setText(resultList.get(row).getPrizeAmt1().toString());
-        textAmt2.setText(resultList.get(row).getPrizeAmt2().toString());
-        textAmt3.setText(resultList.get(row).getPrizeAmt3().toString());
-        textAmt4.setText(resultList.get(row).getPrizeAmt4().toString());
-        textAmt5.setText(resultList.get(row).getPrizeAmt5().toString());
-        textAmt6.setText(resultList.get(row).getPrizeAmt6().toString());
-        textAmt7.setText(resultList.get(row).getPrizeAmt7().toString());
-        textAmt8.setText(resultList.get(row).getPrizeAmt8().toString());
-        textAmt9.setText(resultList.get(row).getPrizeAmt9().toString());
-        textAmt10.setText(resultList.get(row).getPrizeAmt10().toString());
-        textAll1.setText(resultList.get(row).getPrizeAll1().toString());
-        textAll2.setText(resultList.get(row).getPrizeAll2().toString());
-        textAll3.setText(resultList.get(row).getPrizeAll3().toString());
-        textAll4.setText(resultList.get(row).getPrizeAll4().toString());
-        textAll5.setText(resultList.get(row).getPrizeAll5().toString());
-        textAll6.setText(resultList.get(row).getPrizeAll6().toString());
-        textAll7.setText(resultList.get(row).getPrizeAll7().toString());
-        textAll8.setText(resultList.get(row).getPrizeAll8().toString());
-        textAll9.setText(resultList.get(row).getPrizeAll9().toString());
-        textAll10.setText(resultList.get(row).getPrizeAll10().toString());
-    }
-
-    private void loadValuesT(List<Tickets> resultList, int row) {
-        textSerial.setText(resultList.get(row).getId().getSerial());
-        textBin.setText(resultList.get(row).getBin().toString());
-        textUnsoldValue.setText(resultList.get(row).getUnsoldAmt().toString());
-        textActualGross.setText(resultList.get(row).getActualGross().toString());
-        textActualPrizes.setText(resultList.get(row).getActualPrizes().toString());
-        textActualNet.setText(resultList.get(row).getActualNet().toString());
-        cbInplay.setSelected(resultList.get(row).getInplay());
-        textUnsoldTickets.setText(resultList.get(row).getUnsoldTickets().toString());
-        textLastRem.setText(resultList.get(row).getLastSaleRem().toString());
-        textRem1.setText(resultList.get(row).getPrizeRem1().toString());
-        textRem2.setText(resultList.get(row).getPrizeRem2().toString());
-        textRem3.setText(resultList.get(row).getPrizeRem3().toString());
-        textRem4.setText(resultList.get(row).getPrizeRem4().toString());
-        textRem5.setText(resultList.get(row).getPrizeRem5().toString());
-        textRem6.setText(resultList.get(row).getPrizeRem6().toString());
-        textRem7.setText(resultList.get(row).getPrizeRem7().toString());
-        textRem8.setText(resultList.get(row).getPrizeRem8().toString());
-        textRem9.setText(resultList.get(row).getPrizeRem9().toString());
-        textRem10.setText(resultList.get(row).getPrizeRem10().toString());
-
-    }
+//        return resultList;
+//    }
+//
+//    private void loadValuesGT(List<GameTemplates> resultList, int row) {
+//        textGame.setText(resultList.get(row).getGameName());
+//        textPartNum.setText(resultList.get(row).getId().getPartNum());
+//        textGameCost.setText(String.valueOf(resultList.get(row).getGameCost().toString()));
+////        textCostTicket.setText(resultList.get(row).getTicketCost().toString());
+//        textCostTicket.setText((String.valueOf("" + resultList.get(row).getTicketCost().toString())));
+//        textNumTickets.setText(resultList.get(row).getNumTickets().toString());
+//        textIdealGross.setText(resultList.get(row).getIdeaGross().toString());
+//        textIdealPrizes.setText(resultList.get(row).getIdeaPrizes().toString());
+//        textIdealNet.setText(resultList.get(row).getIdeaNet().toString());
+//        int dist = resultList.get(row).getId().getDistsIdDistId();
+//        textDistID.setText(String.valueOf(dist));
+//        int man = resultList.get(row).getId().getMfgIdMfgId();
+//        textManID.setText(String.valueOf(man));
+//        textLastSale.setText(resultList.get(row).getLastSale().toString());
+//        textLastRem.setText(resultList.get(row).getLastSaleAllow().toString());
+//        textAmt1.setText(resultList.get(row).getPrizeAmt1().toString());
+//        textAmt2.setText(resultList.get(row).getPrizeAmt2().toString());
+//        textAmt3.setText(resultList.get(row).getPrizeAmt3().toString());
+//        textAmt4.setText(resultList.get(row).getPrizeAmt4().toString());
+//        textAmt5.setText(resultList.get(row).getPrizeAmt5().toString());
+//        textAmt6.setText(resultList.get(row).getPrizeAmt6().toString());
+//        textAmt7.setText(resultList.get(row).getPrizeAmt7().toString());
+//        textAmt8.setText(resultList.get(row).getPrizeAmt8().toString());
+//        textAmt9.setText(resultList.get(row).getPrizeAmt9().toString());
+//        textAmt10.setText(resultList.get(row).getPrizeAmt10().toString());
+//        textAll1.setText(resultList.get(row).getPrizeAll1().toString());
+//        textAll2.setText(resultList.get(row).getPrizeAll2().toString());
+//        textAll3.setText(resultList.get(row).getPrizeAll3().toString());
+//        textAll4.setText(resultList.get(row).getPrizeAll4().toString());
+//        textAll5.setText(resultList.get(row).getPrizeAll5().toString());
+//        textAll6.setText(resultList.get(row).getPrizeAll6().toString());
+//        textAll7.setText(resultList.get(row).getPrizeAll7().toString());
+//        textAll8.setText(resultList.get(row).getPrizeAll8().toString());
+//        textAll9.setText(resultList.get(row).getPrizeAll9().toString());
+//        textAll10.setText(resultList.get(row).getPrizeAll10().toString());
+//    }
+//
+//    private void loadValuesT(List<Tickets> resultList, int row) {
+//        textSerial.setText(resultList.get(row).getId().getSerial());
+//        textBin.setText(resultList.get(row).getBin().toString());
+//        textUnsoldValue.setText(resultList.get(row).getUnsoldAmt().toString());
+//        textActualGross.setText(resultList.get(row).getActualGross().toString());
+//        textActualPrizes.setText(resultList.get(row).getActualPrizes().toString());
+//        textActualNet.setText(resultList.get(row).getActualNet().toString());
+//        cbInplay.setSelected(resultList.get(row).getInplay());
+//        textUnsoldTickets.setText(resultList.get(row).getUnsoldTickets().toString());
+//        textLastRem.setText(resultList.get(row).getLastSaleRem().toString());
+//        textRem1.setText(resultList.get(row).getPrizeRem1().toString());
+//        textRem2.setText(resultList.get(row).getPrizeRem2().toString());
+//        textRem3.setText(resultList.get(row).getPrizeRem3().toString());
+//        textRem4.setText(resultList.get(row).getPrizeRem4().toString());
+//        textRem5.setText(resultList.get(row).getPrizeRem5().toString());
+//        textRem6.setText(resultList.get(row).getPrizeRem6().toString());
+//        textRem7.setText(resultList.get(row).getPrizeRem7().toString());
+//        textRem8.setText(resultList.get(row).getPrizeRem8().toString());
+//        textRem9.setText(resultList.get(row).getPrizeRem9().toString());
+//        textRem10.setText(resultList.get(row).getPrizeRem10().toString());
+//
+//    }
 
     private void clearFields() {
 
@@ -326,7 +357,7 @@ public class TicketsEditor extends javax.swing.JFrame {
         textInplay = new javax.swing.JTextField();
         jLabel47 = new javax.swing.JLabel();
         searchText = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
+        btnSearch = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         cbInplay = new javax.swing.JCheckBox();
         btnInplay = new javax.swing.JButton();
@@ -559,10 +590,10 @@ public class TicketsEditor extends javax.swing.JFrame {
 
         jLabel47.setText("Inplay:");
 
-        jButton5.setText("Search");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        btnSearch.setText("Search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                btnSearchActionPerformed(evt);
             }
         });
 
@@ -748,64 +779,61 @@ public class TicketsEditor extends javax.swing.JFrame {
                                     .addComponent(cbInplay)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(160, 160, 160)
-                                        .addComponent(btnInplay, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                        .addComponent(btnInplay, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(searchText)
+                                                .addComponent(btnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnFirst, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnPrevious, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnLast, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(searchText)
-                                                        .addComponent(btnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(btnFirst, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btnPrevious, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btnLast, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(8, 8, 8)
-                                                .addComponent(jButton5))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(18, 18, 18)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(48, 48, 48)
-                                                .addComponent(jButton6))))
+                                        .addGap(8, 8, 8)
+                                        .addComponent(btnSearch))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(textGame, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(27, 27, 27)
-                                        .addComponent(jLabel4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(textSerial, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel22)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(textBin, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel9)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(textGameType, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(48, 48, 48)
+                                        .addComponent(jButton6))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(textGame, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(27, 27, 27)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(textSerial, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel22)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(textBin, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(textGameType, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addComponent(btnGT, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(86, 86, 86)))
                 .addGap(28, 28, 28)
@@ -1023,7 +1051,7 @@ public class TicketsEditor extends javax.swing.JFrame {
                                 .addGap(43, 43, 43)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(searchText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton5))
+                            .addComponent(btnSearch))
                         .addGap(161, 161, 161))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
@@ -1104,34 +1132,33 @@ public class TicketsEditor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
-        rowId = 0;
-        loadValuesT(tlist, rowId);
+    
     }//GEN-LAST:event_btnFirstActionPerformed
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
-        if (rowId <= tlist.size()) {
+       /* if (rowId <= tlist.size()) {
             rowId++;
             loadValuesT(tlist, rowId);
         } else {
             JOptionPane.showMessageDialog(null, ("Last"));
-        }
+        }*/
 
 
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
-        if (rowId > 0) {
+       /* if (rowId > 0) {
             rowId--;
             loadValuesT(tlist, rowId);
         } else {
             JOptionPane.showMessageDialog(null, ("First"));
-        }
+        }*/
 
     }//GEN-LAST:event_btnPreviousActionPerformed
 
     private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
-        rowId = tlist.size() - 1;
-        loadValuesT(tlist, rowId);
+ /*       rowId = tlist.size() - 1;
+        loadValuesT(tlist, rowId);*/
     }//GEN-LAST:event_btnLastActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
@@ -1228,34 +1255,35 @@ public class TicketsEditor extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        if (!searchText.getText().trim().equals("")) {
-            gtlist = executeHQLQuery(QUERY_BASED_ON_GT + searchText.getText() + "%'");
-            rowId = 0;
-            loadValuesGT(gtlist, rowId);
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        GameTemplates gt = new GameTemplates();
+        GameTemplateDAO gtDAO = new GameTemplateDAO();
+     
+        gt = gtDAO.getGTById(searchText.getText());
+        
+        System.out.println("Game name:" + gt.getGameName());
+        /*setFields(gt.getGameName(),gt.getId().getPartNum(),gt.getGameCost().toString(),gt.getTicketCost().toString(),gt.getNumTickets().toString(),
+                gt.getIdeaGross().toString(),gt.getIdeaPrizes().toString(),gt.getIdeaNet().toString(),gt.getDistsId().toString(),
+                gt.getMfgId().toString(),gt.getLastSale().toString(),gt.getLastSaleAllow().toString(),gt.getPrizeAmt1().toString(),gt.getPrizeAmt2().toString(),gt.getPrizeAmt3().toString(),
+                gt.getPrizeAmt4().toString(),gt.getPrizeAmt5().toString(),gt.getPrizeAmt6().toString(),gt.getPrizeAmt7().toString(),gt.getPrizeAmt8().toString(),gt.getPrizeAmt9().toString(),
+                gt.getPrizeAmt10().toString(),gt.getPrizeAmt11().toString(),gt.getPrizeAmt12().toString(),gt.getPrizeAmt13().toString(),gt.getPrizeAmt14().toString(),gt.getPrizeAmt15().toString(),
+                gt.getPrizeAll1().toString(),gt.getPrizeAll2().toString(),gt.getPrizeAll3().toString(),
+                gt.getPrizeAll4().toString(),gt.getPrizeAll5().toString(),gt.getPrizeAll6().toString(),gt.getPrizeAll7().toString(),gt.getPrizeAll8().toString(),gt.getPrizeAll9().toString(),
+                gt.getPrizeAll10().toString(),gt.getPrizeAll11().toString(),gt.getPrizeAll12().toString(),gt.getPrizeAll13().toString(),gt.getPrizeAll14().toString(),gt.getPrizeAll15().toString());
+        gtDAO.releaseResources();*/
 
-        }
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_btnSearchActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-       clearFields();
-       tlist = executeHQLQuery(QUERY_INPLAY);
-       loadValuesT(tlist,rowId);
+
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void btnInplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInplayActionPerformed
-        // TODO add your handling code here:
-        clearFields();
-        tlist = executeHQLQuery(QUERY_TICKETS);
-        loadValuesT(tlist, rowId);
+
     }//GEN-LAST:event_btnInplayActionPerformed
 
     private void btnGTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGTActionPerformed
-        // TODO add your handling code here:
-        clearFields();
-        gtlist = executeHQLQuery(QUERY_FIRST_ROW);
-        loadValuesGT(gtlist, rowId);
+      
     }//GEN-LAST:event_btnGTActionPerformed
 
     /**
@@ -1295,6 +1323,590 @@ public class TicketsEditor extends javax.swing.JFrame {
         });
     }
 
+    public JTextField getSearchText() {
+        return searchText;
+    }
+
+    public void setSearchText(JTextField searchText) {
+        this.searchText = searchText;
+    }
+
+    public JTextField getTextActualGross() {
+        return textActualGross;
+    }
+
+    public void setTextActualGross(JTextField textActualGross) {
+        this.textActualGross = textActualGross;
+    }
+
+    public JTextField getTextActualNet() {
+        return textActualNet;
+    }
+
+    public void setTextActualNet(JTextField textActualNet) {
+        this.textActualNet = textActualNet;
+    }
+
+    public JTextField getTextActualPrizes() {
+        return textActualPrizes;
+    }
+
+    public void setTextActualPrizes(JTextField textActualPrizes) {
+        this.textActualPrizes = textActualPrizes;
+    }
+
+    public JTextField getTextAll1() {
+        return textAll1;
+    }
+
+    public void setTextAll1(JTextField textAll1) {
+        this.textAll1 = textAll1;
+    }
+
+    public JTextField getTextAll10() {
+        return textAll10;
+    }
+
+    public void setTextAll10(JTextField textAll10) {
+        this.textAll10 = textAll10;
+    }
+
+    public JTextField getTextAll11() {
+        return textAll11;
+    }
+
+    public void setTextAll11(JTextField textAll11) {
+        this.textAll11 = textAll11;
+    }
+
+    public JTextField getTextAll12() {
+        return textAll12;
+    }
+
+    public void setTextAll12(JTextField textAll12) {
+        this.textAll12 = textAll12;
+    }
+
+    public JTextField getTextAll13() {
+        return textAll13;
+    }
+
+    public void setTextAll13(JTextField textAll13) {
+        this.textAll13 = textAll13;
+    }
+
+    public JTextField getTextAll14() {
+        return textAll14;
+    }
+
+    public void setTextAll14(JTextField textAll14) {
+        this.textAll14 = textAll14;
+    }
+
+    public JTextField getTextAll15() {
+        return textAll15;
+    }
+
+    public void setTextAll15(JTextField textAll15) {
+        this.textAll15 = textAll15;
+    }
+
+    public JTextField getTextAll2() {
+        return textAll2;
+    }
+
+    public void setTextAll2(JTextField textAll2) {
+        this.textAll2 = textAll2;
+    }
+
+    public JTextField getTextAll3() {
+        return textAll3;
+    }
+
+    public void setTextAll3(JTextField textAll3) {
+        this.textAll3 = textAll3;
+    }
+
+    public JTextField getTextAll4() {
+        return textAll4;
+    }
+
+    public void setTextAll4(JTextField textAll4) {
+        this.textAll4 = textAll4;
+    }
+
+    public JTextField getTextAll5() {
+        return textAll5;
+    }
+
+    public void setTextAll5(JTextField textAll5) {
+        this.textAll5 = textAll5;
+    }
+
+    public JTextField getTextAll6() {
+        return textAll6;
+    }
+
+    public void setTextAll6(JTextField textAll6) {
+        this.textAll6 = textAll6;
+    }
+
+    public JTextField getTextAll7() {
+        return textAll7;
+    }
+
+    public void setTextAll7(JTextField textAll7) {
+        this.textAll7 = textAll7;
+    }
+
+    public JTextField getTextAll8() {
+        return textAll8;
+    }
+
+    public void setTextAll8(JTextField textAll8) {
+        this.textAll8 = textAll8;
+    }
+
+    public JTextField getTextAll9() {
+        return textAll9;
+    }
+
+    public void setTextAll9(JTextField textAll9) {
+        this.textAll9 = textAll9;
+    }
+
+    public JTextField getTextAllLast() {
+        return textAllLast;
+    }
+
+    public void setTextAllLast(JTextField textAllLast) {
+        this.textAllLast = textAllLast;
+    }
+
+    public JTextField getTextAmt1() {
+        return textAmt1;
+    }
+
+    public void setTextAmt1(JTextField textAmt1) {
+        this.textAmt1 = textAmt1;
+    }
+
+    public JTextField getTextAmt10() {
+        return textAmt10;
+    }
+
+    public void setTextAmt10(JTextField textAmt10) {
+        this.textAmt10 = textAmt10;
+    }
+
+    public JTextField getTextAmt11() {
+        return textAmt11;
+    }
+
+    public void setTextAmt11(JTextField textAmt11) {
+        this.textAmt11 = textAmt11;
+    }
+
+    public JTextField getTextAmt12() {
+        return textAmt12;
+    }
+
+    public void setTextAmt12(JTextField textAmt12) {
+        this.textAmt12 = textAmt12;
+    }
+
+    public JTextField getTextAmt13() {
+        return textAmt13;
+    }
+
+    public void setTextAmt13(JTextField textAmt13) {
+        this.textAmt13 = textAmt13;
+    }
+
+    public JTextField getTextAmt14() {
+        return textAmt14;
+    }
+
+    public void setTextAmt14(JTextField textAmt14) {
+        this.textAmt14 = textAmt14;
+    }
+
+    public JTextField getTextAmt15() {
+        return textAmt15;
+    }
+
+    public void setTextAmt15(JTextField textAmt15) {
+        this.textAmt15 = textAmt15;
+    }
+
+    public JTextField getTextAmt2() {
+        return textAmt2;
+    }
+
+    public void setTextAmt2(JTextField textAmt2) {
+        this.textAmt2 = textAmt2;
+    }
+
+    public JTextField getTextAmt3() {
+        return textAmt3;
+    }
+
+    public void setTextAmt3(JTextField textAmt3) {
+        this.textAmt3 = textAmt3;
+    }
+
+    public JTextField getTextAmt4() {
+        return textAmt4;
+    }
+
+    public void setTextAmt4(JTextField textAmt4) {
+        this.textAmt4 = textAmt4;
+    }
+
+    public JTextField getTextAmt5() {
+        return textAmt5;
+    }
+
+    public void setTextAmt5(JTextField textAmt5) {
+        this.textAmt5 = textAmt5;
+    }
+
+    public JTextField getTextAmt6() {
+        return textAmt6;
+    }
+
+    public void setTextAmt6(JTextField textAmt6) {
+        this.textAmt6 = textAmt6;
+    }
+
+    public JTextField getTextAmt7() {
+        return textAmt7;
+    }
+
+    public void setTextAmt7(JTextField textAmt7) {
+        this.textAmt7 = textAmt7;
+    }
+
+    public JTextField getTextAmt8() {
+        return textAmt8;
+    }
+
+    public void setTextAmt8(JTextField textAmt8) {
+        this.textAmt8 = textAmt8;
+    }
+
+    public JTextField getTextAmt9() {
+        return textAmt9;
+    }
+
+    public void setTextAmt9(JTextField textAmt9) {
+        this.textAmt9 = textAmt9;
+    }
+
+    public JTextField getTextBin() {
+        return textBin;
+    }
+
+    public void setTextBin(JTextField textBin) {
+        this.textBin = textBin;
+    }
+
+    public JTextField getTextCostTicket() {
+        return textCostTicket;
+    }
+
+    public void setTextCostTicket(JTextField textCostTicket) {
+        this.textCostTicket = textCostTicket;
+    }
+
+    public JTextField getTextDatePlaced() {
+        return textDatePlaced;
+    }
+
+    public void setTextDatePlaced(JTextField textDatePlaced) {
+        this.textDatePlaced = textDatePlaced;
+    }
+
+    public JTextField getTextDateRem() {
+        return textDateRem;
+    }
+
+    public void setTextDateRem(JTextField textDateRem) {
+        this.textDateRem = textDateRem;
+    }
+
+    public JTextField getTextDistID() {
+        return textDistID;
+    }
+
+    public void setTextDistID(JTextField textDistID) {
+        this.textDistID = textDistID;
+    }
+
+    public JTextField getTextGame() {
+        return textGame;
+    }
+
+    public void setTextGame(JTextField textGame) {
+        this.textGame = textGame;
+    }
+
+    public JTextField getTextGameCost() {
+        return textGameCost;
+    }
+
+    public void setTextGameCost(JTextField textGameCost) {
+        this.textGameCost = textGameCost;
+    }
+
+    public JTextField getTextGameType() {
+        return textGameType;
+    }
+
+    public void setTextGameType(JTextField textGameType) {
+        this.textGameType = textGameType;
+    }
+
+    public JTextField getTextID() {
+        return textID;
+    }
+
+    public void setTextID(JTextField textID) {
+        this.textID = textID;
+    }
+
+    public JTextField getTextIdealGross() {
+        return textIdealGross;
+    }
+
+    public void setTextIdealGross(JTextField textIdealGross) {
+        this.textIdealGross = textIdealGross;
+    }
+
+    public JTextField getTextIdealNet() {
+        return textIdealNet;
+    }
+
+    public void setTextIdealNet(JTextField textIdealNet) {
+        this.textIdealNet = textIdealNet;
+    }
+
+    public JTextField getTextIdealPrizes() {
+        return textIdealPrizes;
+    }
+
+    public void setTextIdealPrizes(JTextField textIdealPrizes) {
+        this.textIdealPrizes = textIdealPrizes;
+    }
+
+    public JTextField getTextInplay() {
+        return textInplay;
+    }
+
+    public void setTextInplay(JTextField textInplay) {
+        this.textInplay = textInplay;
+    }
+
+    public JTextField getTextInvoiceDate() {
+        return textInvoiceDate;
+    }
+
+    public void setTextInvoiceDate(JTextField textInvoiceDate) {
+        this.textInvoiceDate = textInvoiceDate;
+    }
+
+    public JTextField getTextInvoiceNum() {
+        return textInvoiceNum;
+    }
+
+    public void setTextInvoiceNum(JTextField textInvoiceNum) {
+        this.textInvoiceNum = textInvoiceNum;
+    }
+
+    public JTextField getTextLastRem() {
+        return textLastRem;
+    }
+
+    public void setTextLastRem(JTextField textLastRem) {
+        this.textLastRem = textLastRem;
+    }
+
+    public JTextField getTextLastSale() {
+        return textLastSale;
+    }
+
+    public void setTextLastSale(JTextField textLastSale) {
+        this.textLastSale = textLastSale;
+    }
+
+    public JTextField getTextManID() {
+        return textManID;
+    }
+
+    public void setTextManID(JTextField textManID) {
+        this.textManID = textManID;
+    }
+
+    public JTextField getTextNumTickets() {
+        return textNumTickets;
+    }
+
+    public void setTextNumTickets(JTextField textNumTickets) {
+        this.textNumTickets = textNumTickets;
+    }
+
+    public JTextField getTextPartNum() {
+        return textPartNum;
+    }
+
+    public void setTextPartNum(JTextField textPartNum) {
+        this.textPartNum = textPartNum;
+    }
+
+    public JTextField getTextRem1() {
+        return textRem1;
+    }
+
+    public void setTextRem1(JTextField textRem1) {
+        this.textRem1 = textRem1;
+    }
+
+    public JTextField getTextRem10() {
+        return textRem10;
+    }
+
+    public void setTextRem10(JTextField textRem10) {
+        this.textRem10 = textRem10;
+    }
+
+    public JTextField getTextRem11() {
+        return textRem11;
+    }
+
+    public void setTextRem11(JTextField textRem11) {
+        this.textRem11 = textRem11;
+    }
+
+    public JTextField getTextRem12() {
+        return textRem12;
+    }
+
+    public void setTextRem12(JTextField textRem12) {
+        this.textRem12 = textRem12;
+    }
+
+    public JTextField getTextRem13() {
+        return textRem13;
+    }
+
+    public void setTextRem13(JTextField textRem13) {
+        this.textRem13 = textRem13;
+    }
+
+    public JTextField getTextRem14() {
+        return textRem14;
+    }
+
+    public void setTextRem14(JTextField textRem14) {
+        this.textRem14 = textRem14;
+    }
+
+    public JTextField getTextRem15() {
+        return textRem15;
+    }
+
+    public void setTextRem15(JTextField textRem15) {
+        this.textRem15 = textRem15;
+    }
+
+    public JTextField getTextRem2() {
+        return textRem2;
+    }
+
+    public void setTextRem2(JTextField textRem2) {
+        this.textRem2 = textRem2;
+    }
+
+    public JTextField getTextRem3() {
+        return textRem3;
+    }
+
+    public void setTextRem3(JTextField textRem3) {
+        this.textRem3 = textRem3;
+    }
+
+    public JTextField getTextRem4() {
+        return textRem4;
+    }
+
+    public void setTextRem4(JTextField textRem4) {
+        this.textRem4 = textRem4;
+    }
+
+    public JTextField getTextRem5() {
+        return textRem5;
+    }
+
+    public void setTextRem5(JTextField textRem5) {
+        this.textRem5 = textRem5;
+    }
+
+    public JTextField getTextRem6() {
+        return textRem6;
+    }
+
+    public void setTextRem6(JTextField textRem6) {
+        this.textRem6 = textRem6;
+    }
+
+    public JTextField getTextRem7() {
+        return textRem7;
+    }
+
+    public void setTextRem7(JTextField textRem7) {
+        this.textRem7 = textRem7;
+    }
+
+    public JTextField getTextRem8() {
+        return textRem8;
+    }
+
+    public void setTextRem8(JTextField textRem8) {
+        this.textRem8 = textRem8;
+    }
+
+    public JTextField getTextRem9() {
+        return textRem9;
+    }
+
+    public void setTextRem9(JTextField textRem9) {
+        this.textRem9 = textRem9;
+    }
+
+    public JTextField getTextSerial() {
+        return textSerial;
+    }
+
+    public void setTextSerial(JTextField textSerial) {
+        this.textSerial = textSerial;
+    }
+
+    public JTextField getTextUnsoldTickets() {
+        return textUnsoldTickets;
+    }
+
+    public void setTextUnsoldTickets(JTextField textUnsoldTickets) {
+        this.textUnsoldTickets = textUnsoldTickets;
+    }
+
+    public JTextField getTextUnsoldValue() {
+        return textUnsoldValue;
+    }
+
+    public void setTextUnsoldValue(JTextField textUnsoldValue) {
+        this.textUnsoldValue = textUnsoldValue;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDelete;
@@ -1306,13 +1918,13 @@ public class TicketsEditor extends javax.swing.JFrame {
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JCheckBox cbInplay;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

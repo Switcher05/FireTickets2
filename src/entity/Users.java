@@ -63,6 +63,11 @@ public class Users  implements java.io.Serializable {
         this.tillTapes = tillTapes;
     }
 
+    @Override
+    public String toString() {
+        return "Users{" + "userId=" + userId + ", name=" + name + ", password=" + password + ", level=" + level + ", tillTapes=" + tillTapes + '}';
+    }
+
 
 
 

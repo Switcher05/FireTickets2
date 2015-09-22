@@ -1,6 +1,9 @@
 package entity;
 // Generated Sep 8, 2015 7:01:42 PM by Hibernate Tools 4.3.1
 
+import java.util.Objects;
+
+
 
 
 /**
@@ -33,6 +36,36 @@ public class TicketsId  implements java.io.Serializable {
     
     public void setGameTemplatesPartNum(String gameTemplatesPartNum) {
         this.gameTemplatesPartNum = gameTemplatesPartNum;
+    }
+
+    @Override
+    public String toString() {
+        return "TicketsId{" + "serial=" + serial + ", gameTemplatesPartNum=" + gameTemplatesPartNum + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + Objects.hashCode(this.serial);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TicketsId other = (TicketsId) obj;
+        if (!Objects.equals(this.serial, other.serial)) {
+            return false;
+        }
+        if (!Objects.equals(this.gameTemplatesPartNum, other.gameTemplatesPartNum)) {
+            return false;
+        }
+        return true;
     }
 
 

@@ -53,6 +53,40 @@ public class TillTapeId  implements java.io.Serializable {
         this.locationsLocId = locationsLocId;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 59 * hash + this.TId;
+        hash = 59 * hash + this.usersUserId;
+        hash = 59 * hash + this.customersCustId;
+        hash = 59 * hash + this.locationsLocId;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TillTapeId other = (TillTapeId) obj;
+        if (this.TId != other.TId) {
+            return false;
+        }
+        if (this.usersUserId != other.usersUserId) {
+            return false;
+        }
+        if (this.customersCustId != other.customersCustId) {
+            return false;
+        }
+        if (this.locationsLocId != other.locationsLocId) {
+            return false;
+        }
+        return true;
+    }
+
 
 
 

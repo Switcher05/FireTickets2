@@ -3,6 +3,7 @@ package entity;
 
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -52,6 +53,45 @@ public class MfgId  implements java.io.Serializable {
     
     public void setGameTemplateses(Set gameTemplateses) {
         this.gameTemplateses = gameTemplateses;
+    }
+
+    @Override
+    public String toString() {
+        return "MfgId{" + "mfgId=" + mfgId + ", name=" + name + ", mfgAbr=" + mfgAbr + ", gameTemplateses=" + gameTemplateses + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.mfgId);
+        hash = 59 * hash + Objects.hashCode(this.name);
+        hash = 59 * hash + Objects.hashCode(this.mfgAbr);
+        hash = 59 * hash + Objects.hashCode(this.gameTemplateses);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MfgId other = (MfgId) obj;
+        if (!Objects.equals(this.mfgId, other.mfgId)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.mfgAbr, other.mfgAbr)) {
+            return false;
+        }
+        if (!Objects.equals(this.gameTemplateses, other.gameTemplateses)) {
+            return false;
+        }
+        return true;
     }
 
 
