@@ -401,6 +401,11 @@ public class GameTemplates  implements java.io.Serializable {
         this.prizeAll15 = prizeAll15;
     }
 
+    @Override
+    public String toString() {
+        return "GameTemplates{" + "id=" + id + ", distsId=" + distsId + ", mfgId=" + mfgId + ", gameName=" + gameName + ", gameCost=" + gameCost + ", ticketCost=" + ticketCost + ", numTickets=" + numTickets + ", ideaGross=" + ideaGross + ", ideaPrizes=" + ideaPrizes + ", ideaNet=" + ideaNet + ", lastSale=" + lastSale + ", lastSaleAllow=" + lastSaleAllow + ", prizeAmt1=" + prizeAmt1 + ", prizeAmt2=" + prizeAmt2 + ", prizeAmt3=" + prizeAmt3 + ", prizeAmt4=" + prizeAmt4 + ", prizeAmt5=" + prizeAmt5 + ", prizeAmt6=" + prizeAmt6 + ", prizeAmt7=" + prizeAmt7 + ", prizeAmt8=" + prizeAmt8 + ", prizeAmt9=" + prizeAmt9 + ", prizeAmt10=" + prizeAmt10 + ", prizeAmt11=" + prizeAmt11 + ", prizeAmt12=" + prizeAmt12 + ", prizeAmt13=" + prizeAmt13 + ", prizeAmt14=" + prizeAmt14 + ", prizeAmt15=" + prizeAmt15 + ", prizeAll1=" + prizeAll1 + ", prizeAll2=" + prizeAll2 + ", prizeAll3=" + prizeAll3 + ", prizeAll4=" + prizeAll4 + ", prizeAll5=" + prizeAll5 + ", prizeAll6=" + prizeAll6 + ", prizeAll7=" + prizeAll7 + ", prizeAll8=" + prizeAll8 + ", prizeAll9=" + prizeAll9 + ", prizeAll10=" + prizeAll10 + ", prizeAll11=" + prizeAll11 + ", prizeAll12=" + prizeAll12 + ", prizeAll13=" + prizeAll13 + ", prizeAll14=" + prizeAll14 + ", prizeAll15=" + prizeAll15 + '}';
+    }
+
 
 
 

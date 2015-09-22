@@ -44,6 +44,11 @@ public class GameTemplatesId  implements java.io.Serializable {
         this.mfgIdMfgId = mfgIdMfgId;
     }
 
+    @Override
+    public String toString() {
+        return "GameTemplatesId{" + "partNum=" + partNum + ", distsIdDistId=" + distsIdDistId + ", mfgIdMfgId=" + mfgIdMfgId + '}';
+    }
+
 
 
 

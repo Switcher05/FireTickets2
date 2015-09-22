@@ -90,6 +90,11 @@ public class DistsId  implements java.io.Serializable {
         this.gameTemplateses = gameTemplateses;
     }
 
+    @Override
+    public String toString() {
+        return "DistsId{" + "distId=" + distId + ", distAbbr=" + distAbbr + ", name=" + name + ", address=" + address + ", city=" + city + ", state=" + state + ", licenseNum=" + licenseNum + ", gameTemplateses=" + gameTemplateses + '}';
+    }
+
 
 
 
