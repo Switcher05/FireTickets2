@@ -775,4 +775,248 @@ public class Game {
         this.gameTemplatesPartNum = gameTemplatesPartNum;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Game game = (Game) o;
+
+        if (distsIdDistId != game.distsIdDistId) return false;
+        if (mfgIdMfgId != game.mfgIdMfgId) return false;
+        if (partNum != null ? !partNum.equals(game.partNum) : game.partNum != null) return false;
+        if (distsId != null ? !distsId.equals(game.distsId) : game.distsId != null) return false;
+        if (mfgId != null ? !mfgId.equals(game.mfgId) : game.mfgId != null) return false;
+        if (gameName != null ? !gameName.equals(game.gameName) : game.gameName != null) return false;
+        if (gameCost != null ? !gameCost.equals(game.gameCost) : game.gameCost != null) return false;
+        if (ticketCost != null ? !ticketCost.equals(game.ticketCost) : game.ticketCost != null) return false;
+        if (numTickets != null ? !numTickets.equals(game.numTickets) : game.numTickets != null) return false;
+        if (ideaGross != null ? !ideaGross.equals(game.ideaGross) : game.ideaGross != null) return false;
+        if (ideaPrizes != null ? !ideaPrizes.equals(game.ideaPrizes) : game.ideaPrizes != null) return false;
+        if (ideaNet != null ? !ideaNet.equals(game.ideaNet) : game.ideaNet != null) return false;
+        if (lastSale != null ? !lastSale.equals(game.lastSale) : game.lastSale != null) return false;
+        if (lastSaleAllow != null ? !lastSaleAllow.equals(game.lastSaleAllow) : game.lastSaleAllow != null)
+            return false;
+        if (prizeAmt1 != null ? !prizeAmt1.equals(game.prizeAmt1) : game.prizeAmt1 != null) return false;
+        if (prizeAmt2 != null ? !prizeAmt2.equals(game.prizeAmt2) : game.prizeAmt2 != null) return false;
+        if (prizeAmt3 != null ? !prizeAmt3.equals(game.prizeAmt3) : game.prizeAmt3 != null) return false;
+        if (prizeAmt4 != null ? !prizeAmt4.equals(game.prizeAmt4) : game.prizeAmt4 != null) return false;
+        if (prizeAmt5 != null ? !prizeAmt5.equals(game.prizeAmt5) : game.prizeAmt5 != null) return false;
+        if (prizeAmt6 != null ? !prizeAmt6.equals(game.prizeAmt6) : game.prizeAmt6 != null) return false;
+        if (prizeAmt7 != null ? !prizeAmt7.equals(game.prizeAmt7) : game.prizeAmt7 != null) return false;
+        if (prizeAmt8 != null ? !prizeAmt8.equals(game.prizeAmt8) : game.prizeAmt8 != null) return false;
+        if (prizeAmt9 != null ? !prizeAmt9.equals(game.prizeAmt9) : game.prizeAmt9 != null) return false;
+        if (prizeAmt10 != null ? !prizeAmt10.equals(game.prizeAmt10) : game.prizeAmt10 != null) return false;
+        if (prizeAmt11 != null ? !prizeAmt11.equals(game.prizeAmt11) : game.prizeAmt11 != null) return false;
+        if (prizeAmt12 != null ? !prizeAmt12.equals(game.prizeAmt12) : game.prizeAmt12 != null) return false;
+        if (prizeAmt13 != null ? !prizeAmt13.equals(game.prizeAmt13) : game.prizeAmt13 != null) return false;
+        if (prizeAmt14 != null ? !prizeAmt14.equals(game.prizeAmt14) : game.prizeAmt14 != null) return false;
+        if (prizeAmt15 != null ? !prizeAmt15.equals(game.prizeAmt15) : game.prizeAmt15 != null) return false;
+        if (prizeAll1 != null ? !prizeAll1.equals(game.prizeAll1) : game.prizeAll1 != null) return false;
+        if (prizeAll2 != null ? !prizeAll2.equals(game.prizeAll2) : game.prizeAll2 != null) return false;
+        if (prizeAll3 != null ? !prizeAll3.equals(game.prizeAll3) : game.prizeAll3 != null) return false;
+        if (prizeAll4 != null ? !prizeAll4.equals(game.prizeAll4) : game.prizeAll4 != null) return false;
+        if (prizeAll5 != null ? !prizeAll5.equals(game.prizeAll5) : game.prizeAll5 != null) return false;
+        if (prizeAll6 != null ? !prizeAll6.equals(game.prizeAll6) : game.prizeAll6 != null) return false;
+        if (prizeAll7 != null ? !prizeAll7.equals(game.prizeAll7) : game.prizeAll7 != null) return false;
+        if (prizeAll8 != null ? !prizeAll8.equals(game.prizeAll8) : game.prizeAll8 != null) return false;
+        if (prizeAll9 != null ? !prizeAll9.equals(game.prizeAll9) : game.prizeAll9 != null) return false;
+        if (prizeAll10 != null ? !prizeAll10.equals(game.prizeAll10) : game.prizeAll10 != null) return false;
+        if (prizeAll11 != null ? !prizeAll11.equals(game.prizeAll11) : game.prizeAll11 != null) return false;
+        if (prizeAll12 != null ? !prizeAll12.equals(game.prizeAll12) : game.prizeAll12 != null) return false;
+        if (prizeAll13 != null ? !prizeAll13.equals(game.prizeAll13) : game.prizeAll13 != null) return false;
+        if (prizeAll14 != null ? !prizeAll14.equals(game.prizeAll14) : game.prizeAll14 != null) return false;
+        if (prizeAll15 != null ? !prizeAll15.equals(game.prizeAll15) : game.prizeAll15 != null) return false;
+        if (datePlaced != null ? !datePlaced.equals(game.datePlaced) : game.datePlaced != null) return false;
+        if (dateRemoved != null ? !dateRemoved.equals(game.dateRemoved) : game.dateRemoved != null) return false;
+        if (unsoldAmt != null ? !unsoldAmt.equals(game.unsoldAmt) : game.unsoldAmt != null) return false;
+        if (actualGross != null ? !actualGross.equals(game.actualGross) : game.actualGross != null) return false;
+        if (actualPrizes != null ? !actualPrizes.equals(game.actualPrizes) : game.actualPrizes != null) return false;
+        if (actualNet != null ? !actualNet.equals(game.actualNet) : game.actualNet != null) return false;
+        if (bin != null ? !bin.equals(game.bin) : game.bin != null) return false;
+        if (inplay != null ? !inplay.equals(game.inplay) : game.inplay != null) return false;
+        if (closed != null ? !closed.equals(game.closed) : game.closed != null) return false;
+        if (unsoldTickets != null ? !unsoldTickets.equals(game.unsoldTickets) : game.unsoldTickets != null)
+            return false;
+        if (lastSaleRem != null ? !lastSaleRem.equals(game.lastSaleRem) : game.lastSaleRem != null) return false;
+        if (prizeRem1 != null ? !prizeRem1.equals(game.prizeRem1) : game.prizeRem1 != null) return false;
+        if (prizeRem2 != null ? !prizeRem2.equals(game.prizeRem2) : game.prizeRem2 != null) return false;
+        if (prizeRem3 != null ? !prizeRem3.equals(game.prizeRem3) : game.prizeRem3 != null) return false;
+        if (prizeRem4 != null ? !prizeRem4.equals(game.prizeRem4) : game.prizeRem4 != null) return false;
+        if (prizeRem5 != null ? !prizeRem5.equals(game.prizeRem5) : game.prizeRem5 != null) return false;
+        if (prizeRem6 != null ? !prizeRem6.equals(game.prizeRem6) : game.prizeRem6 != null) return false;
+        if (prizeRem7 != null ? !prizeRem7.equals(game.prizeRem7) : game.prizeRem7 != null) return false;
+        if (prizeRem8 != null ? !prizeRem8.equals(game.prizeRem8) : game.prizeRem8 != null) return false;
+        if (prizeRem9 != null ? !prizeRem9.equals(game.prizeRem9) : game.prizeRem9 != null) return false;
+        if (prizeRem10 != null ? !prizeRem10.equals(game.prizeRem10) : game.prizeRem10 != null) return false;
+        if (prizeRem11 != null ? !prizeRem11.equals(game.prizeRem11) : game.prizeRem11 != null) return false;
+        if (prizeRem12 != null ? !prizeRem12.equals(game.prizeRem12) : game.prizeRem12 != null) return false;
+        if (prizeRem13 != null ? !prizeRem13.equals(game.prizeRem13) : game.prizeRem13 != null) return false;
+        if (prizeRem14 != null ? !prizeRem14.equals(game.prizeRem14) : game.prizeRem14 != null) return false;
+        if (prizeRem15 != null ? !prizeRem15.equals(game.prizeRem15) : game.prizeRem15 != null) return false;
+        if (datePurch != null ? !datePurch.equals(game.datePurch) : game.datePurch != null) return false;
+        if (invoiceNum != null ? !invoiceNum.equals(game.invoiceNum) : game.invoiceNum != null) return false;
+        if (serial != null ? !serial.equals(game.serial) : game.serial != null) return false;
+        return !(gameTemplatesPartNum != null ? !gameTemplatesPartNum.equals(game.gameTemplatesPartNum) : game.gameTemplatesPartNum != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = partNum != null ? partNum.hashCode() : 0;
+        result = 31 * result + distsIdDistId;
+        result = 31 * result + mfgIdMfgId;
+        result = 31 * result + (distsId != null ? distsId.hashCode() : 0);
+        result = 31 * result + (mfgId != null ? mfgId.hashCode() : 0);
+        result = 31 * result + (gameName != null ? gameName.hashCode() : 0);
+        result = 31 * result + (gameCost != null ? gameCost.hashCode() : 0);
+        result = 31 * result + (ticketCost != null ? ticketCost.hashCode() : 0);
+        result = 31 * result + (numTickets != null ? numTickets.hashCode() : 0);
+        result = 31 * result + (ideaGross != null ? ideaGross.hashCode() : 0);
+        result = 31 * result + (ideaPrizes != null ? ideaPrizes.hashCode() : 0);
+        result = 31 * result + (ideaNet != null ? ideaNet.hashCode() : 0);
+        result = 31 * result + (lastSale != null ? lastSale.hashCode() : 0);
+        result = 31 * result + (lastSaleAllow != null ? lastSaleAllow.hashCode() : 0);
+        result = 31 * result + (prizeAmt1 != null ? prizeAmt1.hashCode() : 0);
+        result = 31 * result + (prizeAmt2 != null ? prizeAmt2.hashCode() : 0);
+        result = 31 * result + (prizeAmt3 != null ? prizeAmt3.hashCode() : 0);
+        result = 31 * result + (prizeAmt4 != null ? prizeAmt4.hashCode() : 0);
+        result = 31 * result + (prizeAmt5 != null ? prizeAmt5.hashCode() : 0);
+        result = 31 * result + (prizeAmt6 != null ? prizeAmt6.hashCode() : 0);
+        result = 31 * result + (prizeAmt7 != null ? prizeAmt7.hashCode() : 0);
+        result = 31 * result + (prizeAmt8 != null ? prizeAmt8.hashCode() : 0);
+        result = 31 * result + (prizeAmt9 != null ? prizeAmt9.hashCode() : 0);
+        result = 31 * result + (prizeAmt10 != null ? prizeAmt10.hashCode() : 0);
+        result = 31 * result + (prizeAmt11 != null ? prizeAmt11.hashCode() : 0);
+        result = 31 * result + (prizeAmt12 != null ? prizeAmt12.hashCode() : 0);
+        result = 31 * result + (prizeAmt13 != null ? prizeAmt13.hashCode() : 0);
+        result = 31 * result + (prizeAmt14 != null ? prizeAmt14.hashCode() : 0);
+        result = 31 * result + (prizeAmt15 != null ? prizeAmt15.hashCode() : 0);
+        result = 31 * result + (prizeAll1 != null ? prizeAll1.hashCode() : 0);
+        result = 31 * result + (prizeAll2 != null ? prizeAll2.hashCode() : 0);
+        result = 31 * result + (prizeAll3 != null ? prizeAll3.hashCode() : 0);
+        result = 31 * result + (prizeAll4 != null ? prizeAll4.hashCode() : 0);
+        result = 31 * result + (prizeAll5 != null ? prizeAll5.hashCode() : 0);
+        result = 31 * result + (prizeAll6 != null ? prizeAll6.hashCode() : 0);
+        result = 31 * result + (prizeAll7 != null ? prizeAll7.hashCode() : 0);
+        result = 31 * result + (prizeAll8 != null ? prizeAll8.hashCode() : 0);
+        result = 31 * result + (prizeAll9 != null ? prizeAll9.hashCode() : 0);
+        result = 31 * result + (prizeAll10 != null ? prizeAll10.hashCode() : 0);
+        result = 31 * result + (prizeAll11 != null ? prizeAll11.hashCode() : 0);
+        result = 31 * result + (prizeAll12 != null ? prizeAll12.hashCode() : 0);
+        result = 31 * result + (prizeAll13 != null ? prizeAll13.hashCode() : 0);
+        result = 31 * result + (prizeAll14 != null ? prizeAll14.hashCode() : 0);
+        result = 31 * result + (prizeAll15 != null ? prizeAll15.hashCode() : 0);
+        result = 31 * result + (datePlaced != null ? datePlaced.hashCode() : 0);
+        result = 31 * result + (dateRemoved != null ? dateRemoved.hashCode() : 0);
+        result = 31 * result + (unsoldAmt != null ? unsoldAmt.hashCode() : 0);
+        result = 31 * result + (actualGross != null ? actualGross.hashCode() : 0);
+        result = 31 * result + (actualPrizes != null ? actualPrizes.hashCode() : 0);
+        result = 31 * result + (actualNet != null ? actualNet.hashCode() : 0);
+        result = 31 * result + (bin != null ? bin.hashCode() : 0);
+        result = 31 * result + (inplay != null ? inplay.hashCode() : 0);
+        result = 31 * result + (closed != null ? closed.hashCode() : 0);
+        result = 31 * result + (unsoldTickets != null ? unsoldTickets.hashCode() : 0);
+        result = 31 * result + (lastSaleRem != null ? lastSaleRem.hashCode() : 0);
+        result = 31 * result + (prizeRem1 != null ? prizeRem1.hashCode() : 0);
+        result = 31 * result + (prizeRem2 != null ? prizeRem2.hashCode() : 0);
+        result = 31 * result + (prizeRem3 != null ? prizeRem3.hashCode() : 0);
+        result = 31 * result + (prizeRem4 != null ? prizeRem4.hashCode() : 0);
+        result = 31 * result + (prizeRem5 != null ? prizeRem5.hashCode() : 0);
+        result = 31 * result + (prizeRem6 != null ? prizeRem6.hashCode() : 0);
+        result = 31 * result + (prizeRem7 != null ? prizeRem7.hashCode() : 0);
+        result = 31 * result + (prizeRem8 != null ? prizeRem8.hashCode() : 0);
+        result = 31 * result + (prizeRem9 != null ? prizeRem9.hashCode() : 0);
+        result = 31 * result + (prizeRem10 != null ? prizeRem10.hashCode() : 0);
+        result = 31 * result + (prizeRem11 != null ? prizeRem11.hashCode() : 0);
+        result = 31 * result + (prizeRem12 != null ? prizeRem12.hashCode() : 0);
+        result = 31 * result + (prizeRem13 != null ? prizeRem13.hashCode() : 0);
+        result = 31 * result + (prizeRem14 != null ? prizeRem14.hashCode() : 0);
+        result = 31 * result + (prizeRem15 != null ? prizeRem15.hashCode() : 0);
+        result = 31 * result + (datePurch != null ? datePurch.hashCode() : 0);
+        result = 31 * result + (invoiceNum != null ? invoiceNum.hashCode() : 0);
+        result = 31 * result + (serial != null ? serial.hashCode() : 0);
+        result = 31 * result + (gameTemplatesPartNum != null ? gameTemplatesPartNum.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "partNum='" + partNum + '\'' +
+                ", distsIdDistId=" + distsIdDistId +
+                ", mfgIdMfgId=" + mfgIdMfgId +
+                ", distsId=" + distsId +
+                ", mfgId=" + mfgId +
+                ", gameName='" + gameName + '\'' +
+                ", gameCost=" + gameCost +
+                ", ticketCost=" + ticketCost +
+                ", numTickets=" + numTickets +
+                ", ideaGross=" + ideaGross +
+                ", ideaPrizes=" + ideaPrizes +
+                ", ideaNet=" + ideaNet +
+                ", lastSale=" + lastSale +
+                ", lastSaleAllow=" + lastSaleAllow +
+                ", prizeAmt1=" + prizeAmt1 +
+                ", prizeAmt2=" + prizeAmt2 +
+                ", prizeAmt3=" + prizeAmt3 +
+                ", prizeAmt4=" + prizeAmt4 +
+                ", prizeAmt5=" + prizeAmt5 +
+                ", prizeAmt6=" + prizeAmt6 +
+                ", prizeAmt7=" + prizeAmt7 +
+                ", prizeAmt8=" + prizeAmt8 +
+                ", prizeAmt9=" + prizeAmt9 +
+                ", prizeAmt10=" + prizeAmt10 +
+                ", prizeAmt11=" + prizeAmt11 +
+                ", prizeAmt12=" + prizeAmt12 +
+                ", prizeAmt13=" + prizeAmt13 +
+                ", prizeAmt14=" + prizeAmt14 +
+                ", prizeAmt15=" + prizeAmt15 +
+                ", prizeAll1=" + prizeAll1 +
+                ", prizeAll2=" + prizeAll2 +
+                ", prizeAll3=" + prizeAll3 +
+                ", prizeAll4=" + prizeAll4 +
+                ", prizeAll5=" + prizeAll5 +
+                ", prizeAll6=" + prizeAll6 +
+                ", prizeAll7=" + prizeAll7 +
+                ", prizeAll8=" + prizeAll8 +
+                ", prizeAll9=" + prizeAll9 +
+                ", prizeAll10=" + prizeAll10 +
+                ", prizeAll11=" + prizeAll11 +
+                ", prizeAll12=" + prizeAll12 +
+                ", prizeAll13=" + prizeAll13 +
+                ", prizeAll14=" + prizeAll14 +
+                ", prizeAll15=" + prizeAll15 +
+                ", datePlaced=" + datePlaced +
+                ", dateRemoved=" + dateRemoved +
+                ", unsoldAmt=" + unsoldAmt +
+                ", actualGross=" + actualGross +
+                ", actualPrizes=" + actualPrizes +
+                ", actualNet=" + actualNet +
+                ", bin=" + bin +
+                ", inplay=" + inplay +
+                ", closed=" + closed +
+                ", unsoldTickets=" + unsoldTickets +
+                ", lastSaleRem=" + lastSaleRem +
+                ", prizeRem1=" + prizeRem1 +
+                ", prizeRem2=" + prizeRem2 +
+                ", prizeRem3=" + prizeRem3 +
+                ", prizeRem4=" + prizeRem4 +
+                ", prizeRem5=" + prizeRem5 +
+                ", prizeRem6=" + prizeRem6 +
+                ", prizeRem7=" + prizeRem7 +
+                ", prizeRem8=" + prizeRem8 +
+                ", prizeRem9=" + prizeRem9 +
+                ", prizeRem10=" + prizeRem10 +
+                ", prizeRem11=" + prizeRem11 +
+                ", prizeRem12=" + prizeRem12 +
+                ", prizeRem13=" + prizeRem13 +
+                ", prizeRem14=" + prizeRem14 +
+                ", prizeRem15=" + prizeRem15 +
+                ", datePurch=" + datePurch +
+                ", invoiceNum='" + invoiceNum + '\'' +
+                ", serial='" + serial + '\'' +
+                ", gameTemplatesPartNum='" + gameTemplatesPartNum + '\'' +
+                '}';
+    }
 }

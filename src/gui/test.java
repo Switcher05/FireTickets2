@@ -23,9 +23,7 @@
  */
 package gui;
 
-import dao.CustomerDAO;
-import dao.GameTemplateDAO;
-import dao.SaleSessDAO;
+import dao.*;
 import db.DBUtil;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -33,10 +31,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import dao.UserDAO;
+
 import db.HibernateUtil;
 import entity.Customers;
 import entity.GameTemplates;
+import entity.Tickets;
 import entity.SaleSessions;
 import entity.Users;
 import java.util.List;
@@ -74,6 +73,10 @@ public class test {
             getAll(gt);
             gt = (GameTemplates)gts.get(20);
             getAll(gt);
+        Tickets tk = new Tickets();
+        TicketDAO tkdao = new TicketDAO();
+        tk = tkdao.getTById("7536933");
+        System.out.println(tk.getActualGross());
 
 //           System.out.println("total" + gt.toString());
 //        SaleSessDAO saleDAO = new SaleSessDAO();

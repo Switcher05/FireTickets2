@@ -8,6 +8,10 @@ import org.hibernate.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 
 /**
  * Created by Switcher on 9/21/2015.
@@ -15,6 +19,7 @@ import java.util.List;
 public class GameTemplateDAO {
     Transaction trns = null;
     Session session;
+    private static final Logger LOG = Logger.getLogger(GameTemplateDAO.class.getName());
 
     public void addGameTemplat(GameTemplates gt){
 
@@ -89,7 +94,12 @@ public class GameTemplateDAO {
 
             gt = (GameTemplates) q.uniqueResult();
         }catch (RuntimeException e){
-            e.printStackTrace();
+            
+            if(trns!= null){
+                 e.printStackTrace();
+                 JOptionPane.showMessageDialog(null, "No Game Template found - " + gtid);
+                 trns.rollback();
+            }
         } finally {
             releaseResources();
         }
