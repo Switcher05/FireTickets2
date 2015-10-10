@@ -1,11 +1,18 @@
 
+import dao.GameDAO;
+import dao.GameTemplateDAO;
+import dao.TicketDAO;
+import dao.TillTapeDAO;
 import db.DBUtil;
 import db.HibernateUtil;
 import entity.Game;
 import entity.GameTemplates;
 import entity.Tickets;
+import entity.TillTape;
+import dao.Transaction;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
@@ -13,6 +20,7 @@ import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -31,58 +39,78 @@ import Tickets.TicketEditor.TicketsEditor;
  */
 
 public class SellingMain extends javax.swing.JFrame  {
-    private String LOAD_BUTTON = "from GameTemplates gt, Tickets t where gt.id.partNum = t.id.gameTemplatesPartNum and t.bin < 1 and t.inplay=1";
-    private List<Game> tlist;
-    private ResultSet rs;
+    public int invoice;
     private int bin;
-    private Query q;
-    private Session session;
+    private double total = 0;
+    private int subtotal = 0;
     public SellingMain() {
         //get logged in user
         initComponents();
         
         
-//        try {
-//            DBUtil dbu = new DBUtil();
-//            dbu.connect();
-//            String[] select2 = null;
-//            select2[1] = "2";
-//            String select = "SELECT serial from tickets where bin = ?";
-//            dbu.executeWithPreparedStatement(select,select2[1]);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(SellingMain.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(SellingMain.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         
-        //loadbuttons
-//        getSession();
-//        tlist = executeHQLQuery(LOAD_BUTTON);
-//        loadButtons();
-//    }
-//    private Session getSession(){
-//        try{
-//            session = HibernateUtil.getSessionFactory().openSession();
-//            session.beginTransaction();
-//            
-//        }catch (HibernateException he) {
-//            he.printStackTrace();
-//        }
-//        return session;
-//    }
-//    private List executeHQLQuery(String hql) {
-//        List resultList = null;
-//             Query q = session.createQuery(hql);
-//             resultList = q.list();
-//             session.getTransaction().commit();
-//
-//        return resultList;
+        //Load list of games in play in bins 1 to 30
+        Tickets tk = new Tickets();
+        TicketDAO tkDAO = new TicketDAO();
+        GameTemplates gt = new GameTemplates();
+        GameTemplateDAO gtDAO = new GameTemplateDAO();
+        List<Tickets> tkList = tkDAO.get30Tickets();
+        
+        String[] bins;
+        bins = new String[31];
+        String[] names;
+        names = new String[31];
+        String[] partNum;
+        partNum = new String[31];
+        for(int i=0; i < tkList.size(); i++){
+            tk = tkList.get(i);
+            int binNum = tk.getBin();
+            bins[binNum] = tk.getId().getSerial();
+            partNum[binNum] = tk.getId().getGameTemplatesPartNum();
+            gt = gtDAO.getGTById(partNum[binNum]);
+            names[binNum] = gt.getGameName();
+            System.out.println("Bin num: " + binNum + " Serial: " + bins[binNum]);
+        }
+        togbtn1.setText(formatString(names[1], bins[1]));
+        togbtn2.setText(formatString(names[2], bins[2]));
+        togbtn3.setText(formatString(names[3], bins[3]));
+        togbtn4.setText(formatString(names[4], bins[4]));
+        togbtn5.setText(formatString(names[5], bins[5]));
+        togbtn6.setText(formatString(names[6], bins[6]));
+        togbtn7.setText(formatString(names[7], bins[7]));
+        togbtn8.setText(formatString(names[8], bins[8]));
+        togbtn9.setText(formatString(names[9], bins[9]));
+        togbtn10.setText(formatString(names[10], bins[10]));
+        togbtn11.setText(formatString(names[11], bins[11]));
+        togbtn12.setText(formatString(names[12], bins[12]));
+        togbtn13.setText(formatString(names[13], bins[13]));
+        togbtn14.setText(formatString(names[14], bins[14]));
+        togbtn15.setText(formatString(names[15], bins[15]));
+        togbtn16.setText(formatString(names[16], bins[16]));
+        togbtn17.setText(formatString(names[17], bins[17]));
+        togbtn18.setText(formatString(names[18], bins[18]));
+        togbtn19.setText(formatString(names[19], bins[19]));
+        togbtn20.setText(formatString(names[20], bins[20]));
+        togbtn21.setText(formatString(names[21], bins[21]));
+        togbtn22.setText(formatString(names[22], bins[22]));
+        togbtn23.setText(formatString(names[23], bins[23]));
+        togbtn24.setText(formatString(names[24], bins[24]));
+        togbtn25.setText(formatString(names[25], bins[25]));
+        togbtn26.setText(formatString(names[26], bins[26]));
+        togbtn27.setText(formatString(names[27], bins[27]));
+        togbtn28.setText(formatString(names[28], bins[28]));
+        togbtn29.setText(formatString(names[29], bins[29]));
+        togbtn30.setText(formatString(names[30], bins[30]));
+
    }
-private void loadButtons(){
-   // DBUtil.connect();
-    
-    
-}
+    private String formatString(String name, String serial){
+//        if(serial.isEmpty()&& name.isEmpty()){
+//            serial = "";
+//            name = "";
+//        }
+        String label = "<html>" + name + "<br>" + serial + "</html>";
+        return label;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -249,7 +277,6 @@ private void loadButtons(){
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Games:"));
 
-        togbtn1.setBackground(new java.awt.Color(255, 255, 255));
         togbtn1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 togbtn1ActionPerformed(evt);
@@ -825,7 +852,6 @@ private void loadButtons(){
         });
 
         negativebtn.setText("Negative");
-        negativebtn.setEnabled(false);
         negativebtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 negativebtnActionPerformed(evt);
@@ -1258,6 +1284,42 @@ private void loadButtons(){
     }//GEN-LAST:event_btnHundredActionPerformed
 
     private void btnSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaleActionPerformed
+        //TODO: get button selected, get number sold
+        bin = getButton();
+        String subText = textDisplay.getText();
+        subtotal = Integer.valueOf(subText);
+        //needs to be sale * the cost of the tickets
+        total = total + subtotal;
+        
+        //Get the invoice number
+        Transaction trns = new Transaction();
+        invoice = trns.getInvoice();
+        System.out.println("Invoice: " + invoice);
+        
+        
+        //Set till tape to record sales / prizes
+        //Update tickets with sales
+        Tickets tk = new Tickets();
+        TicketDAO tkDAO = new TicketDAO();
+        //Get ticket by bin
+        tk = tkDAO.getTByBin(bin);
+       
+        TillTape tt = new TillTape();
+        TillTapeDAO ttDAO = new TillTapeDAO();
+        
+        tt.setSerial(tk.getId().getSerial());
+        tt.setId(null);
+        tt.setName(tk.getId().getGameTemplatesPartNum());
+        tt.setSaleAmount(subtotal);
+        tt.setPrizeAmount(0);
+        tt.setUsers(null);
+        tt.setCustomers(null);
+        tt.setLocations(null);
+        tt.setInvoice(invoice);
+        tt.setVoid_(null);
+        ttDAO.addTrans(tt);
+        
+        
         
     }//GEN-LAST:event_btnSaleActionPerformed
 
@@ -1299,7 +1361,7 @@ private void loadButtons(){
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-
+        textDisplay.setText(null);
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnEditTickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditTickActionPerformed
@@ -1408,7 +1470,10 @@ private void loadButtons(){
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void negativebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_negativebtnActionPerformed
-
+        
+        String subText = textDisplay.getText();
+        String newText = "-"+ subText;
+        textDisplay.setText(newText);
     }//GEN-LAST:event_negativebtnActionPerformed
 
     private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed

@@ -24,6 +24,8 @@
 package gui;
 
 import dao.*;
+import dao.Transaction;
+import entity.*;
 import db.DBUtil;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -38,6 +40,8 @@ import entity.GameTemplates;
 import entity.Tickets;
 import entity.SaleSessions;
 import entity.Users;
+
+import javax.transaction.*;
 import java.util.List;
 
 /**
@@ -46,24 +50,59 @@ import java.util.List;
  */
 public class test {
     public static void main(String args[]){
-/*        CustomerDAO custDAO = new CustomerDAO();
-        Customers cust = new Customers();
-        cust.setFname("Josh");
-        cust.setLname("Duley");
-        cust.setAddress("133 Stone Road");
-        cust.setState("OH");
-        cust.setCity("Belpre");
-        cust.setTotalPrizes(0);
-        cust.setPhone("7404237234");
-        cust.setTotalSales(0);
-        custDAO.addCustomer(cust);
+        Transaction trn = new Transaction();
+       // trn.Sale(trn.getTicket("7536933"), 10, 10);
+        //trn.Prize(trn.getTicket("7536933"),);
+        int invoice = trn.getInvoice();
+        System.out.println("Invoice: " + invoice);
         
-        custDAO.deleteCust(2);
-        cust.setAddress("704 washington blvd");
-        cust.setCustId(4);
-        custDAO.updateCustomer(cust);
-        custDAO.getAllCustomers().forEach(System.out::println);*/
-
+        TillTape tt = new TillTape();
+        TillTapeId ttid = new TillTapeId();
+        TillTapeDAO ttDAO = new TillTapeDAO();
+        Users usr = new Users();
+        Customers cust = new Customers();
+        Locations loc = new Locations();
+        Tickets tk = new Tickets();
+        TicketDAO tkDAO = new TicketDAO();
+        //Get ticket by bin
+        tk = tkDAO.getTByBin(1);
+       
+        cust.setFname("Ryan");
+        cust.setCardNum(20122);
+        
+        tt.setSerial(tk.getId().getSerial());
+        //tt.setId(ttid.setCustomersCustId(null));
+        tt.setName(tk.getId().getGameTemplatesPartNum());
+        tt.setSaleAmount(100);
+        tt.setPrizeAmount(0);
+        tt.setUsers(usr);
+        tt.setCustomers(cust);
+        tt.setLocations(loc);
+        tt.setInvoice(invoice);
+        tt.setVoid_(null);
+        ttDAO.addTrans(tt);
+//        SaleSessDAO ssDAO = new SaleSessDAO();
+//        SaleSessions ss = new SaleSessions();
+//        //ssDAO.updateCurrent(68, "10");
+//
+//        CustomerDAO custDAO = new CustomerDAO();
+//        Customers cust = new Customers();
+//        cust.setFname("Josh");
+//        cust.setLname("Duley");
+//        cust.setAddress("133 Stone Road");
+//        cust.setState("OH");
+//        cust.setCity("Belpre");
+//        cust.setTotalPrizes(0);
+//        cust.setPhone("7404237234");
+//        cust.setTotalSales(0);
+//        custDAO.addCustomer(cust);
+//        
+//        custDAO.deleteCust(2);
+//        cust.setAddress("704 washington blvd");
+//        cust.setCustId(4);
+//        custDAO.updateCustomer(cust);
+//        custDAO.getAllCustomers().forEach(System.out::println);
+/*
         GameTemplateDAO gtDAO = new GameTemplateDAO();
         GameTemplates gt = new GameTemplates();
 //        gt = gtDAO.getGTById("AI0026");
@@ -102,5 +141,7 @@ public class test {
     }
         private static void getAll(GameTemplates gameTemplates){
                 System.out.println("GameNAme:" + gameTemplates.getGameName());
+                */
         }
+
 }

@@ -49,13 +49,25 @@ public class SaleSessDAO {
             session.flush();
         }
     }
-    public void updateCurrent(Integer SessionID, String sale){
+    public void updateCurrent(Integer SessionID, int sale, int prize){
         session = HibernateUtil.getSessionFactory().openSession();
         try{
             trns = session.beginTransaction();
             SaleSessions saleses = (SaleSessions)session.get(SaleSessions.class, SessionID);
-            saleses.setStartBank(sale);
-            
+            double grossSales, grossPrizes, grossNet, currentBank;
+            grossSales = saleses.getGrossSales();
+            grossPrizes = saleses.getGrossPrizes();
+            grossNet = saleses.getGrossNet();
+            currentBank = saleses.getCurrentbank();
+            grossSales = grossSales + sale;
+            grossPrizes = grossPrizes + prize;
+            grossNet = grossSales - grossPrizes;
+            currentBank = currentBank + sale - prize;
+            saleses.setCurrentbank(currentBank);
+            saleses.setGrossSales(grossSales);
+            saleses.setGrossPrizes(grossPrizes);
+            saleses.setGrossNet(grossNet);
+
             session.update(saleses);
             session.getTransaction().commit();
         } catch (RuntimeException e){

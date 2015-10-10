@@ -78,6 +78,20 @@ public class TicketDAO {
         }
         return ts;
     }
+    public List<Tickets> get30Tickets(){
+        List<Tickets> ts = new ArrayList<Tickets>();
+        session = HibernateUtil.getSessionFactory().openSession();
+        try{
+            trns = session.beginTransaction();
+            ts = session.createQuery("from Tickets where inplay = 1 and bin < 30 ORDER BY bin ASC").list();
+
+        } catch (RuntimeException e){
+            e.printStackTrace();
+        } finally {
+            releaseResources();
+        }
+        return ts;
+    }
     public Tickets getTById(String serial){
         Tickets gt = null;
         session = HibernateUtil.getSessionFactory().openSession();
@@ -94,6 +108,23 @@ public class TicketDAO {
             releaseResources();
         }
         return gt;
+    }
+    public Tickets getTByBin(int Bin){
+        Tickets tk = null;
+        session = HibernateUtil.getSessionFactory().openSession();
+        try{
+            trns = session.beginTransaction();
+            String queryString = "from Tickets tk where inplay = 1 and tk.bin = :bin";
+            Query q = session.createQuery(queryString);
+            q.setParameter("bin", Bin);
+
+            tk = (Tickets)q.uniqueResult();
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        } finally {
+            releaseResources();
+        }
+        return tk;
     }
     public void releaseResources(){
         session.flush();

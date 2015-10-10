@@ -83,6 +83,7 @@ public class GameTemplateDAO {
         }
         return gts;
     }
+    
     public GameTemplates getGTById(String gtid){
         GameTemplates gt = null;
         session = HibernateUtil.getSessionFactory().openSession();

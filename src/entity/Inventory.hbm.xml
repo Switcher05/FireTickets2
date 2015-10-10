@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 8, 2015 11:06:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.Inventory" table="inventory" catalog="fire_tickets" optimistic-lock="version">
+        <composite-id name="id" class="entity.InventoryId">
+            <key-property name="serial" type="string">
+                <column name="Serial" length="12" />
+            </key-property>
+            <key-property name="datePlaced" type="date">
+                <column name="Date_placed" length="10" />
+            </key-property>
+            <key-property name="dateRemoved" type="date">
+                <column name="Date_removed" length="10" />
+            </key-property>
+            <key-property name="unsoldAmt" type="java.lang.Integer">
+                <column name="Unsold_amt" />
+            </key-property>
+            <key-property name="actualGross" type="java.lang.Integer">
+                <column name="Actual_gross" />
+            </key-property>
+            <key-property name="actualPrizes" type="java.lang.Integer">
+                <column name="Actual_prizes" />
+            </key-property>
+            <key-property name="actualNet" type="java.lang.Integer">
+                <column name="Actual_net" />
+            </key-property>
+            <key-property name="bin" type="java.lang.Integer">
+                <column name="Bin" />
+            </key-property>
+            <key-property name="inplay" type="java.lang.Boolean">
+                <column name="Inplay" />
+            </key-property>
+            <key-property name="closed" type="java.lang.Integer">
+                <column name="Closed" />
+            </key-property>
+            <key-property name="unsoldTickets" type="java.lang.Integer">
+                <column name="Unsold_tickets" />
+            </key-property>
+            <key-property name="lastSaleRem" type="java.lang.Byte">
+                <column name="Last_sale_rem" />
+            </key-property>
+            <key-property name="prizeRem1" type="java.lang.Integer">
+                <column name="Prize_rem1" />
+            </key-property>
+            <key-property name="prizeRem2" type="java.lang.Integer">
+                <column name="Prize_rem2" />
+            </key-property>
+            <key-property name="prizeRem3" type="java.lang.Integer">
+                <column name="Prize_rem3" />
+            </key-property>
+            <key-property name="prizeRem4" type="java.lang.Integer">
+                <column name="Prize_rem4" />
+            </key-property>
+            <key-property name="prizeRem5" type="java.lang.Integer">
+                <column name="Prize_rem5" />
+            </key-property>
+            <key-property name="prizeRem6" type="java.lang.Integer">
+                <column name="Prize_rem6" />
+            </key-property>
+            <key-property name="prizeRem7" type="java.lang.Integer">
+                <column name="Prize_rem7" />
+            </key-property>
+            <key-property name="prizeRem8" type="java.lang.Integer">
+                <column name="Prize_rem8" />
+            </key-property>
+            <key-property name="prizeRem9" type="java.lang.Integer">
+                <column name="Prize_rem9" />
+            </key-property>
+            <key-property name="prizeRem10" type="java.lang.Integer">
+                <column name="Prize_rem10" />
+            </key-property>
+            <key-property name="prizeRem11" type="java.lang.Integer">
+                <column name="Prize_rem11" />
+            </key-property>
+            <key-property name="prizeRem12" type="java.lang.Integer">
+                <column name="Prize_rem12" />
+            </key-property>
+            <key-property name="prizeRem13" type="java.lang.Integer">
+                <column name="Prize_rem13" />
+            </key-property>
+            <key-property name="prizeRem14" type="java.lang.Integer">
+                <column name="Prize_rem14" />
+            </key-property>
+            <key-property name="prizeRem15" type="java.lang.Integer">
+                <column name="Prize_rem15" />
+            </key-property>
+            <key-property name="gameTemplatesPartNum" type="string">
+                <column name="game_templates_part_num" length="12" />
+            </key-property>
+            <key-property name="datePurch" type="date">
+                <column name="date_purch" length="10" />
+            </key-property>
+            <key-property name="invoiceNum" type="string">
+                <column name="invoice_num" length="10" />
+            </key-property>
+            <key-property name="partNum" type="string">
+                <column name="part_num" length="12" />
+            </key-property>
+            <key-property name="gameName" type="string">
+                <column name="game_name" length="20" />
+            </key-property>
+            <key-property name="gameCost" type="java.lang.Double">
+                <column name="game_cost" precision="22" scale="0" />
+            </key-property>
+            <key-property name="ticketCost" type="java.lang.Double">
+                <column name="ticket_cost" precision="22" scale="0" />
+            </key-property>
+            <key-property name="numTickets" type="java.lang.Integer">
+                <column name="num_tickets" />
+            </key-property>
+            <key-property name="ideaGross" type="java.lang.Integer">
+                <column name="idea_gross" />
+            </key-property>
+            <key-property name="ideaPrizes" type="java.lang.Integer">
+                <column name="idea_prizes" />
+            </key-property>
+            <key-property name="ideaNet" type="java.lang.Integer">
+                <column name="idea_net" />
+            </key-property>
+            <key-property name="distsIdDistId" type="int">
+                <column name="dists_id_dist_id" />
+            </key-property>
+            <key-property name="mfgIdMfgId" type="int">
+                <column name="mfg_id_mfg_id" />
+            </key-property>
+            <key-property name="lastSale" type="java.lang.Integer">
+                <column name="Last_sale" />
+            </key-property>
+            <key-property name="lastSaleAllow" type="java.lang.Integer">
+                <column name="Last_sale_allow" />
+            </key-property>
+            <key-property name="prizeAmt1" type="java.lang.Integer">
+                <column name="Prize_amt1" />
+            </key-property>
+            <key-property name="prizeAmt2" type="java.lang.Integer">
+                <column name="Prize_amt2" />
+            </key-property>
+            <key-property name="prizeAmt3" type="java.lang.Integer">
+                <column name="Prize_amt3" />
+            </key-property>
+            <key-property name="prizeAmt4" type="java.lang.Integer">
+                <column name="Prize_amt4" />
+            </key-property>
+            <key-property name="prizeAmt5" type="java.lang.Integer">
+                <column name="Prize_amt5" />
+            </key-property>
+            <key-property name="prizeAmt6" type="java.lang.Integer">
+                <column name="Prize_amt6" />
+            </key-property>
+            <key-property name="prizeAmt7" type="java.lang.Integer">
+                <column name="Prize_amt7" />
+            </key-property>
+            <key-property name="prizeAmt8" type="java.lang.Integer">
+                <column name="Prize_amt8" />
+            </key-property>
+            <key-property name="prizeAmt9" type="java.lang.Integer">
+                <column name="Prize_amt9" />
+            </key-property>
+            <key-property name="prizeAmt10" type="java.lang.Integer">
+                <column name="Prize_amt10" />
+            </key-property>
+            <key-property name="prizeAmt11" type="java.lang.Integer">
+                <column name="Prize_amt11" />
+            </key-property>
+            <key-property name="prizeAmt12" type="java.lang.Integer">
+                <column name="Prize_amt12" />
+            </key-property>
+            <key-property name="prizeAmt13" type="java.lang.Integer">
+                <column name="Prize_amt13" />
+            </key-property>
+            <key-property name="prizeAmt14" type="java.lang.Integer">
+                <column name="Prize_amt14" />
+            </key-property>
+            <key-property name="prizeAmt15" type="java.lang.Integer">
+                <column name="Prize_amt15" />
+            </key-property>
+            <key-property name="prizeAll1" type="java.lang.Integer">
+                <column name="Prize_all1" />
+            </key-property>
+            <key-property name="prizeAll2" type="java.lang.Integer">
+                <column name="Prize_all2" />
+            </key-property>
+            <key-property name="prizeAll3" type="java.lang.Integer">
+                <column name="Prize_all3" />
+            </key-property>
+            <key-property name="prizeAll4" type="java.lang.Integer">
+                <column name="Prize_all4" />
+            </key-property>
+            <key-property name="prizeAll5" type="java.lang.Integer">
+                <column name="Prize_all5" />
+            </key-property>
+            <key-property name="prizeAll6" type="java.lang.Integer">
+                <column name="Prize_all6" />
+            </key-property>
+            <key-property name="prizeAll7" type="java.lang.Integer">
+                <column name="Prize_all7" />
+            </key-property>
+            <key-property name="prizeAll8" type="java.lang.Integer">
+                <column name="Prize_all8" />
+            </key-property>
+            <key-property name="prizeAll9" type="java.lang.Integer">
+                <column name="Prize_all9" />
+            </key-property>
+            <key-property name="prizeAll10" type="java.lang.Integer">
+                <column name="Prize_all10" />
+            </key-property>
+            <key-property name="prizeAll11" type="java.lang.Integer">
+                <column name="Prize_all11" />
+            </key-property>
+            <key-property name="prizeAll12" type="java.lang.Integer">
+                <column name="Prize_all12" />
+            </key-property>
+            <key-property name="prizeAll13" type="java.lang.Integer">
+                <column name="Prize_all13" />
+            </key-property>
+            <key-property name="prizeAll14" type="java.lang.Integer">
+                <column name="Prize_all14" />
+            </key-property>
+            <key-property name="prizeAll15" type="java.lang.Integer">
+                <column name="Prize_all15" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>
