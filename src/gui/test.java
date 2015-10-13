@@ -40,6 +40,9 @@ import entity.GameTemplates;
 import entity.Tickets;
 import entity.SaleSessions;
 import entity.Users;
+import org.hibernate.Session;
+
+import java.util.HashSet;
 
 import javax.transaction.*;
 import java.util.List;
@@ -49,38 +52,67 @@ import java.util.List;
  * @author Switcher
  */
 public class test {
+
     public static void main(String args[]){
-        Transaction trn = new Transaction();
-       // trn.Sale(trn.getTicket("7536933"), 10, 10);
-        //trn.Prize(trn.getTicket("7536933"),);
-        int invoice = trn.getInvoice();
-        System.out.println("Invoice: " + invoice);
-        
-        TillTape tt = new TillTape();
-        TillTapeId ttid = new TillTapeId();
-        TillTapeDAO ttDAO = new TillTapeDAO();
+        int sale = 0;
+
+        sale = 90;
+        int prize = 0;
+        Transaction tx = new Transaction();
         Users usr = new Users();
         Customers cust = new Customers();
         Locations loc = new Locations();
-        Tickets tk = new Tickets();
-        TicketDAO tkDAO = new TicketDAO();
-        //Get ticket by bin
-        tk = tkDAO.getTByBin(1);
-       
-        cust.setFname("Ryan");
-        cust.setCardNum(20122);
-        
-        tt.setSerial(tk.getId().getSerial());
-        //tt.setId(ttid.setCustomersCustId(null));
-        tt.setName(tk.getId().getGameTemplatesPartNum());
-        tt.setSaleAmount(100);
-        tt.setPrizeAmount(0);
-        tt.setUsers(usr);
-        tt.setCustomers(cust);
-        tt.setLocations(loc);
-        tt.setInvoice(invoice);
-        tt.setVoid_(null);
-        ttDAO.addTrans(tt);
+        SaleSessions ss  = new SaleSessions();
+        SaleSessDAO ssDAO = new SaleSessDAO();
+
+        usr.setUserId(3);
+
+        loc.setLocId(1);
+        cust.setCustId(3);
+        tx.Sale(tx.getTicket("1164326"), sale, sale);
+        tx.tillTape(usr, cust, loc, 19, sale, prize, tx.getInvoice());
+        ssDAO.updateCurrent(81, sale, prize);
+
+
+//        Transaction trn = new Transaction();
+////        HashSet set1 = new HashSet();
+////        set1.add(new User)
+//       // trn.Sale(trn.getTicket("7536933"), 10, 10);
+//        //trn.Prize(trn.getTicket("7536933"),);
+//        int invoice = trn.getInvoice();
+//        System.out.println("Invoice: " + invoice);
+//        
+//        TillTape tt = new TillTape();
+//        TillTapeId ttid = new TillTapeId();
+ //       TillTapeDAO ttDAO = new TillTapeDAO();
+//        Users usr = new Users();
+//        Customers cust = new Customers();
+//        Locations loc = new Locations();
+//        Tickets tk = new Tickets();
+//        TicketDAO tkDAO = new TicketDAO();
+//        //Get ticket by bin
+//       tk = tkDAO.getTByBin(1);
+//        tt.setSerial(tk.getId().getSerial());
+//        tt.setName(tk.getId().getGameTemplatesPartNum());
+//        tt.setSaleAmount(100);
+//        tt.setPrizeAmount(0);
+//
+//       // ttid.getTId();
+//        ttid.setCustomersCustId(3);
+//        ttid.setLocationsLocId(1);
+//        ttid.setUsersUserId(3);
+//        tt.setId(ttid);
+//      //  cust.setCustId(3);
+//        //loc.setLocId(1);
+//        //usr.setUserId(5);
+//        //tt.setUsers(usr);
+//        //tt.setCustomers(cust);
+//       // tt.setLocations(loc);
+//        tt.setInvoice(100);
+//        tt.setVoid_(false);
+
+//        ttDAO.addTrans(tt);
+
 //        SaleSessDAO ssDAO = new SaleSessDAO();
 //        SaleSessions ss = new SaleSessions();
 //        //ssDAO.updateCurrent(68, "10");
@@ -102,9 +134,13 @@ public class test {
 //        cust.setCustId(4);
 //        custDAO.updateCustomer(cust);
 //        custDAO.getAllCustomers().forEach(System.out::println);
-/*
-        GameTemplateDAO gtDAO = new GameTemplateDAO();
-        GameTemplates gt = new GameTemplates();
+
+//        GameTemplateDAO gtDAO = new GameTemplateDAO();
+//        GameTemplates gt = new GameTemplates();
+//        GameTemplatesId gtId = new GameTemplatesId();
+//        gt = gtDAO.getGameTempByPart("ai0026");
+//        System.out.println("Game name: " + gt.getGameName());
+        /*
 //        gt = gtDAO.getGTById("AI0026");
 //        System.out.println(gt.getGameName());
             List<GameTemplates> gts = gtDAO.getAllGameTemplates();

@@ -1,15 +1,9 @@
 
-import dao.GameDAO;
-import dao.GameTemplateDAO;
-import dao.TicketDAO;
-import dao.TillTapeDAO;
+import dao.*;
 import db.DBUtil;
 import db.HibernateUtil;
-import entity.Game;
-import entity.GameTemplates;
-import entity.Tickets;
-import entity.TillTape;
-import dao.Transaction;
+import entity.*;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -1285,40 +1279,49 @@ public class SellingMain extends javax.swing.JFrame  {
 
     private void btnSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaleActionPerformed
         //TODO: get button selected, get number sold
+        Users usr = new Users();
+        Customers cust = new Customers();
+        Locations loc = new Locations();
         bin = getButton();
         String subText = textDisplay.getText();
         subtotal = Integer.valueOf(subText);
         //needs to be sale * the cost of the tickets
         total = total + subtotal;
-        
+        textDisplay.setText("");
+        textTotal.setText(Double.toString(total));
         //Get the invoice number
         Transaction trns = new Transaction();
         invoice = trns.getInvoice();
         System.out.println("Invoice: " + invoice);
         
-        
+        usr.setUserId(3);
+        loc.setLocId(1);
+        cust.setCustId(3);
+        trns.Sale(trns.getTicketBin(bin), subtotal, subtotal);
+        trns.tillTape(usr, cust, loc, bin, subtotal, 0, trns.getInvoice());
+
         //Set till tape to record sales / prizes
         //Update tickets with sales
-        Tickets tk = new Tickets();
-        TicketDAO tkDAO = new TicketDAO();
-        //Get ticket by bin
-        tk = tkDAO.getTByBin(bin);
-       
-        TillTape tt = new TillTape();
-        TillTapeDAO ttDAO = new TillTapeDAO();
-        
-        tt.setSerial(tk.getId().getSerial());
-        tt.setId(null);
-        tt.setName(tk.getId().getGameTemplatesPartNum());
-        tt.setSaleAmount(subtotal);
-        tt.setPrizeAmount(0);
-        tt.setUsers(null);
-        tt.setCustomers(null);
-        tt.setLocations(null);
-        tt.setInvoice(invoice);
-        tt.setVoid_(null);
-        ttDAO.addTrans(tt);
-        
+//        Tickets tk = new Tickets();
+//        TicketDAO tkDAO = new TicketDAO();
+//        //Get ticket by bin
+//        tk = tkDAO.getTByBin(bin);
+//
+//        TillTape tt = new TillTape();
+//        TillTapeDAO ttDAO = new TillTapeDAO();
+//
+//        tt.setSerial(tk.getId().getSerial());
+//        tt.setId(null);
+//        tt.setName(tk.getId().getGameTemplatesPartNum());
+//        tt.setSaleAmount(subtotal);
+//        tt.setPrizeAmount(0);
+//        tt.setUsers(null);
+//        tt.setCustomers(null);
+//        tt.setLocations(null);
+//        tt.setInvoice(invoice);
+//        tt.setVoid_(null);
+//        ttDAO.addTrans(tt);
+//
         
         
     }//GEN-LAST:event_btnSaleActionPerformed

@@ -2,6 +2,7 @@ package dao;
 
 import db.HibernateUtil;
 import entity.GameTemplates;
+import entity.GameTemplatesId;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -105,6 +106,22 @@ public class GameTemplateDAO {
             releaseResources();
         }
         return gt;
+    }
+    public GameTemplates getGameTempByPart(String partNum){
+        GameTemplates gt = null;
+        session = HibernateUtil.getSessionFactory().openSession();
+        try{
+            trns = session.beginTransaction();
+            GameTemplatesId gtId = new GameTemplatesId();
+            gtId.setPartNum(partNum);
+            gt = (GameTemplates) session.get(GameTemplates.class, gtId);
+            System.out.println("Game name: " + gt.getGameName());
+        } catch (RuntimeException e){
+            if(trns != null){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "No game template by part number : " + partNum);
+            }
+        }return gt;
     }
     public void releaseResources(){
         session.flush();

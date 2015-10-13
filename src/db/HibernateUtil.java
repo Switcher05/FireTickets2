@@ -10,15 +10,12 @@ package db;
  * @author Switcher
  */
 
-import java.util.List;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
+
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
- 
+import org.hibernate.service.ServiceRegistryBuilder;
+
 public class HibernateUtil {
     private static SessionFactory sessionFactory;
      
@@ -26,15 +23,11 @@ public class HibernateUtil {
         if (sessionFactory == null) {
             // loads configuration and mappings
             Configuration configuration = new Configuration().configure();
-            ServiceRegistry serviceRegistry
-                = new StandardServiceRegistryBuilder()
-                    .applySettings(configuration.getProperties()).build();
-             
+            ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(
+                    configuration.getProperties()).buildServiceRegistry();
             // builds a session factory from the service registry
             sessionFactory = configuration.buildSessionFactory(serviceRegistry);           
         }
-         
         return sessionFactory;
     }
-    
 }

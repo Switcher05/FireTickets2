@@ -1,5 +1,5 @@
 package entity;
-// Generated Oct 8, 2015 11:06:13 PM by Hibernate Tools 4.3.1
+// Generated Oct 11, 2015 7:56:58 PM by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -41,7 +41,8 @@ public class TillTape  implements java.io.Serializable {
      private Integer prizeAmount;
      private Boolean saleClosed;
      private int invoice;
-     private Integer void_;
+     private Boolean void_;
+     private Set<BigWinners> bigWinnerses = new HashSet<BigWinners>(0);
 
     public TillTape() {
     }
@@ -54,7 +55,7 @@ public class TillTape  implements java.io.Serializable {
         this.users = users;
         this.invoice = invoice;
     }
-    public TillTape(TillTapeId id, Customers customers, Locations locations, Users users, String serial, String name, Date time, Integer saleAmount, Integer prizeAmount, Boolean saleClosed, int invoice, Integer void_, Set<BigWinners> bigWinnerses) {
+    public TillTape(TillTapeId id, Customers customers, Locations locations, Users users, String serial, String name, Date time, Integer saleAmount, Integer prizeAmount, Boolean saleClosed, int invoice, Boolean void_, Set<BigWinners> bigWinnerses) {
        this.id = id;
        this.customers = customers;
        this.locations = locations;
@@ -67,6 +68,7 @@ public class TillTape  implements java.io.Serializable {
        this.saleClosed = saleClosed;
        this.invoice = invoice;
        this.void_ = void_;
+       this.bigWinnerses = bigWinnerses;
     }
    
      @EmbeddedId
@@ -187,14 +189,22 @@ public class TillTape  implements java.io.Serializable {
 
     
     @Column(name="void")
-    public Integer getVoid_() {
+    public Boolean getVoid_() {
         return this.void_;
     }
     
-    public void setVoid_(Integer void_) {
+    public void setVoid_(Boolean void_) {
         this.void_ = void_;
     }
 
+@OneToMany(fetch=FetchType.LAZY, mappedBy="tillTape")
+    public Set<BigWinners> getBigWinnerses() {
+        return this.bigWinnerses;
+    }
+    
+    public void setBigWinnerses(Set<BigWinners> bigWinnerses) {
+        this.bigWinnerses = bigWinnerses;
+    }
 
 
 

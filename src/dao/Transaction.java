@@ -48,6 +48,12 @@ public class Transaction {
         tk = tDAO.getTById(serial);
         return tk;
     }
+    public Tickets getTicketBin(int bin){
+        TicketDAO tDAO = new TicketDAO();
+        Tickets tk = new Tickets();
+        tk = tDAO.getTByBin(bin);
+        return tk;
+    }
     public void Sale(Tickets tk, int  amount, int value){
         //Update tickets table with, add till tape, update sale session,
         //add sales to customer
@@ -84,7 +90,7 @@ public class Transaction {
         return invoice;
     }
     
-    private Session getSession(){
+    public Session getSession(){
         try{
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
@@ -100,22 +106,40 @@ public class Transaction {
         net = tk.getActualGross() - tk.getActualPrizes();
         tk.setActualNet(net);
     }
-    public void tillTape(Tickets tk, Users us, Customers cust, Locations loc, int sale, int prize, int invoice){
-        //serial, name, time, sale_amount, prize_amount, users_user_id, customers_cust_id, locations_loc_id, invoice
+    public void tillTape(Users us, Customers cust, Locations loc, int bin, int sale, int prize, int invoice){
+        //serial, name, time, sale_amount, prize_amount, users_user_id, customers_cust_id, locations_loc_id, invoice, sale closed, void
         TillTape tt = new TillTape();
-        TillTapeDAO ttDao = new TillTapeDAO();
+        TillTapeId ttid = new TillTapeId();
+        TillTapeDAO ttDAO = new TillTapeDAO();
+        Users usr = new Users();
+        //Customers cust2 = new Customers();
+        //Locations loc = new Locations();
+        Tickets tk = new Tickets();
+        TicketDAO tkDAO = new TicketDAO();
+
+        tk = tkDAO.getTByBin(bin); //Get ticket by bin
         tt.setSerial(tk.getId().getSerial());
-        //needs changed to game name
-        tt.setName(tk.getId().getGameTemplatesPartNum());
+        tt.setName(tk.getId().getGameTemplatesPartNum()); //TODO: change to game name instead of part num
         tt.setSaleAmount(sale);
-        tt.setTime(getCurrentTimeStamp());
         tt.setPrizeAmount(prize);
-        tt.setUsers(us);
+
+        //ttid.getTId();
+        ttid.setCustomersCustId(cust.getCustId());
+        ttid.setLocationsLocId(loc.getLocId());
+        ttid.setUsersUserId(us.getUserId());
+        tt.setId(ttid);
+//        cust.setCustId(3);
+//        loc.setLocId(1);
+//        usr.setUserId(5);
+//        tt.setUsers(usr);
+        tt.setTime(getCurrentTimeStamp());
         tt.setCustomers(cust);
         tt.setLocations(loc);
         tt.setInvoice(invoice);
+        tt.setVoid_(false);
 
-        ttDao.addTrans(tt);
+        ttDAO.addTrans(tt);
+
     }
     public static java.sql.Timestamp getCurrentTimeStamp() {
         java.util.Date today = new java.util.Date();
