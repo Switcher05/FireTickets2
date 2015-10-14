@@ -49,11 +49,12 @@ public class TicketDAO {
             releaseResources();
         }
     }
-    public void updateTickets(Tickets gt){
+    public void updateTickets(Tickets tk){
         session = HibernateUtil.getSessionFactory().openSession();
         try{
             trns = session.beginTransaction();
-            session.update(gt);
+            tk.setActualNet((tk.getActualGross() - tk.getActualPrizes()));
+            session.update(tk);
             session.getTransaction().commit();
         } catch (RuntimeException e){
             if (trns != null){

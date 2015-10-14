@@ -3,10 +3,14 @@ package dao;
 
 
 
+import db.HibernateUtil;
 import entity.TillTape;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static db.HibernateUtil.getSessionFactory;
 
@@ -68,4 +72,49 @@ public class TillTapeDAO {
             sess.close();
         }
     }
+    public void closeSale(int invoice){
+        sess = getSessionFactory().openSession();
+        try{
+            tx = sess.beginTransaction();
+            String sql = "update TillTape tt set tt.saleClosed = true where tt.invoice = :invoice";
+            String queryString = "from Tickets gt where gt.id.serial = :serial";
+            Query q = sess.createQuery(sql);
+            q.setParameter("invoice", invoice);
+            int result = q.executeUpdate();
+            System.out.println("Updated invoices: " + result + " from invoice num: " + invoice);
+            sess.getTransaction().commit();
+        } catch (RuntimeException e){
+            if (tx != null){
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            sess.flush();
+            sess.close();
+        }
+    }
+    public List<TillTape> getAllTillTapeByInvoice(int invoice){
+        List<TillTape> tt = new ArrayList<TillTape>();
+        sess = HibernateUtil.getSessionFactory().openSession();
+        try{
+            tx = sess.beginTransaction();
+
+            tt = sess.createQuery("from TillTape where invoice = :invoice")
+                    .setParameter("invoice", invoice)
+                    .list();
+
+
+
+        } catch (RuntimeException e){
+            e.printStackTrace();
+        } finally {
+            releaseResources();
+        }
+        return tt;
+    }
+    public void releaseResources(){
+        sess.flush();
+        sess.close();
+    }
+
 }

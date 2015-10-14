@@ -106,6 +106,27 @@ public class Transaction {
         net = tk.getActualGross() - tk.getActualPrizes();
         tk.setActualNet(net);
     }
+    public void updateTicket(Tickets tk, int amount, int prizeIn, int value){
+        int gross = tk.getActualGross();
+        int prize = tk.getActualPrizes();
+        int net = tk.getActualNet();
+        int unsold = tk.getUnsoldTickets();
+        int unsoldValue = tk.getUnsoldAmt();
+        gross = gross + amount;
+        prize = prize + prizeIn;
+        net = gross - prize;
+        unsold = unsold - amount;
+        unsoldValue = unsoldValue - value;
+        tk.setActualGross(gross);
+        tk.setActualPrizes(prize);
+        tk.setActualNet(net);
+        tk.setUnsoldAmt(unsoldValue);
+        tk.setUnsoldTickets(unsold);
+        TicketDAO tkDAO = new TicketDAO();
+        tkDAO.updateTickets(tk);
+
+
+    }
     public void tillTape(Users us, Customers cust, Locations loc, int bin, int sale, int prize, int invoice){
         //serial, name, time, sale_amount, prize_amount, users_user_id, customers_cust_id, locations_loc_id, invoice, sale closed, void
         TillTape tt = new TillTape();

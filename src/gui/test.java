@@ -28,9 +28,7 @@ import dao.Transaction;
 import entity.*;
 import db.DBUtil;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,10 +40,7 @@ import entity.SaleSessions;
 import entity.Users;
 import org.hibernate.Session;
 
-import java.util.HashSet;
-
 import javax.transaction.*;
-import java.util.List;
 
 /**
  *
@@ -54,24 +49,24 @@ import java.util.List;
 public class test {
 
     public static void main(String args[]){
-        int sale = 0;
-
-        sale = 90;
-        int prize = 0;
-        Transaction tx = new Transaction();
-        Users usr = new Users();
-        Customers cust = new Customers();
-        Locations loc = new Locations();
-        SaleSessions ss  = new SaleSessions();
-        SaleSessDAO ssDAO = new SaleSessDAO();
-
-        usr.setUserId(3);
-
-        loc.setLocId(1);
-        cust.setCustId(3);
-        tx.Sale(tx.getTicket("1164326"), sale, sale);
-        tx.tillTape(usr, cust, loc, 19, sale, prize, tx.getInvoice());
-        ssDAO.updateCurrent(81, sale, prize);
+//        int sale = 0;
+//
+//        sale = 90;
+//        int prize = 0;
+//        Transaction tx = new Transaction();
+//        Users usr = new Users();
+//        Customers cust = new Customers();
+//        Locations loc = new Locations();
+//        SaleSessions ss  = new SaleSessions();
+//        SaleSessDAO ssDAO = new SaleSessDAO();
+//
+//        usr.setUserId(3);
+//
+//        loc.setLocId(1);
+//        cust.setCustId(3);
+//        tx.Sale(tx.getTicket("1164326"), sale, sale);
+//        tx.tillTape(usr, cust, loc, 19, sale, prize, tx.getInvoice());
+//        ssDAO.updateCurrent(81, sale, prize);
 
 
 //        Transaction trn = new Transaction();
@@ -82,9 +77,22 @@ public class test {
 //        int invoice = trn.getInvoice();
 //        System.out.println("Invoice: " + invoice);
 //        
-//        TillTape tt = new TillTape();
+        TillTape tt = new TillTape();
 //        TillTapeId ttid = new TillTapeId();
- //       TillTapeDAO ttDAO = new TillTapeDAO();
+        TillTapeDAO ttDAO = new TillTapeDAO();
+
+        List<TillTape> ttlst = new ArrayList<>();
+        ttlst = ttDAO.getAllTillTapeByInvoice(9999);
+        tt = ttlst.get(0);
+        System.out.println("Closed: " + tt.getSaleClosed());
+        for (TillTape till : ttlst){
+            till.setSaleClosed(true);
+            ttDAO.updateTillTape(till);
+
+        }
+
+
+
 //        Users usr = new Users();
 //        Customers cust = new Customers();
 //        Locations loc = new Locations();

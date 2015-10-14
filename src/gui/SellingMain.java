@@ -1,19 +1,11 @@
 
 import dao.*;
-import db.DBUtil;
-import db.HibernateUtil;
 import entity.*;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
+
+import javax.swing.*;
 
 
 /*
@@ -33,16 +25,18 @@ import Tickets.TicketEditor.TicketsEditor;
  */
 
 public class SellingMain extends javax.swing.JFrame  {
-    public int invoice;
+    public static int invoice;
     private int bin;
     private double total = 0;
     private int subtotal = 0;
+    public static boolean saleClosed = true;
+
     public SellingMain() {
         //get logged in user
         initComponents();
         
         
-        
+
         //Load list of games in play in bins 1 to 30
         Tickets tk = new Tickets();
         TicketDAO tkDAO = new TicketDAO();
@@ -65,6 +59,7 @@ public class SellingMain extends javax.swing.JFrame  {
             names[binNum] = gt.getGameName();
             System.out.println("Bin num: " + binNum + " Serial: " + bins[binNum]);
         }
+
         togbtn1.setText(formatString(names[1], bins[1]));
         togbtn2.setText(formatString(names[2], bins[2]));
         togbtn3.setText(formatString(names[3], bins[3]));
@@ -205,7 +200,7 @@ public class SellingMain extends javax.swing.JFrame  {
         jLabel35 = new javax.swing.JLabel();
         textTotal = new javax.swing.JTextField();
         btnEditTick = new javax.swing.JButton();
-        jLabel18 = new javax.swing.JLabel();
+        lblInvoiceNum = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -795,7 +790,7 @@ public class SellingMain extends javax.swing.JFrame  {
             }
         });
 
-        jLabel18.setText("jLabel18");
+        lblInvoiceNum.setText("lblInvoiceNum");
 
         jButton2.setText("Add Customer");
         jButton2.setEnabled(false);
@@ -1019,7 +1014,7 @@ public class SellingMain extends javax.swing.JFrame  {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnPrintEvery)
-                            .addComponent(jLabel18)))
+                            .addComponent(lblInvoiceNum)))
                     .addComponent(btnUndo, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29))
         );
@@ -1034,7 +1029,7 @@ public class SellingMain extends javax.swing.JFrame  {
                         .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlAmountLayout.createSequentialGroup()
                         .addGap(31, 31, 31)
-                        .addComponent(jLabel18)))
+                        .addComponent(lblInvoiceNum)))
                 .addGap(19, 19, 19)
                 .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlAmountLayout.createSequentialGroup()
@@ -1278,28 +1273,47 @@ public class SellingMain extends javax.swing.JFrame  {
     }//GEN-LAST:event_btnHundredActionPerformed
 
     private void btnSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaleActionPerformed
-        //TODO: get button selected, get number sold
+        //TODO: If more then one button selected cycle through them all
+        //TODO: if no button selected dont do anything
         Users usr = new Users();
         Customers cust = new Customers();
         Locations loc = new Locations();
+        Tickets tk = new Tickets();
+
         bin = getButton();
         String subText = textDisplay.getText();
         subtotal = Integer.valueOf(subText);
+
+
         //needs to be sale * the cost of the tickets
         total = total + subtotal;
         textDisplay.setText("");
         textTotal.setText(Double.toString(total));
         //Get the invoice number
         Transaction trns = new Transaction();
-        invoice = trns.getInvoice();
+        //check if there is already an invoice, if not create
+        if (saleClosed == true){
+            invoice = trns.getInvoice();
+            saleClosed = false;
+            lblInvoiceNum.setText(String.valueOf(invoice));
+            addTextLog("\n===================");
+            addTextLog("\nInvoice number: " + invoice);
+            addTextLog("\n===================");
+        }
+
         System.out.println("Invoice: " + invoice);
         
         usr.setUserId(3);
         loc.setLocId(1);
         cust.setCustId(3);
-        trns.Sale(trns.getTicketBin(bin), subtotal, subtotal);
-        trns.tillTape(usr, cust, loc, bin, subtotal, 0, trns.getInvoice());
-
+        tk = trns.getTicketBin(bin);
+        addTextLog("\nSALE: " + bin + " : " + tk.getId().getSerial() + "\n Amount: " + subtotal);
+        trns.Sale(tk, subtotal, subtotal);
+        trns.tillTape(usr, cust, loc, bin, subtotal, 0, invoice);
+        //trns.updateTicket(tk, subtotal, 0, subtotal);
+        togbtnSetEnabledFalse();
+        subtotal = 0;
+        bin = 0;
         //Set till tape to record sales / prizes
         //Update tickets with sales
 //        Tickets tk = new Tickets();
@@ -1360,7 +1374,44 @@ public class SellingMain extends javax.swing.JFrame  {
         togbtn30.setSelected(false);
     }
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        
+
+        //TODO:Get the total, close the invoice number, calculate payout or payin, update the log, print the reciept, kick the register.
+        Transaction tx = new Transaction();
+        TillTape tt = new TillTape();
+        TillTapeDAO ttDAO = new TillTapeDAO();
+        //close the till tape where invoice number  equal to:
+
+        List<TillTape> ttlst = new ArrayList<>();
+        ttlst = ttDAO.getAllTillTapeByInvoice(invoice);
+        for (TillTape till : ttlst){
+            till.setSaleClosed(true);
+            ttDAO.updateTillTape(till);
+
+        }
+
+        if(total <= 0)
+        {
+            JOptionPane.showMessageDialog(null, "Payout: " + total);
+            addTextLog("\n===================");
+            addTextLog("\n Payout: " + total);
+            addTextLog("\n===================");
+        }else{
+            JOptionPane.showMessageDialog(null, "Collect: " + total);
+            addTextLog("\n===================");
+            addTextLog("\n Collect: " + total);
+            addTextLog("\n===================");
+
+        }
+        invoice = 0;
+        subtotal = 0;
+        total = 0;
+        saleClosed = true;
+        textTotal.setText("");
+        textDisplay.setText("");
+
+        //close the till tape where invoice number  equal to:
+
+
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
@@ -1394,6 +1445,7 @@ public class SellingMain extends javax.swing.JFrame  {
         // SQL find invoice number
         // look up serial number of games, minus from gross, add to unsold amt and unsold tickets
     }//GEN-LAST:event_jButton8ActionPerformed
+
     public static void addTextLog(String text){
         textLog.append(text);
     }
@@ -1465,6 +1517,32 @@ public class SellingMain extends javax.swing.JFrame  {
     }
 
     private void btnPrizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrizeActionPerformed
+    Transaction tx = new Transaction();
+        Tickets tk = new Tickets();
+        Users usr = new Users();
+        Customers cust = new Customers();
+        Locations loc = new Locations();
+
+        bin = getButton();
+        String subText = textDisplay.getText();
+        subtotal = Integer.valueOf(subText);
+
+        total = total - subtotal;
+        textDisplay.setText("");
+        textTotal.setText(Double.toString(total));
+
+        //check if there is already an invoice, if not create
+        if (saleClosed == true){
+            invoice = tx.getInvoice();
+            saleClosed = false;
+        }
+        usr.setUserId(3);
+        loc.setLocId(1);
+        cust.setCustId(3);
+        tk = tx.getTicketBin(bin);
+        tx.Prize(tk,subtotal);
+        tx.tillTape(usr, cust, loc, bin, 0, subtotal, invoice);
+        togbtnSetEnabledFalse();
 
     }//GEN-LAST:event_btnPrizeActionPerformed
 
@@ -1610,7 +1688,7 @@ public class SellingMain extends javax.swing.JFrame  {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel lblInvoiceNum;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
