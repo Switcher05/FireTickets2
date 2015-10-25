@@ -1,7 +1,7 @@
 package dao;
 
-import db.HibernateUtil;
 import entity.Tickets;
+import main.resources.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -16,12 +16,12 @@ public class TicketDAO {
     Transaction trns = null;
     Session session;
 
-    public void addTickets(Tickets gt){
+    public void addTickets(Tickets tt) {
 
         session = HibernateUtil.getSessionFactory().openSession();
         try{
             trns = session.beginTransaction();
-            session.save(gt);
+            session.saveOrUpdate(tt);
             session.getTransaction().commit();
 
         }catch (RuntimeException e){
@@ -49,7 +49,12 @@ public class TicketDAO {
             releaseResources();
         }
     }
+<<<<<<< HEAD
+
+    public void updateTickets(Tickets tk) {
+=======
     public void updateTickets(Tickets tk){
+>>>>>>> origin/master
         session = HibernateUtil.getSessionFactory().openSession();
         try{
             trns = session.beginTransaction();

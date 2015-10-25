@@ -26,7 +26,7 @@ public class TillTapeId  implements java.io.Serializable {
        this.customersCustId = customersCustId;
        this.locationsLocId = locationsLocId;
     }
-   
+
 
 
     @Column(name="t_id", unique=true, nullable=false)

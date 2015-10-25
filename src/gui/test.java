@@ -23,6 +23,8 @@
  */
 package gui;
 
+<<<<<<< HEAD
+=======
 import dao.*;
 import dao.Transaction;
 import entity.*;
@@ -42,6 +44,7 @@ import org.hibernate.Session;
 
 import javax.transaction.*;
 
+>>>>>>> origin/master
 /**
  *
  * @author Switcher
@@ -77,6 +80,23 @@ public class test {
 //        int invoice = trn.getInvoice();
 //        System.out.println("Invoice: " + invoice);
 //        
+<<<<<<< HEAD
+//        TillTape tt = new TillTape();
+////        TillTapeId ttid = new TillTapeId();
+//        TillTapeDAO ttDAO = new TillTapeDAO();
+//
+//        List<TillTape> ttlst = new ArrayList<>();
+//        ttlst = ttDAO.getAllTillTapeByInvoice(9999);
+//        tt = ttlst.get(0);
+//        System.out.println("Closed: " + tt.getSaleClosed());
+//        for (TillTape till : ttlst){
+//            till.setSaleClosed(true);
+//            ttDAO.updateTillTape(till);
+//
+//        }
+//
+//
+=======
         TillTape tt = new TillTape();
 //        TillTapeId ttid = new TillTapeId();
         TillTapeDAO ttDAO = new TillTapeDAO();
@@ -92,6 +112,7 @@ public class test {
         }
 
 
+>>>>>>> origin/master
 
 //        Users usr = new Users();
 //        Customers cust = new Customers();
@@ -186,6 +207,15 @@ public class test {
         private static void getAll(GameTemplates gameTemplates){
                 System.out.println("GameNAme:" + gameTemplates.getGameName());
                 */
+//        Transaction tx = new Transaction();
+//        Tickets tk = new Tickets();
+//        TicketDAO tkDAO = new TicketDAO();
+//        tk = tkDAO.getTByBin(1);
+//
+//
+//        boolean correctPrize = tx.findPrizeAmt(tk, 124);
+//        System.out.println("Result: " + correctPrize);
+
         }
 
 }

@@ -107,7 +107,11 @@ public class Game {
     private Integer type;
 
 
+<<<<<<< HEAD
+    public Game() {
+=======
     public Game(){
+>>>>>>> origin/master
 
     }
 
