@@ -23,12 +23,13 @@
  */
 package dao;
 
-import db.HibernateUtil;
 import entity.DistsId;
-import java.util.ArrayList;
-import java.util.List;
+import main.resources.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

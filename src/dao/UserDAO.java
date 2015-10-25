@@ -22,13 +22,15 @@
  * THE SOFTWARE.
  */
 package dao;
-import db.HibernateUtil;
+
+import entity.Users;
+import main.resources.HibernateUtil;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import entity.Users;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.Query;
 
 /**
  *
@@ -119,5 +121,31 @@ public class UserDAO {
             session.close();
         }
         return user;
-    }        
+    }
+
+    public boolean Login(Users usr) {
+        Users user = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            trns = session.beginTransaction();
+            String queryString = "from Users where name = :name ";
+            Query q = session.createQuery(queryString);
+            q.setParameter("name", usr.getName());
+            // .setParameter("password", usr.getPassword());
+            user = (Users) q.uniqueResult();
+            if (user != null) {
+                if (user.getPassword().equals(usr.getPassword())) {
+                    return true;
+                }
+
+            }
+
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        } finally {
+            session.flush();
+            session.close();
+        }
+        return false;
+    }
 }

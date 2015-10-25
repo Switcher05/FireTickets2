@@ -75,38 +75,44 @@ public class Game {
      private Integer prizeAll14;
      private Integer prizeAll15;
 
-     private Date datePlaced;
-     private Date dateRemoved;
-     private Integer unsoldAmt;
-     private Integer actualGross;
-     private Integer actualPrizes;
-     private Integer actualNet;
-     private Integer bin;
-     private Boolean inplay;
-     private Integer closed;
-     private Integer unsoldTickets;
-     private Byte lastSaleRem;
-     private Integer prizeRem1;
-     private Integer prizeRem2;
-     private Integer prizeRem3;
-     private Integer prizeRem4;
-     private Integer prizeRem5;
-     private Integer prizeRem6;
-     private Integer prizeRem7;
-     private Integer prizeRem8;
-     private Integer prizeRem9;
-     private Integer prizeRem10;
-     private Integer prizeRem11;
-     private Integer prizeRem12;
-     private Integer prizeRem13;
-     private Integer prizeRem14;
-     private Integer prizeRem15;
-     private Date datePurch;
-     private String invoiceNum;
-     private String serial;
-     private String gameTemplatesPartNum;
+    private TicketsId id;
+    private Date datePlaced;
+    private Date dateRemoved;
+    private Integer unsoldAmt;
+    private Integer actualGross;
+    private Integer actualPrizes;
+    private Integer actualNet;
+    private Integer bin;
+    private Boolean inplay;
+    private Integer closed;
+    private Integer unsoldTickets;
+    private Byte lastSaleRem;
+    private Integer prizeRem1;
+    private Integer prizeRem2;
+    private Integer prizeRem3;
+    private Integer prizeRem4;
+    private Integer prizeRem5;
+    private Integer prizeRem6;
+    private Integer prizeRem7;
+    private Integer prizeRem8;
+    private Integer prizeRem9;
+    private Integer prizeRem10;
+    private Integer prizeRem11;
+    private Integer prizeRem12;
+    private Integer prizeRem13;
+    private Integer prizeRem14;
+    private Integer prizeRem15;
+    private Date datePurch;
+    private String invoiceNum;
+    private Integer type;
 
-    public Game(String partNum, int distsIdDistId, int mfgIdMfgId, DistsId distsId, MfgId mfgId, String gameName, Double gameCost, Double ticketCost, Integer numTickets, Integer ideaGross, Integer ideaPrizes, Integer ideaNet, Integer lastSale, Integer lastSaleAllow, Integer prizeAmt1, Integer prizeAmt2, Integer prizeAmt3, Integer prizeAmt4, Integer prizeAmt5, Integer prizeAmt6, Integer prizeAmt7, Integer prizeAmt8, Integer prizeAmt9, Integer prizeAmt10, Integer prizeAmt11, Integer prizeAmt12, Integer prizeAmt13, Integer prizeAmt14, Integer prizeAmt15, Integer prizeAll1, Integer prizeAll2, Integer prizeAll3, Integer prizeAll4, Integer prizeAll5, Integer prizeAll6, Integer prizeAll7, Integer prizeAll8, Integer prizeAll9, Integer prizeAll10, Integer prizeAll11, Integer prizeAll12, Integer prizeAll13, Integer prizeAll14, Integer prizeAll15, Date datePlaced, Date dateRemoved, Integer unsoldAmt, Integer actualGross, Integer actualPrizes, Integer actualNet, Integer bin, Boolean inplay, Integer closed, Integer unsoldTickets, Byte lastSaleRem, Integer prizeRem1, Integer prizeRem2, Integer prizeRem3, Integer prizeRem4, Integer prizeRem5, Integer prizeRem6, Integer prizeRem7, Integer prizeRem8, Integer prizeRem9, Integer prizeRem10, Integer prizeRem11, Integer prizeRem12, Integer prizeRem13, Integer prizeRem14, Integer prizeRem15, Date datePurch, String invoiceNum, String serial, String gameTemplatesPartNum) {
+
+    public Game() {
+
+    }
+
+
+    public Game(String partNum, int distsIdDistId, int mfgIdMfgId, DistsId distsId, MfgId mfgId, String gameName, Double gameCost, Double ticketCost, Integer numTickets, Integer ideaGross, Integer ideaPrizes, Integer ideaNet, Integer lastSale, Integer lastSaleAllow, Integer prizeAmt1, Integer prizeAmt2, Integer prizeAmt3, Integer prizeAmt4, Integer prizeAmt5, Integer prizeAmt6, Integer prizeAmt7, Integer prizeAmt8, Integer prizeAmt9, Integer prizeAmt10, Integer prizeAmt11, Integer prizeAmt12, Integer prizeAmt13, Integer prizeAmt14, Integer prizeAmt15, Integer prizeAll1, Integer prizeAll2, Integer prizeAll3, Integer prizeAll4, Integer prizeAll5, Integer prizeAll6, Integer prizeAll7, Integer prizeAll8, Integer prizeAll9, Integer prizeAll10, Integer prizeAll11, Integer prizeAll12, Integer prizeAll13, Integer prizeAll14, Integer prizeAll15, TicketsId id, Date datePlaced, Date dateRemoved, Integer unsoldAmt, Integer actualGross, Integer actualPrizes, Integer actualNet, Integer bin, Boolean inplay, Integer closed, Integer unsoldTickets, Byte lastSaleRem, Integer prizeRem1, Integer prizeRem2, Integer prizeRem3, Integer prizeRem4, Integer prizeRem5, Integer prizeRem6, Integer prizeRem7, Integer prizeRem8, Integer prizeRem9, Integer prizeRem10, Integer prizeRem11, Integer prizeRem12, Integer prizeRem13, Integer prizeRem14, Integer prizeRem15, Date datePurch, String invoiceNum, Integer type) {
         this.partNum = partNum;
         this.distsIdDistId = distsIdDistId;
         this.mfgIdMfgId = mfgIdMfgId;
@@ -151,6 +157,7 @@ public class Game {
         this.prizeAll13 = prizeAll13;
         this.prizeAll14 = prizeAll14;
         this.prizeAll15 = prizeAll15;
+        this.id = id;
         this.datePlaced = datePlaced;
         this.dateRemoved = dateRemoved;
         this.unsoldAmt = unsoldAmt;
@@ -179,8 +186,7 @@ public class Game {
         this.prizeRem15 = prizeRem15;
         this.datePurch = datePurch;
         this.invoiceNum = invoiceNum;
-        this.serial = serial;
-        this.gameTemplatesPartNum = gameTemplatesPartNum;
+        this.type = type;
     }
 
     public String getPartNum() {
@@ -759,20 +765,20 @@ public class Game {
         this.invoiceNum = invoiceNum;
     }
 
-    public String getSerial() {
-        return serial;
+    public Integer getType() {
+        return type;
     }
 
-    public void setSerial(String serial) {
-        this.serial = serial;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
-    public String getGameTemplatesPartNum() {
-        return gameTemplatesPartNum;
+    public TicketsId getId() {
+        return id;
     }
 
-    public void setGameTemplatesPartNum(String gameTemplatesPartNum) {
-        this.gameTemplatesPartNum = gameTemplatesPartNum;
+    public void setId(TicketsId id) {
+        this.id = id;
     }
 
     @Override
@@ -784,19 +790,18 @@ public class Game {
 
         if (distsIdDistId != game.distsIdDistId) return false;
         if (mfgIdMfgId != game.mfgIdMfgId) return false;
-        if (partNum != null ? !partNum.equals(game.partNum) : game.partNum != null) return false;
-        if (distsId != null ? !distsId.equals(game.distsId) : game.distsId != null) return false;
-        if (mfgId != null ? !mfgId.equals(game.mfgId) : game.mfgId != null) return false;
-        if (gameName != null ? !gameName.equals(game.gameName) : game.gameName != null) return false;
-        if (gameCost != null ? !gameCost.equals(game.gameCost) : game.gameCost != null) return false;
-        if (ticketCost != null ? !ticketCost.equals(game.ticketCost) : game.ticketCost != null) return false;
-        if (numTickets != null ? !numTickets.equals(game.numTickets) : game.numTickets != null) return false;
-        if (ideaGross != null ? !ideaGross.equals(game.ideaGross) : game.ideaGross != null) return false;
-        if (ideaPrizes != null ? !ideaPrizes.equals(game.ideaPrizes) : game.ideaPrizes != null) return false;
-        if (ideaNet != null ? !ideaNet.equals(game.ideaNet) : game.ideaNet != null) return false;
-        if (lastSale != null ? !lastSale.equals(game.lastSale) : game.lastSale != null) return false;
-        if (lastSaleAllow != null ? !lastSaleAllow.equals(game.lastSaleAllow) : game.lastSaleAllow != null)
-            return false;
+        if (!partNum.equals(game.partNum)) return false;
+        if (!distsId.equals(game.distsId)) return false;
+        if (!mfgId.equals(game.mfgId)) return false;
+        if (!gameName.equals(game.gameName)) return false;
+        if (!gameCost.equals(game.gameCost)) return false;
+        if (!ticketCost.equals(game.ticketCost)) return false;
+        if (!numTickets.equals(game.numTickets)) return false;
+        if (!ideaGross.equals(game.ideaGross)) return false;
+        if (!ideaPrizes.equals(game.ideaPrizes)) return false;
+        if (!ideaNet.equals(game.ideaNet)) return false;
+        if (!lastSale.equals(game.lastSale)) return false;
+        if (!lastSaleAllow.equals(game.lastSaleAllow)) return false;
         if (prizeAmt1 != null ? !prizeAmt1.equals(game.prizeAmt1) : game.prizeAmt1 != null) return false;
         if (prizeAmt2 != null ? !prizeAmt2.equals(game.prizeAmt2) : game.prizeAmt2 != null) return false;
         if (prizeAmt3 != null ? !prizeAmt3.equals(game.prizeAmt3) : game.prizeAmt3 != null) return false;
@@ -827,6 +832,7 @@ public class Game {
         if (prizeAll13 != null ? !prizeAll13.equals(game.prizeAll13) : game.prizeAll13 != null) return false;
         if (prizeAll14 != null ? !prizeAll14.equals(game.prizeAll14) : game.prizeAll14 != null) return false;
         if (prizeAll15 != null ? !prizeAll15.equals(game.prizeAll15) : game.prizeAll15 != null) return false;
+        if (id != null ? !id.equals(game.id) : game.id != null) return false;
         if (datePlaced != null ? !datePlaced.equals(game.datePlaced) : game.datePlaced != null) return false;
         if (dateRemoved != null ? !dateRemoved.equals(game.dateRemoved) : game.dateRemoved != null) return false;
         if (unsoldAmt != null ? !unsoldAmt.equals(game.unsoldAmt) : game.unsoldAmt != null) return false;
@@ -856,27 +862,26 @@ public class Game {
         if (prizeRem15 != null ? !prizeRem15.equals(game.prizeRem15) : game.prizeRem15 != null) return false;
         if (datePurch != null ? !datePurch.equals(game.datePurch) : game.datePurch != null) return false;
         if (invoiceNum != null ? !invoiceNum.equals(game.invoiceNum) : game.invoiceNum != null) return false;
-        if (serial != null ? !serial.equals(game.serial) : game.serial != null) return false;
-        return !(gameTemplatesPartNum != null ? !gameTemplatesPartNum.equals(game.gameTemplatesPartNum) : game.gameTemplatesPartNum != null);
+        return !(type != null ? !type.equals(game.type) : game.type != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = partNum != null ? partNum.hashCode() : 0;
+        int result = partNum.hashCode();
         result = 31 * result + distsIdDistId;
         result = 31 * result + mfgIdMfgId;
-        result = 31 * result + (distsId != null ? distsId.hashCode() : 0);
-        result = 31 * result + (mfgId != null ? mfgId.hashCode() : 0);
-        result = 31 * result + (gameName != null ? gameName.hashCode() : 0);
-        result = 31 * result + (gameCost != null ? gameCost.hashCode() : 0);
-        result = 31 * result + (ticketCost != null ? ticketCost.hashCode() : 0);
-        result = 31 * result + (numTickets != null ? numTickets.hashCode() : 0);
-        result = 31 * result + (ideaGross != null ? ideaGross.hashCode() : 0);
-        result = 31 * result + (ideaPrizes != null ? ideaPrizes.hashCode() : 0);
-        result = 31 * result + (ideaNet != null ? ideaNet.hashCode() : 0);
-        result = 31 * result + (lastSale != null ? lastSale.hashCode() : 0);
-        result = 31 * result + (lastSaleAllow != null ? lastSaleAllow.hashCode() : 0);
+        result = 31 * result + distsId.hashCode();
+        result = 31 * result + mfgId.hashCode();
+        result = 31 * result + gameName.hashCode();
+        result = 31 * result + gameCost.hashCode();
+        result = 31 * result + ticketCost.hashCode();
+        result = 31 * result + numTickets.hashCode();
+        result = 31 * result + ideaGross.hashCode();
+        result = 31 * result + ideaPrizes.hashCode();
+        result = 31 * result + ideaNet.hashCode();
+        result = 31 * result + lastSale.hashCode();
+        result = 31 * result + lastSaleAllow.hashCode();
         result = 31 * result + (prizeAmt1 != null ? prizeAmt1.hashCode() : 0);
         result = 31 * result + (prizeAmt2 != null ? prizeAmt2.hashCode() : 0);
         result = 31 * result + (prizeAmt3 != null ? prizeAmt3.hashCode() : 0);
@@ -907,6 +912,7 @@ public class Game {
         result = 31 * result + (prizeAll13 != null ? prizeAll13.hashCode() : 0);
         result = 31 * result + (prizeAll14 != null ? prizeAll14.hashCode() : 0);
         result = 31 * result + (prizeAll15 != null ? prizeAll15.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (datePlaced != null ? datePlaced.hashCode() : 0);
         result = 31 * result + (dateRemoved != null ? dateRemoved.hashCode() : 0);
         result = 31 * result + (unsoldAmt != null ? unsoldAmt.hashCode() : 0);
@@ -935,8 +941,7 @@ public class Game {
         result = 31 * result + (prizeRem15 != null ? prizeRem15.hashCode() : 0);
         result = 31 * result + (datePurch != null ? datePurch.hashCode() : 0);
         result = 31 * result + (invoiceNum != null ? invoiceNum.hashCode() : 0);
-        result = 31 * result + (serial != null ? serial.hashCode() : 0);
-        result = 31 * result + (gameTemplatesPartNum != null ? gameTemplatesPartNum.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
 
@@ -987,6 +992,7 @@ public class Game {
                 ", prizeAll13=" + prizeAll13 +
                 ", prizeAll14=" + prizeAll14 +
                 ", prizeAll15=" + prizeAll15 +
+                ", id=" + id +
                 ", datePlaced=" + datePlaced +
                 ", dateRemoved=" + dateRemoved +
                 ", unsoldAmt=" + unsoldAmt +
@@ -1015,8 +1021,7 @@ public class Game {
                 ", prizeRem15=" + prizeRem15 +
                 ", datePurch=" + datePurch +
                 ", invoiceNum='" + invoiceNum + '\'' +
-                ", serial='" + serial + '\'' +
-                ", gameTemplatesPartNum='" + gameTemplatesPartNum + '\'' +
+                ", type=" + type +
                 '}';
     }
 }

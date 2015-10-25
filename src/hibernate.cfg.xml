@@ -4,10 +4,12 @@
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/fire_tickets</property>
-    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.url">jdbc:mysql://74.91.120.129:3306/fire_tickets</property>
+    <property name="hibernate.connection.username">Switcher</property>
     <property name="hibernate.connection.password">hawaii</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
+
+    <property name="show_sql">true</property>
     <mapping resource="entity/Users.hbm.xml"/>
     <mapping resource="entity/SaleSessions.hbm.xml"/>
     <mapping resource="entity/GameTemplates.hbm.xml"/>
@@ -16,12 +18,8 @@
     <mapping resource="entity/BigWinners.hbm.xml"/>
     <mapping resource="entity/Locations.hbm.xml"/>
     <mapping resource="entity/Sessions.hbm.xml"/>
-    <mapping resource="entity/InplayGames.hbm.xml"/>
     <mapping resource="entity/TillTape.hbm.xml"/>
     <mapping resource="entity/DistsId.hbm.xml"/>
     <mapping resource="entity/Tickets.hbm.xml"/>
-    <mapping resource="entity/Inventory.hbm.xml"/>
-    <mapping resource="entity/ClosedGames.hbm.xml"/>
-    <mapping resource="entity/Monthly.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

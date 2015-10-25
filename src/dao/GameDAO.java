@@ -1,10 +1,10 @@
 package dao;
 
-import db.HibernateUtil;
+import entity.Game;
+import main.resources.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import entity.Game;
 
 import javax.swing.*;
 

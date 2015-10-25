@@ -23,11 +23,13 @@
  */
 package dao;
 
+import entity.SaleSessions;
+import main.resources.HibernateUtil;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import entity.SaleSessions;
-import db.HibernateUtil;
-import org.hibernate.Query;
+
+import javax.swing.*;
 
 /**
  *
@@ -37,18 +39,19 @@ public class SaleSessDAO {
     Transaction trns = null;
     Session session;
     public void addSession(SaleSessions saleSess){
+
         session = HibernateUtil.getSessionFactory().openSession();
         try{
             trns = session.beginTransaction();
-            session.save(saleSess);
+            session.saveOrUpdate(saleSess);
             session.getTransaction().commit();
         } catch (RuntimeException e){
             e.printStackTrace();
         } finally {
-            session.close();
-            session.flush();
+            releaseResources();
         }
     }
+
     public void updateCurrent(Integer SessionID, int sale, int prize){
         session = HibernateUtil.getSessionFactory().openSession();
         try{
@@ -76,8 +79,62 @@ public class SaleSessDAO {
             }
             e.printStackTrace();
         } finally {
-            session.flush();
-            session.close();
+            releaseResources();
         }
+    }
+
+    public SaleSessions getSSById(String ssid) {
+        SaleSessions ss = null;
+        session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            trns = session.beginTransaction();
+            String queryString = "from SaleSessions ss where ss.id = :ssid";
+            Query q = session.createQuery(queryString);
+            q.setParameter("ssid", ssid);
+
+            ss = (SaleSessions) q.uniqueResult();
+        } catch (RuntimeException e) {
+
+            if (trns != null) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "No Sale Session found - " + ssid);
+                trns.rollback();
+            }
+        } finally {
+            releaseResources();
+        }
+        return ss;
+    }
+
+    public SaleSessions fetchOpenSS() {
+        SaleSessions ss = null;
+        session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            trns = session.beginTransaction();
+            //a session from the same day, with endingbank as null, or max value of the session id
+            String queryString = "from SaleSessions ss where ss.endingbank = 1";
+            Query q = session.createQuery(queryString);
+
+            ss = (SaleSessions) q.uniqueResult();
+//            Criteria criteria = session
+//                    .createCriteria(SaleSessions.class)
+//                    .setProjection(Projections.max("id"))
+//            ss = (SaleSessions)criteria.uniqueResult();
+        } catch (RuntimeException e) {
+
+            if (trns != null) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "No Sale Session found");
+                trns.rollback();
+            }
+        } finally {
+            releaseResources();
+        }
+        return ss;
+    }
+
+    public void releaseResources() {
+        session.flush();
+        session.close();
     }
 }

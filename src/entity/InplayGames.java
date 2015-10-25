@@ -1,5 +1,5 @@
 package entity;
-// Generated Oct 8, 2015 11:06:13 PM by Hibernate Tools 4.3.1
+// Generated Oct 11, 2015 7:56:58 PM by Hibernate Tools 4.3.1
 
 
 import javax.persistence.AttributeOverride;

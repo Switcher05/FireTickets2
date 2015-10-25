@@ -23,11 +23,11 @@
  */
 package dao;
 
-import db.HibernateUtil;
+import entity.MfgId;
+import main.resources.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import entity.MfgId;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
