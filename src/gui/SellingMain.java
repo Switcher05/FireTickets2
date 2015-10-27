@@ -6,6 +6,8 @@ import entity.*;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -29,9 +31,6 @@ public class SellingMain extends javax.swing.JFrame  {
     public static int invoice;
     public static boolean saleClosed = true;
     public static int sessionNum;
-    public static javax.swing.JTextArea textLog;
-    public javax.swing.JTextField textDisplay;
-    public javax.swing.JToggleButton togbtn1;
     private int bin = 0;
     private double total = 0;
     private int subtotal = 0;
@@ -195,7 +194,6 @@ button.setText(text);
         SaleSessDAO ssDAO = new SaleSessDAO();
         SaleSessions ss = new SaleSessions();
         CustomerDAO custDAO = new CustomerDAO();
-        Customers cust = new Customers();
 
 
 
@@ -217,14 +215,56 @@ button.setText(text);
         textDisplay.setText("");
         textTotal.setText(Double.toString(total) + "0");
 
+
         //update the sales to the customers
+        //if cust1 toggle button is selected:
         if (cust1.isSelected()){
             //get the id number from the button
-            cust = custDAO.getCustById(Integer.getInteger(cust1.getText()));
+            cust = custDAO.getCustById(4);
+            //add the sales to the current value
             int sales = cust.getTotalSales();
-            int prizes = cust.getTotalPrizes();
+            //set the value (note: cust.setTotalSales(cust.getTotalSales() + subtotal) doesn't work
             cust.setTotalSales(sales + subtotal);
-            cust.setTotalPrizes(prizes + 0);
+            //update the Customer
+            custDAO.updateCustomer(cust);
+        }else if (cust2.isSelected()){
+            cust = custDAO.getCustById(Integer.getInteger(cust2.getText()));
+            int sales = cust.getTotalSales();
+            cust.setTotalSales(sales + subtotal);
+            custDAO.updateCustomer(cust);
+        }else if (cust3.isSelected()){
+            cust = custDAO.getCustById(Integer.getInteger(cust3.getText()));
+            int sales = cust.getTotalSales();
+            cust.setTotalSales(sales + subtotal);
+            custDAO.updateCustomer(cust);
+        }else if(cust4.isSelected()){
+            cust = custDAO.getCustById(Integer.getInteger(cust4.getText()));
+            int sales = cust.getTotalSales();
+            cust.setTotalSales(sales + subtotal);
+            custDAO.updateCustomer(cust);
+        }else if (cust5.isSelected()){
+            cust = custDAO.getCustById(Integer.getInteger(cust5.getText()));
+            int sales = cust.getTotalSales();
+            cust.setTotalSales(sales + subtotal);
+            custDAO.updateCustomer(cust);
+        }else if(cust6.isSelected()){
+            cust = custDAO.getCustById(Integer.getInteger(cust6.getText()));
+            int sales = cust.getTotalSales();
+            cust.setTotalSales(sales + subtotal);
+            custDAO.updateCustomer(cust);
+        }else if(cust7.isSelected()){
+            cust = custDAO.getCustById(Integer.getInteger(cust7.getText()));
+            int sales = cust.getTotalSales();
+            cust.setTotalSales(sales + subtotal);
+            custDAO.updateCustomer(cust);
+        }else if(cust8.isSelected()){
+            cust = custDAO.getCustById(Integer.getInteger(cust8.getText()));
+            int sales = cust.getTotalSales();
+            cust.setTotalSales(sales + subtotal);
+            custDAO.updateCustomer(cust);
+        }else{
+            //No button selected
+            System.out.println("No customer selected");
         }
 
         //Get the invoice number
@@ -260,6 +300,7 @@ button.setText(text);
         ss.setCurrentbank(bank + subtotal);
         ss.setGrossNet(ss.getGrossSales() - ss.getGrossPrizes());
         ssDAO.addSession(ss);
+        //TODO:deselect customers
 
         //Un-select any remaining buttons
         togbtnSetEnabledFalse();
@@ -611,7 +652,7 @@ button.setText(text);
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Customers:"));
         jPanel4.setName("Customers"); // NOI18N
 
-        cust1.setText("jToggleButton1");
+        cust1.setText("4");
 
         cust2.setText("jToggleButton2");
 
@@ -645,24 +686,24 @@ button.setText(text);
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cust1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cust5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(cust1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cust6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cust7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cust8))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(cust2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cust3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cust4)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(cust5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cust6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cust7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cust8)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel40)
@@ -684,10 +725,10 @@ button.setText(text);
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cust2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cust3, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cust4, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cust2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cust4, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(cust1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1528,10 +1569,10 @@ button.setText(text);
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
                 .addComponent(pnlAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(46, 46, 46)
+                .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
@@ -1882,7 +1923,7 @@ button.setText(text);
     /**
      * @param args the command line arguments
      */
-    public void main(String args[]) {
+    public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1941,14 +1982,14 @@ button.setText(text);
     private javax.swing.JButton btnZero;
     private javax.swing.JTextField closingfield;
     private javax.swing.JLabel currentTime;
-    private javax.swing.JToggleButton cust1;
-    private javax.swing.JToggleButton cust2;
-    private javax.swing.JToggleButton cust3;
-    private javax.swing.JToggleButton cust4;
-    private javax.swing.JToggleButton cust5;
-    private javax.swing.JToggleButton cust6;
-    private javax.swing.JToggleButton cust7;
-    private javax.swing.JToggleButton cust8;
+    public javax.swing.JToggleButton cust1;
+    public javax.swing.JToggleButton cust2;
+    public javax.swing.JToggleButton cust3;
+    public javax.swing.JToggleButton cust4;
+    public javax.swing.JToggleButton cust5;
+    public javax.swing.JToggleButton cust6;
+    public javax.swing.JToggleButton cust7;
+    public javax.swing.JToggleButton cust8;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
