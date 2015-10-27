@@ -23,64 +23,43 @@
  */
 package gui;
 
-import dao.*;
-import dao.Transaction;
-import entity.*;
-import db.DBUtil;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import db.HibernateUtil;
-import entity.Customers;
-import entity.GameTemplates;
-import entity.Tickets;
-import entity.SaleSessions;
-import entity.Users;
-
-import javax.transaction.*;
-import java.util.List;
-
 /**
  *
  * @author Switcher
  */
 public class test {
     public static void main(String args[]){
-        Transaction trn = new Transaction();
-       // trn.Sale(trn.getTicket("7536933"), 10, 10);
-        //trn.Prize(trn.getTicket("7536933"),);
-        int invoice = trn.getInvoice();
-        System.out.println("Invoice: " + invoice);
-        
-        TillTape tt = new TillTape();
-        TillTapeId ttid = new TillTapeId();
-        TillTapeDAO ttDAO = new TillTapeDAO();
-        Users usr = new Users();
-        Customers cust = new Customers();
-        Locations loc = new Locations();
-        Tickets tk = new Tickets();
-        TicketDAO tkDAO = new TicketDAO();
-        //Get ticket by bin
-        tk = tkDAO.getTByBin(1);
-       
-        cust.setFname("Ryan");
-        cust.setCardNum(20122);
-        
-        tt.setSerial(tk.getId().getSerial());
-        //tt.setId(ttid.setCustomersCustId(null));
-        tt.setName(tk.getId().getGameTemplatesPartNum());
-        tt.setSaleAmount(100);
-        tt.setPrizeAmount(0);
-        tt.setUsers(usr);
-        tt.setCustomers(cust);
-        tt.setLocations(loc);
-        tt.setInvoice(invoice);
-        tt.setVoid_(null);
-        ttDAO.addTrans(tt);
+//        Transaction trn = new Transaction();
+//       // trn.Sale(trn.getTicket("7536933"), 10, 10);
+//        //trn.Prize(trn.getTicket("7536933"),);
+//        int invoice = trn.getInvoice();
+//        System.out.println("Invoice: " + invoice);
+//
+//        TillTape tt = new TillTape();
+//        TillTapeId ttid = new TillTapeId();
+//        TillTapeDAO ttDAO = new TillTapeDAO();
+//        Users usr = new Users();
+//        Customers cust = new Customers();
+//        Locations loc = new Locations();
+//        Tickets tk = new Tickets();
+//        TicketDAO tkDAO = new TicketDAO();
+//        //Get ticket by bin
+//        tk = tkDAO.getTByBin(1);
+//
+//        cust.setFname("Ryan");
+//        cust.setCardNum(20122);
+//
+//        tt.setSerial(tk.getId().getSerial());
+//        //tt.setId(ttid.setCustomersCustId(null));
+//        tt.setName(tk.getId().getGameTemplatesPartNum());
+//        tt.setSaleAmount(100);
+//        tt.setPrizeAmount(0);
+//        tt.setUsers(usr);
+//        tt.setCustomers(cust);
+//        tt.setLocations(loc);
+//        tt.setInvoice(invoice);
+//        tt.setVoid_(null);
+//        ttDAO.addTrans(tt);
 //        SaleSessDAO ssDAO = new SaleSessDAO();
 //        SaleSessions ss = new SaleSessions();
 //        //ssDAO.updateCurrent(68, "10");

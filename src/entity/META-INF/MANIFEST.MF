@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 Manifest-Version: 1.0
 Main-Class: SellingMain
 
+=======
+Manifest-Version: 1.0
+Main-Class: SellingMain
+
+>>>>>>> origin/master

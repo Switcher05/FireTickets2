@@ -1,0 +1,7 @@
+/nbproject/private/
+/build/
+/src/hibernate.cfg.xml
+/src/db/Settings.java
+/dist/
+/out/
+/.idea/

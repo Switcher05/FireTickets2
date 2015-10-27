@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Manifest-Version: 1.0
 Class-Path: xercesimpl.jar dom4j-1.6.1.jar javax.servlet.jar javax.tra
  nsaction.jar stario.jar jboss-logging-3.1.0.GA.jar javax.annotation.j
@@ -10,3 +11,17 @@ Class-Path: xercesimpl.jar dom4j-1.6.1.jar javax.servlet.jar javax.tra
  ar
 Main-Class: gui.Main2
 
+=======
+Manifest-Version: 1.0
+Class-Path: xercesimpl.jar dom4j-1.6.1.jar javax.servlet.jar javax.tra
+ nsaction.jar stario.jar jboss-logging-3.1.0.GA.jar javax.annotation.j
+ ar jboss-transaction-api_1.1_spec-1.0.1.Final.jar javax.ejb.jar javax
+ .resource.jar starjavapos.jar javax.jms.jar javax.servlet.jsp.jar xml
+ -apis.jar javax.persistence.jar antlr-2.7.7.jar hibernate-jpa-2.0-api
+ -1.0.1.Final.jar mysql-connector-java-5.1.34-bin.jar jcl.jar javassis
+ t-3.15.0-GA.jar hibernate-commons-annotations-4.0.2.Final.jar jpos113
+ -controls.jar hibernate-core-4.2.2.Final.jar javax.servlet.jsp.jstl.j
+ ar
+Main-Class: gui.Main2
+
+>>>>>>> origin/master
