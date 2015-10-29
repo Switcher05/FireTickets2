@@ -106,14 +106,14 @@ public class CustomerDAO {
         }
         return custs;
     }
-    public Customers getCustById(int custid){
+    public Customers getCustById(String custid){
         Customers cust = null;
         session = HibernateUtil.getSessionFactory().openSession();
         try{
             trns = session.beginTransaction();
             String queryString = "from Customers where cust_id = :cust_id";
             Query q = session.createQuery(queryString);
-            q.setInteger("cust_id", custid);
+            q.setParameter("cust_id", custid);
             cust = (Customers) q.uniqueResult();
         }catch (RuntimeException e){
             e.printStackTrace();
