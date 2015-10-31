@@ -57,22 +57,25 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
         button = new Button();
         button.setText("Clear");
+        button.setPrefSize(65,65);
         GridPane.setConstraints(button, 1, 2);
         button.setOnAction(e -> System.out.println("test"));
 
         loginBtn = new Button();
         loginBtn.setText("Login");
+        loginBtn.setPrefSize(65,65);
         GridPane.setConstraints(loginBtn, 1, 3);
         loginBtn.setOnAction(this);
 
         cancelBtn = new Button();
         cancelBtn.setText("Cancel");
+        cancelBtn.setPrefSize(65,65);
         GridPane.setConstraints(cancelBtn, 2, 3);
         cancelBtn.setOnAction(this);
 
         gp.getChildren().addAll(nameLbl, user, pass, passLbl, button, loginBtn, cancelBtn);
 
-        Scene scene = new Scene(gp, 300, 250);
+        Scene scene = new Scene(gp, 300, 350);
         window.setScene(scene);
         window.show();
 
@@ -88,9 +91,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             Users usr = new Users();
             UserDAO usrDAO = new UserDAO();
             //TODO: needs to be get text of text box
-            usr.setName("Ryan");
+            usr.setName(user.getText());
             //TODO: Change from plain text to password field
-            usr.setPassword("2626");
+            usr.setPassword(pass.getText());
             if (usrDAO.Login(usr) == true){
                 //Close screen and open
                 SellingMain sm = new SellingMain();
@@ -100,6 +103,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             }else{
                 System.out.println("Invalid login");
                 JOptionPane.showMessageDialog(null, "invalid login");
+                pass.setText("");
+                user.setText("");
             }
         } else if (event.getSource() == cancelBtn){
             //TODO: close the program

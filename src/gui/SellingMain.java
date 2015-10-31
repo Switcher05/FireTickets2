@@ -6,10 +6,11 @@ import entity.*;
 import org.hibernate.engine.transaction.internal.jta.JtaIsolationDelegate;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.util.*;
 
 
 /*
@@ -38,19 +39,14 @@ public class SellingMain extends javax.swing.JFrame  {
 
     public SellingMain() {
         //get logged in user
-        //TODO: create Componet Factory:
-        /*
-        class ComponentFactory{
-    static JButton createButton(String text) {
-        JButton button = new JButton();
-        button.setBackground(Color.WHITE);
-        button.setForeground(Color.BLACK);
-    }
-
-}JButton button = ComponentFactory.createButton();
-button.setText(text);
-         */
+        //get current sales session
         initComponents();
+        //Setup timer to run tickTock() every half second.
+        Timer timer = new Timer(500, e -> tickTock());
+        timer.setRepeats(true);
+        timer.setCoalesce(true);
+        timer.setInitialDelay(0);
+        timer.start();
 
 
         //Load list of games in play in bins 1 to 30
@@ -110,6 +106,9 @@ button.setText(text);
         togbtn30.setText(formatString(names[30], bins[30]));
 
    }
+    public void tickTock() {
+        currentTime.setText(DateFormat.getDateTimeInstance().format(new Date()));
+    }
 
     public static void addTextLog(String text) {
         //Update the text log on the side
@@ -134,13 +133,14 @@ button.setText(text);
         SaleSessDAO ssDAO = new SaleSessDAO();
         SaleSessions ss = new SaleSessions();
         GameTemplateDAO gtDAO = new GameTemplateDAO();
+        CustomerDAO custDAO = new CustomerDAO();
         bin = getButton();
         String subText = textDisplay.getText();
         subtotal = Integer.valueOf(subText);
         //Check if prize is in game
         tk = tx.getTicketBin(bin);
         //Is the prize entered a prize from the game template? TODO:if not, override?
-        boolean templatePrize = tx.findPrizeAmt(tk, subtotal);
+        boolean templatePrize = tx.findPrizeAmt(tk, (double)subtotal);
         //TODO:if subtotal is negative then we need a reverse prize
         if (templatePrize != true) {
             int response = JOptionPane.showConfirmDialog(null, "No prize found. Do you want to continue?", "Confirm",
@@ -158,6 +158,17 @@ button.setText(text);
         total = total - subtotal;
         textDisplay.setText("");
         textTotal.setText(Double.toString(total));
+        //Update the customers
+        Collection<JToggleButton> custButtons = Arrays.asList(cust1,cust2,cust3,cust4,cust5,cust6,cust7,cust8);
+        for (JToggleButton button : custButtons) {
+            if (button.isSelected()) {
+                String cusID = button.getText();
+                cust = custDAO.getCustById(cusID);
+                int prizes = cust.getTotalPrizes();
+                cust.setTotalPrizes(prizes + subtotal);
+                custDAO.updateCustomer(cust);
+            }
+        }
 
         //check if there is already an invoice, if not create
         if (saleClosed == true) {
@@ -166,7 +177,10 @@ button.setText(text);
         }
         usr.setUserId(3);
         loc.setLocId(1);
-        cust.setCustId(3);
+
+        if (cust.getCustId() == null) {
+            cust.setCustId(3);
+        }
 
         tx.Prize(tk, subtotal);
         //Update the current sales session
@@ -242,10 +256,13 @@ button.setText(text);
         //TODO:set user and location on login
         usr.setUserId(3);
         loc.setLocId(1);
-        //TODO:Get the selected customer
-        if (cust == null) {
+
+        //if no customer selected use the default #3
+        if (cust.getCustId() == null) {
             cust.setCustId(3);
         }
+        //cust.setCustId(3);
+
         //Return ticket by the bin number
         tk = trns.getTicketBin(bin);
         addTextLog("\nSALE: " + bin + " : " + tk.getId().getSerial() + "\n Amount: " + subtotal);
@@ -476,6 +493,7 @@ button.setText(text);
         jButton15 = new javax.swing.JButton();
         jComboBox2 = new javax.swing.JComboBox();
         jLabel42 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         timeLabel = new javax.swing.JLabel();
@@ -1237,11 +1255,22 @@ button.setText(text);
             }
         });
 
-        jButton15.setText("jButton15");
+        jButton15.setText("Set SS id");
+        jButton15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton15ActionPerformed(evt);
+            }
+        });
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel42.setText("Select an ID:");
+
+        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlAmountLayout = new javax.swing.GroupLayout(pnlAmount);
         pnlAmount.setLayout(pnlAmountLayout);
@@ -1279,24 +1308,6 @@ button.setText(text);
                                         .addComponent(jLabel24)
                                         .addGap(18, 31, Short.MAX_VALUE)
                                         .addComponent(jLabel18))))
-                            .addGroup(pnlAmountLayout.createSequentialGroup()
-                                .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnPrize, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnEditTick)
-                                    .addComponent(jButton2)
-                                    .addComponent(jButton5))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton9)
-                                .addGap(4, 4, 4)
-                                .addComponent(jButton8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton4)
-                                    .addGroup(pnlAmountLayout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addComponent(jButton7)))
-                                .addGap(33, 33, 33))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlAmountLayout.createSequentialGroup()
                                 .addComponent(btnSeven, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1347,7 +1358,30 @@ button.setText(text);
                                     .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jButton11)
                                     .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(pnlAmountLayout.createSequentialGroup()
+                                .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(pnlAmountLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jButton15))
+                                    .addGroup(pnlAmountLayout.createSequentialGroup()
+                                        .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(btnPrize, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(btnEditTick)
+                                            .addComponent(jButton2)
+                                            .addComponent(jButton5))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jButton9)
+                                        .addGap(4, 4, 4)
+                                        .addComponent(jButton8)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton4)
+                                    .addGroup(pnlAmountLayout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addComponent(jButton7)))
+                                .addGap(33, 33, 33))))
                     .addGroup(pnlAmountLayout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1355,21 +1389,21 @@ button.setText(text);
                                 .addComponent(jLabel40)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 295, Short.MAX_VALUE))
                             .addGroup(pnlAmountLayout.createSequentialGroup()
                                 .addComponent(jLabel41)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(40, 40, 40)
                                 .addComponent(jLabel42)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlAmountLayout.createSequentialGroup()
                                 .addGap(33, 33, 33)
                                 .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton15)
-                                .addGap(39, 39, 39)))))
+                                .addGap(39, 408, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         pnlAmountLayout.setVerticalGroup(
@@ -1476,7 +1510,8 @@ button.setText(text);
                     .addComponent(jLabel41)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel42))
+                    .addComponent(jLabel42)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -1868,6 +1903,15 @@ button.setText(text);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField4ActionPerformed
+
+    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
+        // TODO add your handling code here:
+        sessionNum = Integer.parseInt(jTextField4.getText());
+    }//GEN-LAST:event_jButton15ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -2010,6 +2054,7 @@ button.setText(text);
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     private javax.swing.JButton negativebtn;
     private javax.swing.JPanel pnlAmount;
     public static javax.swing.JTextField textDisplay;
