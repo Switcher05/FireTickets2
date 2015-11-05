@@ -1,4 +1,5 @@
 package gui;
+
 import dao.UserDAO;
 import entity.Users;
 import javafx.application.Application;
@@ -13,12 +14,11 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * Created by Ryan on 10/13/2015.
  */
-public class Main extends Application implements EventHandler<ActionEvent> {
+public class LoginGUI extends Application implements EventHandler<ActionEvent> {
     Button button;
     Button loginBtn, cancelBtn;
     Stage window;
@@ -84,13 +84,15 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         if (event.getSource() == button){
-            System.out.println("Hey Charlie!");
+            //Clear the boxes
+            user.setText("");
+            pass.setText("");
+            System.out.println("Fields cleared");
         } else if (event.getSource() == loginBtn){
-            //TODO: Check if user name and password is valid, if so return logged in user id
-            //Check if the login is valid, if so close this screen and open seeling screen.
+
+            //Check if the login is valid, if so close this screen and open selling screen.
             Users usr = new Users();
             UserDAO usrDAO = new UserDAO();
-            //TODO: needs to be get text of text box
             usr.setName(user.getText());
             //TODO: Change from plain text to password field
             usr.setPassword(pass.getText());
@@ -107,7 +109,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
                 user.setText("");
             }
         } else if (event.getSource() == cancelBtn){
-            //TODO: close the program
+            //close the program
             System.exit(0);
 
         }

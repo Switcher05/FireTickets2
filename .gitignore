@@ -6,4 +6,5 @@
 /out/
 /.idea/
 .idea/
-workspace.xml
+.idea/workspace.xml
+out/
