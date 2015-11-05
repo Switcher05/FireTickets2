@@ -31,6 +31,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  *
@@ -166,7 +169,7 @@ public class Transaction {
 
     }
 
-    public boolean findPrizeAmt(Tickets tk, double prizeAmt) {
+    public boolean findPrizeAmt(Tickets tk, Integer prizeAmt) {
         //TODO: needs to detect if the the prizeAmt is valid, if so subtract one from the ticket
         int amount;
         GameTemplates gt = new GameTemplates();
@@ -174,26 +177,95 @@ public class Transaction {
         TicketDAO ttDAO = new TicketDAO();
         //Load the gametemplate based on the part number
         gt = gtDAO.getGTById(tk.getId().getGameTemplatesPartNum());
-        //Detect if prizeAmt matches one of the 15 possible prizes
-        if (prizeAmt == gt.getPrizeAmt1()) {
-            amount = tk.getPrizeRem1();
-            tk.setPrizeRem1(amount - 1);
+        //TODO:need to add the last sale
+        List<Integer> gameTemps = Arrays.asList(gt.getPrizeAmt1(), gt.getPrizeAmt2(), gt.getPrizeAmt3(), gt.getPrizeAmt4(), gt.getPrizeAmt5(), gt.getPrizeAmt6(),
+                gt.getPrizeAmt7(), gt.getPrizeAmt8(), gt.getPrizeAmt9(), gt.getPrizeAmt10(), gt.getPrizeAmt11(), gt.getPrizeAmt12(), gt.getPrizeAmt13(), gt.getPrizeAmt14(), gt.getPrizeAmt15());
+        for (int i =0; i < gameTemps.size(); i++){
+            int num = gameTemps.get(i);
+            if (prizeAmt == num){
+                if (i == 0){
+                    amount = tk.getPrizeRem1();
+                    tk.setPrizeRem1(amount--);
+                    break;
+                }else if (i == 1) {
+                    amount = tk.getPrizeRem2();
+                    tk.setPrizeRem2(amount--);
+                }else if (i == 2){
+                    amount = tk.getPrizeRem3();
+                    tk.setPrizeRem3(amount--);
+                }else if (i == 3){
+                    amount = tk.getPrizeRem4();
+                    tk.setPrizeRem4(amount--);
+                }else if (i == 4 ){
+                    amount = tk.getPrizeRem5();
+                    tk.setPrizeRem5(amount--);
+                }else if (i == 5){
+                    amount = tk.getPrizeRem6();
+                    tk.setPrizeRem6(amount--);
+                }else if (i == 6){
+                    amount = tk.getPrizeRem7();
+                    tk.setPrizeRem7(amount--);
+                }else if (i == 7){
+                    amount = tk.getPrizeRem8();
+                    tk.setPrizeRem8(amount--);
+                }else if (i == 8){
+                    amount = tk.getPrizeRem9();
+                    tk.setPrizeRem9(amount--);
+                }else if (i == 9){
+                    amount = tk.getPrizeRem10();
+                    tk.setPrizeRem10(amount--);
+                }else if (i == 10){
+                    amount = tk.getPrizeRem11();
+                    tk.setPrizeRem12(amount--);
+                }else if (i == 11){
+                    amount = tk.getPrizeRem12();
+                    tk.setPrizeRem12(amount--);
+                }else if (i == 12){
+                    amount = tk.getPrizeRem13();
+                    tk.setPrizeRem13(amount--);
+                }else if (i ==13){
+                    amount = tk.getPrizeRem14();
+                    tk.setPrizeRem14(amount--);
+                }else if (i== 14) {
+                    amount = tk.getPrizeRem15();
+                    tk.setPrizeRem15(amount--);
+                }else{
+                    return false;
+                }
 
-        } else if (prizeAmt == gt.getPrizeAmt2()) {
-            amount = tk.getPrizeRem2();
-            tk.setPrizeRem2(amount - 1);
-        } else if (prizeAmt == gt.getPrizeAmt3()) {
-            amount = tk.getPrizeRem3();
-            tk.setPrizeRem3(amount - 1);
-        } else if (prizeAmt == gt.getPrizeAmt4()) {
-            amount = tk.getPrizeRem3();
-            tk.setPrizeRem4(amount - 1);
-        } else if (prizeAmt == gt.getLastSale()) {
-            tk.setLastSaleRem((byte) 0);
-
-        } else {
-            return false;
+            }else{
+                return false;
+            }
         }
+
+
+//        //Detect if prizeAmt matches one of the 15 possible prizes
+//        if (prizeAmt == gt.getPrizeAmt1()) {
+//            amount = tk.getPrizeRem1();
+//            tk.setPrizeRem1(amount - 1);
+//
+//        } else if (prizeAmt == gt.getPrizeAmt2()) {
+//            amount = tk.getPrizeRem2();
+//            tk.setPrizeRem2(amount - 1);
+//        } else if (prizeAmt == gt.getPrizeAmt3()) {
+//            amount = tk.getPrizeRem3();
+//            tk.setPrizeRem3(amount - 1);
+//        } else if (prizeAmt == gt.getPrizeAmt4()) {
+//            amount = tk.getPrizeRem3();
+//            tk.setPrizeRem4(amount - 1);
+//        } else if (prizeAmt == gt.getPrizeAmt1()){
+//            amount = tk.getPrizeRem3();
+//            tk.setPrizeRem3(amount - 1);
+//        }
+//
+//
+//
+//        else if (prizeAmt == gt.getLastSale()) {
+//            tk.setLastSaleRem((byte) 0);
+//
+//        } else {
+//            return false;
+//        }
 
         //Update the ticket
         ttDAO.addTickets(tk);

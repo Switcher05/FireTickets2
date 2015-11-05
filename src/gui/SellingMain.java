@@ -3,12 +3,9 @@ package gui;
 import Util.CashDrawerKick;
 import dao.*;
 import entity.*;
-import org.hibernate.engine.transaction.internal.jta.JtaIsolationDelegate;
 
 import javax.swing.*;
 import javax.swing.Timer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.util.*;
 
@@ -132,7 +129,6 @@ public class SellingMain extends javax.swing.JFrame  {
         Locations loc = new Locations();
         SaleSessDAO ssDAO = new SaleSessDAO();
         SaleSessions ss = new SaleSessions();
-        GameTemplateDAO gtDAO = new GameTemplateDAO();
         CustomerDAO custDAO = new CustomerDAO();
         bin = getButton();
         String subText = textDisplay.getText();
@@ -140,7 +136,7 @@ public class SellingMain extends javax.swing.JFrame  {
         //Check if prize is in game
         tk = tx.getTicketBin(bin);
         //Is the prize entered a prize from the game template? TODO:if not, override?
-        boolean templatePrize = tx.findPrizeAmt(tk, (double)subtotal);
+        boolean templatePrize = tx.findPrizeAmt(tk, subtotal);
         //TODO:if subtotal is negative then we need a reverse prize
         if (templatePrize != true) {
             int response = JOptionPane.showConfirmDialog(null, "No prize found. Do you want to continue?", "Confirm",
@@ -218,6 +214,7 @@ public class SellingMain extends javax.swing.JFrame  {
             System.out.println("sale session feteched: " + ss.getId());
         }
         //TODO: If more then one button selected cycle through them all
+        //TODO: If the button is blank, do nothing. 
         //Get the button selected
         if (bin == 0) {
             bin = getButton();
@@ -293,8 +290,6 @@ public class SellingMain extends javax.swing.JFrame  {
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {
         //TODO:Get the total, close the invoice number, calculate payout or payin, update the log, print the reciept, kick the register.
-        Transaction tx = new Transaction();
-        TillTape tt = new TillTape();
         TillTapeDAO ttDAO = new TillTapeDAO();
 
 
