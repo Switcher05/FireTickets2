@@ -213,8 +213,21 @@ public class SellingMain extends javax.swing.JFrame  {
             ss = ssDAO.fetchOpenSS();
             System.out.println("sale session feteched: " + ss.getId());
         }
+        //Check if buttons have a game assigned to them
+        Collection<JToggleButton> gameBtns = Arrays.asList(togbtn1, togbtn2, togbtn3, togbtn4,togbtn5,togbtn6,togbtn7,togbtn8,togbtn9,togbtn10,togbtn11,togbtn12,togbtn13,togbtn14,togbtn15,togbtn16,togbtn17,togbtn18,togbtn19,togbtn20,togbtn21,togbtn22,
+                togbtn23,togbtn24,togbtn25,togbtn26, togbtn27, togbtn28,togbtn29,togbtn30);
+        for (JToggleButton gameButton : gameBtns){
+            if (gameButton.isSelected()) {
+                if (gameButton.getText().contains("*")) {
+                    System.out.println("Empty game selected");
+                    JOptionPane.showMessageDialog(null, "Empty game selected");
+                    return;
+                }
+            }
+        }
         //TODO: If more then one button selected cycle through them all
-        //TODO: If the button is blank, do nothing. 
+        //TODO: If the button is blank, do nothing.
+        //If collection of buttons from getText is equal to * then error.
         //Get the button selected
         if (bin == 0) {
             bin = getButton();
