@@ -159,6 +159,7 @@ public class Transaction {
 //        loc.setLocId(1);
 //        usr.setUserId(5);
 //        tt.setUsers(usr);
+
         tt.setTime(getCurrentTimeStamp());
         tt.setCustomers(cust);
         tt.setLocations(loc);
@@ -182,7 +183,11 @@ public class Transaction {
                 gt.getPrizeAmt7(), gt.getPrizeAmt8(), gt.getPrizeAmt9(), gt.getPrizeAmt10(), gt.getPrizeAmt11(), gt.getPrizeAmt12(), gt.getPrizeAmt13(), gt.getPrizeAmt14(), gt.getPrizeAmt15());
         for (int i =0; i < gameTemps.size(); i++){
             int num = gameTemps.get(i);
+            if (num == 0){
+                return false;
+            }
             if (prizeAmt == num){
+
                 if (i == 0){
                     amount = tk.getPrizeRem1();
                     tk.setPrizeRem1(amount--);
@@ -190,83 +195,65 @@ public class Transaction {
                 }else if (i == 1) {
                     amount = tk.getPrizeRem2();
                     tk.setPrizeRem2(amount--);
+                    break;
                 }else if (i == 2){
                     amount = tk.getPrizeRem3();
                     tk.setPrizeRem3(amount--);
+                    break;
                 }else if (i == 3){
                     amount = tk.getPrizeRem4();
                     tk.setPrizeRem4(amount--);
+                    break;
                 }else if (i == 4 ){
                     amount = tk.getPrizeRem5();
                     tk.setPrizeRem5(amount--);
+                    break;
                 }else if (i == 5){
                     amount = tk.getPrizeRem6();
                     tk.setPrizeRem6(amount--);
+                    break;
                 }else if (i == 6){
                     amount = tk.getPrizeRem7();
                     tk.setPrizeRem7(amount--);
+                    break;
                 }else if (i == 7){
                     amount = tk.getPrizeRem8();
                     tk.setPrizeRem8(amount--);
+                    break;
                 }else if (i == 8){
                     amount = tk.getPrizeRem9();
                     tk.setPrizeRem9(amount--);
+                    break;
                 }else if (i == 9){
                     amount = tk.getPrizeRem10();
                     tk.setPrizeRem10(amount--);
+                    break;
                 }else if (i == 10){
                     amount = tk.getPrizeRem11();
                     tk.setPrizeRem12(amount--);
+                    break;
                 }else if (i == 11){
                     amount = tk.getPrizeRem12();
                     tk.setPrizeRem12(amount--);
+                    break;
                 }else if (i == 12){
                     amount = tk.getPrizeRem13();
                     tk.setPrizeRem13(amount--);
+                    break;
                 }else if (i ==13){
                     amount = tk.getPrizeRem14();
                     tk.setPrizeRem14(amount--);
+                    break;
                 }else if (i== 14) {
                     amount = tk.getPrizeRem15();
                     tk.setPrizeRem15(amount--);
+                    break;
                 }else{
                     return false;
                 }
 
-            }else{
-                return false;
             }
         }
-
-
-//        //Detect if prizeAmt matches one of the 15 possible prizes
-//        if (prizeAmt == gt.getPrizeAmt1()) {
-//            amount = tk.getPrizeRem1();
-//            tk.setPrizeRem1(amount - 1);
-//
-//        } else if (prizeAmt == gt.getPrizeAmt2()) {
-//            amount = tk.getPrizeRem2();
-//            tk.setPrizeRem2(amount - 1);
-//        } else if (prizeAmt == gt.getPrizeAmt3()) {
-//            amount = tk.getPrizeRem3();
-//            tk.setPrizeRem3(amount - 1);
-//        } else if (prizeAmt == gt.getPrizeAmt4()) {
-//            amount = tk.getPrizeRem3();
-//            tk.setPrizeRem4(amount - 1);
-//        } else if (prizeAmt == gt.getPrizeAmt1()){
-//            amount = tk.getPrizeRem3();
-//            tk.setPrizeRem3(amount - 1);
-//        }
-//
-//
-//
-//        else if (prizeAmt == gt.getLastSale()) {
-//            tk.setLastSaleRem((byte) 0);
-//
-//        } else {
-//            return false;
-//        }
-
         //Update the ticket
         ttDAO.addTickets(tk);
         return true;

@@ -16,22 +16,25 @@ import java.util.logging.Logger;
 /**
  * Created by Switcher on 9/21/2015.
  */
-public class GameTemplateDAO {
+public class GameTemplateDAO{
     private static final Logger LOG = Logger.getLogger(GameTemplateDAO.class.getName());
-    Transaction trns = null;
+    Transaction tx = null;
     Session session;
+    public GameTemplateDAO(){
 
-    public void addGameTemplat(GameTemplates gt){
+    }
+
+    public void addGameTemplate(GameTemplates gt){
 
         session = HibernateUtil.getSessionFactory().openSession();
         try{
-            trns = session.beginTransaction();
+            tx = session.beginTransaction();
             session.save(gt);
             session.getTransaction().commit();
 
         }catch (RuntimeException e){
-            if (trns != null){
-                trns.rollback();
+            if (tx != null){
+                tx.rollback();
             }
             e.printStackTrace();
         }finally {
@@ -41,14 +44,14 @@ public class GameTemplateDAO {
     public void deleteGameTemplate(int gtid){
         session = HibernateUtil.getSessionFactory().openSession();
         try{
-            trns = session.beginTransaction();
+            tx = session.beginTransaction();
             GameTemplates gt = (GameTemplates) session.load(GameTemplates.class, new Integer(gtid));
             session.delete(gt);
             session.getTransaction().commit();
 
         }catch (RuntimeException e){
-            if (trns != null){
-                trns.rollback();
+            if (tx != null){
+                tx.rollback();
             }
         } finally {
             releaseResources();
@@ -57,12 +60,12 @@ public class GameTemplateDAO {
     public void updateGameTemplate(GameTemplates gt){
         session = HibernateUtil.getSessionFactory().openSession();
         try{
-            trns = session.beginTransaction();
+            tx = session.beginTransaction();
             session.update(gt);
             session.getTransaction().commit();
         } catch (RuntimeException e){
-            if (trns != null){
-                trns.rollback();
+            if (tx != null){
+                tx.rollback();
             }
             e.printStackTrace();
         } finally {
@@ -73,7 +76,7 @@ public class GameTemplateDAO {
         List<GameTemplates> gts = new ArrayList<GameTemplates>();
         session = HibernateUtil.getSessionFactory().openSession();
         try{
-            trns = session.beginTransaction();
+            tx = session.beginTransaction();
             gts = session.createQuery("from GameTemplates").list();
 
         } catch (RuntimeException e){
@@ -88,7 +91,7 @@ public class GameTemplateDAO {
         GameTemplates gt = null;
         session = HibernateUtil.getSessionFactory().openSession();
         try{
-            trns = session.beginTransaction();
+            tx = session.beginTransaction();
             String queryString = "from GameTemplates gt where gt.id.partNum = :gtid";
             Query q = session.createQuery(queryString);
             q.setParameter("gtid", gtid);
@@ -96,10 +99,10 @@ public class GameTemplateDAO {
             gt = (GameTemplates) q.uniqueResult();
         }catch (RuntimeException e){
             
-            if(trns!= null){
+            if(tx != null){
                  e.printStackTrace();
                  JOptionPane.showMessageDialog(null, "No Game Template found - " + gtid);
-                 trns.rollback();
+                 tx.rollback();
             }
         } finally {
             releaseResources();
@@ -111,13 +114,13 @@ public class GameTemplateDAO {
         GameTemplates gt = null;
         session = HibernateUtil.getSessionFactory().openSession();
         try {
-            trns = session.beginTransaction();
+            tx = session.beginTransaction();
             GameTemplatesId gtId = new GameTemplatesId();
             gtId.setPartNum(partNum);
             gt = (GameTemplates) session.get(GameTemplates.class, gtId);
             System.out.println("Game name: " + gt.getGameName());
         } catch (RuntimeException e) {
-            if (trns != null) {
+            if (tx != null) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "No game template by part number : " + partNum);
             }
