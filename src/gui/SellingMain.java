@@ -1,13 +1,12 @@
 package gui;
 
-import Util.CashDrawerKick;
 import dao.*;
 import entity.*;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.Timer;
+import java.awt.event.ActionEvent;
 import java.text.DateFormat;
 import java.util.*;
 
@@ -30,6 +29,7 @@ import Tickets.editor.TicketsEditor;
 
 public class SellingMain extends javax.swing.JFrame  {
 
+
     private final Logger logger = Logger.getLogger(SellingMain.class);
     public static int invoice;
     public static boolean saleClosed = true;
@@ -37,7 +37,9 @@ public class SellingMain extends javax.swing.JFrame  {
     private int bin = 0;
     private double total = 0;
     private int subtotal = 0;
+    public static List<TxObject> lst;
     public static List<Tickets> tkList;
+    public static TxObject txObject;
 
     public static GameTemplateDAO gtDAO;
     public static GameTemplates gt;
@@ -54,7 +56,11 @@ public class SellingMain extends javax.swing.JFrame  {
     public static TillTapeDAO ttDAO;
 
     public SellingMain() {
-        BasicConfigurator.configure();
+     //   StdOutErr console = new StdOutErr();
+    //    console.setVisible(true);
+     //   PropertyConfigurator.configure("log4j.properties");
+        //BasicConfigurator.configure();
+        lst = new ArrayList<>();
         logger.info("Start up");
         //get logged in user
         //get current sales session
@@ -142,13 +148,6 @@ public class SellingMain extends javax.swing.JFrame  {
         togbtn30.setText(formatString(names[30], bins[30]));
     }
 
-    public static int getSessionNum() {
-        return sessionNum;
-    }
-
-    public static void setSessionNum(int sessionNum) {
-        SellingMain.sessionNum = sessionNum;
-    }
 
     private void btnPrizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrizeActionPerformed
         //TODO: if the @ is in the text box, loop the value that many times.
@@ -161,11 +160,12 @@ public class SellingMain extends javax.swing.JFrame  {
         ss = new SaleSessions();
         custDAO = new CustomerDAO();
         bin = getButton();
+
         String subText = textDisplay.getText();
         subtotal = Integer.valueOf(subText);
         //Check if prize is in game
         tk = tx.getTicketBin(bin);
-        //Is the prize entered a prize from the game template? TODO:if not, override?
+        //Is the prize entered a prize from the game template? if not, override?
         boolean templatePrize = tx.findPrizeAmt(tk, subtotal);
         //TODO:if subtotal is negative then we need a reverse prize
         if (templatePrize != true) {
@@ -180,11 +180,38 @@ public class SellingMain extends javax.swing.JFrame  {
                 System.out.println("JOptionPane closed");
             }
         }
-
+        checkForInvoice();
         total = total - subtotal;
         textDisplay.setText("");
         textTotal.setText(Double.toString(total));
+        if (cust.getCustId() == null) {
+            cust.setCustId(3);
+        }
         //Update the customers
+        updateCustomersPrizes();
+
+        //check if there is already an invoice, if not create
+        if (saleClosed == true) {
+            invoice = tx.getInvoice();
+            saleClosed = false;
+        }
+        usr.setUserId(3);
+        loc.setLocId(1);
+
+        addTextLog("\nPRIZE: " + bin + " : " + tk.getId().getSerial() + "\n Amount: " + subtotal);
+
+        txObject = new TxObject(bin, subtotal, 1);
+        lst.add(txObject);
+
+        togbtnSetEnabledFalse();
+        subtotal = 0;
+        tk = null;
+        ss = null;
+        bin = 0;
+
+    }//GEN-LAST:event_btnPrizeActionPerformed
+
+    private void updateCustomersPrizes() {
         Collection<JToggleButton> custButtons = Arrays.asList(cust1,cust2,cust3,cust4,cust5,cust6,cust7,cust8);
         for (JToggleButton button : custButtons) {
             if (button.isSelected()) {
@@ -195,39 +222,7 @@ public class SellingMain extends javax.swing.JFrame  {
                 custDAO.updateCustomer(cust);
             }
         }
-
-        //check if there is already an invoice, if not create
-        if (saleClosed == true) {
-            invoice = tx.getInvoice();
-            saleClosed = false;
-        }
-        usr.setUserId(3);
-        loc.setLocId(1);
-
-        if (cust.getCustId() == null) {
-            cust.setCustId(3);
-        }
-
-        tx.Prize(tk, subtotal);
-        //Update the current sales session
-        ss = ssDAO.getSSById(String.valueOf(getSessionNum()));
-        double grossSale = ss.getGrossSales();
-        double grossPrize = ss.getGrossPrizes();
-        ss.setGrossPrizes(grossSale + subtotal);
-        ss.setCurrentbank(grossPrize - subtotal);
-        ss.setGrossNet(ss.getGrossSales() - ss.getGrossPrizes());
-        ssDAO.addSession(ss);
-
-        addTextLog("\nPrize: " + bin + " : " + tk.getId().getSerial() + "\n Amount: " + subtotal);
-        tx.tillTape(usr, cust, loc, bin, 0, subtotal, invoice);
-
-        togbtnSetEnabledFalse();
-        subtotal = 0;
-        tk = null;
-        ss = null;
-        bin = 0;
-
-    }//GEN-LAST:event_btnPrizeActionPerformed
+    }
 
     private void btnSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaleActionPerformed
 
@@ -243,8 +238,8 @@ public class SellingMain extends javax.swing.JFrame  {
         custDAO = new CustomerDAO();
 
 
-
         //If sale session has not been started by start bank button then fetch a possible open session.
+        //TODO:Doesn't work?
         if (sessionNum == 0) {
             ss = ssDAO.fetchOpenSS();
             System.out.println("sale session feteched: " + ss.getId());
@@ -257,9 +252,11 @@ public class SellingMain extends javax.swing.JFrame  {
                 if (gameButton.getText().contains("*")) {
                     System.out.println("Empty game selected");
                     JOptionPane.showMessageDialog(null, "Empty game selected");
+                    logger.warn("Empty game selected");
                     return;
                 }
             }
+
         }
         //TODO: If more then one button selected cycle through them all
         //TODO: If the button is blank, do nothing.
@@ -275,6 +272,7 @@ public class SellingMain extends javax.swing.JFrame  {
         total = total + subtotal;
         textDisplay.setText("");
         textTotal.setText(Double.toString(total) + "0");
+
         //Update the customers
         Collection<JToggleButton> custButtons = Arrays.asList(cust1,cust2,cust3,cust4,cust5,cust6,cust7,cust8);
         for (JToggleButton button : custButtons) {
@@ -284,50 +282,25 @@ public class SellingMain extends javax.swing.JFrame  {
                 int sales = cust.getTotalSales();
                 cust.setTotalSales(sales + subtotal);
                 custDAO.updateCustomer(cust);
+                logger.info("Updated customer id:" + cust.getCustId());
             }
         }
-
-        //Get the invoice number
-        tx = new Transaction();
-        //check if there is already an invoice, if not create
-        if (saleClosed == true) {
-            invoice = tx.getInvoice();
-            saleClosed = false;
-            jLabel18.setText(String.valueOf(invoice));
-            addTextLog("\n===================");
-            addTextLog("\nInvoice number: " + invoice);
-            addTextLog("\n===================");
-        }
-
-        //TODO:set user and location on login
         usr.setUserId(3);
         loc.setLocId(1);
-
-        //if no customer selected use the default #3
         if (cust.getCustId() == null) {
             cust.setCustId(3);
         }
-        //cust.setCustId(3);
-
-        //Return ticket by the bin number
+        tx = new Transaction();
         tk = tx.getTicketBin(bin);
+        checkForInvoice();
         addTextLog("\nSALE: " + bin + " : " + tk.getId().getSerial() + "\n Amount: " + subtotal);
-        //Update ticket stats
-        tx.Sale(tk, subtotal, subtotal);
-        //Add sale to the till tape
-        tx.tillTape(usr, cust, loc, bin, subtotal, 0, invoice);
-        //Update the current sales session
-        ss = ssDAO.getSSById(String.valueOf(getSessionNum()));
-        double gross = ss.getGrossSales();
-        double bank = ss.getCurrentbank();
+        //check if there is already an invoice, if not create
 
-        ss.setGrossSales(gross + subtotal);
-        ss.setCurrentbank(bank + subtotal);
-        ss.setGrossNet(ss.getGrossSales() - ss.getGrossPrizes());
-        ssDAO.addSession(ss);
-        //TODO:deselect customers
 
-        //Un-select any remaining buttons
+        //Add the sale to list of Transaction
+        txObject = new TxObject(bin, subtotal, 1);
+        lst.add(txObject);
+
         togbtnSetEnabledFalse();
         //Set values to 0 to prepare for next sale
         subtotal = 0;
@@ -337,10 +310,24 @@ public class SellingMain extends javax.swing.JFrame  {
 
     }//GEN-LAST:event_btnSaleActionPerformed
 
+    private void checkForInvoice() {
+        if (saleClosed == true) {
+            invoice = tx.getInvoice();
+            saleClosed = false;
+            invoiceLbl.setText(String.valueOf(invoice));
+            addTextLog("\n===================");
+            addTextLog("\nInvoice number: " + invoice);
+            addTextLog("\n===================");
+        }
+    }
+
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {
         //TODO:Get the total, close the invoice number, calculate payout or payin, update the log, print the reciept, kick the register.
         ttDAO = new TillTapeDAO();
+        tx = new Transaction();
 
+        boolean closed = tx.closeTransaction(lst);
+        System.out.println("closed: " + closed);
 
         //close the till tape where invoice number  equal to:
         List<TillTape> ttlst = new ArrayList<>();
@@ -351,8 +338,9 @@ public class SellingMain extends javax.swing.JFrame  {
 
         }
         //Kick the cash drawer
-        CashDrawerKick cd = new CashDrawerKick();
-        cd.run();
+//        CashDrawerKick cd = new CashDrawerKick();
+//        cd.run();
+
         //Display message to collect or payout
         if (total <= 0) {
             JOptionPane.showMessageDialog(null, "Payout: " + total);
@@ -375,6 +363,7 @@ public class SellingMain extends javax.swing.JFrame  {
         textTotal.setText("");
         textDisplay.setText("");
         clearButtons();
+        lst.clear();
 
     }
     public void clearButtons(){
@@ -500,7 +489,7 @@ public class SellingMain extends javax.swing.JFrame  {
         btnHundred = new javax.swing.JButton();
         btnSale = new javax.swing.JButton();
         btnPrize = new javax.swing.JButton();
-        jButton18 = new javax.swing.JButton();
+        tenderBtn = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
         textDisplay = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -508,7 +497,7 @@ public class SellingMain extends javax.swing.JFrame  {
         jLabel35 = new javax.swing.JLabel();
         textTotal = new javax.swing.JTextField();
         btnEditTick = new javax.swing.JButton();
-        jLabel18 = new javax.swing.JLabel();
+        invoiceLbl = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -516,25 +505,25 @@ public class SellingMain extends javax.swing.JFrame  {
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         negativebtn = new javax.swing.JButton();
-        jButton12 = new javax.swing.JButton();
+        startBankBtn = new javax.swing.JButton();
         bankText = new javax.swing.JTextField();
         btnRefresh = new javax.swing.JButton();
         btnUndo = new javax.swing.JButton();
         btnPrintEvery = new javax.swing.JToggleButton();
-        jButton10 = new javax.swing.JButton();
+        kickDrawer1 = new javax.swing.JButton();
         closingfield = new javax.swing.JTextField();
-        jButton11 = new javax.swing.JButton();
-        jButton13 = new javax.swing.JButton();
+        closingCashBtn = new javax.swing.JButton();
+        kickDrawer2 = new javax.swing.JButton();
         jTFaddcash = new javax.swing.JTextField();
-        jButton14 = new javax.swing.JButton();
+        addCashBtn = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jLabel41 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton15 = new javax.swing.JButton();
+        custIDtxt = new javax.swing.JTextField();
+        setCustBtn = new javax.swing.JButton();
+        setSSIDBtn = new javax.swing.JButton();
         jComboBox2 = new javax.swing.JComboBox();
         jLabel42 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
@@ -543,7 +532,6 @@ public class SellingMain extends javax.swing.JFrame  {
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         timeLabel = new javax.swing.JLabel();
-        dateLabel = new javax.swing.JLabel();
         currentTime = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
         jLabel37 = new javax.swing.JLabel();
@@ -1142,10 +1130,10 @@ public class SellingMain extends javax.swing.JFrame  {
             }
         });
 
-        jButton18.setText("Tender change");
-        jButton18.addActionListener(new java.awt.event.ActionListener() {
+        tenderBtn.setText("Tender change");
+        tenderBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton18ActionPerformed(evt);
+                tenderBtnActionPerformed(evt);
             }
         });
 
@@ -1185,8 +1173,8 @@ public class SellingMain extends javax.swing.JFrame  {
             }
         });
 
-        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel18.setText("jLabel18");
+        invoiceLbl.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        invoiceLbl.setText("invoice#");
 
         jButton2.setText("Add Customer");
         jButton2.setEnabled(false);
@@ -1227,10 +1215,10 @@ public class SellingMain extends javax.swing.JFrame  {
             }
         });
 
-        jButton12.setText("Start bank");
-        jButton12.addActionListener(new java.awt.event.ActionListener() {
+        startBankBtn.setText("Start bank");
+        startBankBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton12ActionPerformed(evt);
+                startBankBtnActionPerformed(evt);
             }
         });
 
@@ -1255,31 +1243,31 @@ public class SellingMain extends javax.swing.JFrame  {
             }
         });
 
-        jButton10.setText("Kick drawer 1");
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        kickDrawer1.setText("Kick drawer 1");
+        kickDrawer1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                kickDrawer1ActionPerformed(evt);
             }
         });
 
-        jButton11.setText("Closing Cash");
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
+        closingCashBtn.setText("Closing Cash");
+        closingCashBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
+                closingCashBtnActionPerformed(evt);
             }
         });
 
-        jButton13.setText("Kick drawer 2");
-        jButton13.addActionListener(new java.awt.event.ActionListener() {
+        kickDrawer2.setText("Kick drawer 2");
+        kickDrawer2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton13ActionPerformed(evt);
+                kickDrawer2ActionPerformed(evt);
             }
         });
 
-        jButton14.setText("Add/Rem Cash");
-        jButton14.addActionListener(new java.awt.event.ActionListener() {
+        addCashBtn.setText("Add/Rem Cash");
+        addCashBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton14ActionPerformed(evt);
+                addCashBtnActionPerformed(evt);
             }
         });
 
@@ -1294,17 +1282,17 @@ public class SellingMain extends javax.swing.JFrame  {
 
         jLabel41.setText("Set by ID number:");
 
-        jButton1.setText("Set");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        setCustBtn.setText("Set");
+        setCustBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                setCustBtnActionPerformed(evt);
             }
         });
 
-        jButton15.setText("Set SS id");
-        jButton15.addActionListener(new java.awt.event.ActionListener() {
+        setSSIDBtn.setText("Set SS id");
+        setSSIDBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton15ActionPerformed(evt);
+                setSSIDBtnActionPerformed(evt);
             }
         });
 
@@ -1357,7 +1345,7 @@ public class SellingMain extends javax.swing.JFrame  {
                                         .addGap(31, 31, 31)
                                         .addComponent(jLabel24)
                                         .addGap(18, 18, Short.MAX_VALUE)
-                                        .addComponent(jLabel18))))
+                                        .addComponent(invoiceLbl))))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlAmountLayout.createSequentialGroup()
                                 .addComponent(btnSeven, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1365,7 +1353,7 @@ public class SellingMain extends javax.swing.JFrame  {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton18))
+                                .addComponent(tenderBtn))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlAmountLayout.createSequentialGroup()
                                 .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(pnlAmountLayout.createSequentialGroup()
@@ -1401,23 +1389,23 @@ public class SellingMain extends javax.swing.JFrame  {
                                         .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(bankText, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jButton10)
-                                                .addComponent(jButton13, javax.swing.GroupLayout.Alignment.TRAILING))
+                                                .addComponent(kickDrawer1)
+                                                .addComponent(kickDrawer2, javax.swing.GroupLayout.Alignment.TRAILING))
                                             .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                                 .addComponent(jTFaddcash, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(closingfield, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                                 .addGap(18, 18, 18)
                                 .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(btnUndo, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton11)
-                                    .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(startBankBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(closingCashBtn)
+                                    .addComponent(addCashBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(pnlAmountLayout.createSequentialGroup()
                                 .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(pnlAmountLayout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(jButton15))
+                                        .addComponent(setSSIDBtn))
                                     .addGroup(pnlAmountLayout.createSequentialGroup()
                                         .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1442,7 +1430,7 @@ public class SellingMain extends javax.swing.JFrame  {
                             .addGroup(pnlAmountLayout.createSequentialGroup()
                                 .addComponent(jLabel41)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(custIDtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(40, 40, 40)
@@ -1455,7 +1443,7 @@ public class SellingMain extends javax.swing.JFrame  {
                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlAmountLayout.createSequentialGroup()
                                 .addGap(33, 33, 33)
-                                .addComponent(jButton1)))))
+                                .addComponent(setCustBtn)))))
                 .addContainerGap())
         );
         pnlAmountLayout.setVerticalGroup(
@@ -1466,7 +1454,7 @@ public class SellingMain extends javax.swing.JFrame  {
                     .addComponent(jLabel2)
                     .addComponent(jLabel35)
                     .addComponent(textTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel18)
+                    .addComponent(invoiceLbl)
                     .addComponent(jLabel24))
                 .addGap(19, 19, 19)
                 .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1511,14 +1499,14 @@ public class SellingMain extends javax.swing.JFrame  {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnHundred, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tenderBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlAmountLayout.createSequentialGroup()
-                                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(kickDrawer1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(kickDrawer2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnUndo, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1527,19 +1515,19 @@ public class SellingMain extends javax.swing.JFrame  {
                         .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(bankText, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(startBankBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(moveButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(closingfield, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(closingCashBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlAmountLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(jTFaddcash, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlAmountLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(addCashBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlAmountLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(btnEditTick, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1564,14 +1552,14 @@ public class SellingMain extends javax.swing.JFrame  {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel41)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(custIDtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel42)
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(pnlAmountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton15)))
+                    .addComponent(setCustBtn)
+                    .addComponent(setSSIDBtn)))
         );
 
         jLabel3.setText("Seller:");
@@ -1584,8 +1572,6 @@ public class SellingMain extends javax.swing.JFrame  {
         });
 
         timeLabel.setText("Time:");
-
-        dateLabel.setText("Date:");
 
         currentTime.setText("jLabel24");
 
@@ -1632,8 +1618,7 @@ public class SellingMain extends javax.swing.JFrame  {
                         .addComponent(timeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(currentTime)
-                        .addGap(22, 22, 22)
-                        .addComponent(dateLabel))
+                        .addGap(49, 49, 49))
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(67, 67, 67))
         );
@@ -1647,7 +1632,6 @@ public class SellingMain extends javax.swing.JFrame  {
                             .addComponent(jLabel3)
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(timeLabel)
-                            .addComponent(dateLabel)
                             .addComponent(currentTime))
                         .addGap(18, 18, 18)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1774,6 +1758,7 @@ public class SellingMain extends javax.swing.JFrame  {
             bin = 30;
         } else{
             System.err.println("No game selected");
+            logger.warn("No game button selected");
         }
         return bin;
     }
@@ -1782,7 +1767,7 @@ public class SellingMain extends javax.swing.JFrame  {
 
     }//GEN-LAST:event_togbtn1ActionPerformed
 
-    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+    private void addCashBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCashBtnActionPerformed
         // TODO: add/rem button
         ssDAO = new SaleSessDAO();
         ss = new SaleSessions();
@@ -1791,13 +1776,13 @@ public class SellingMain extends javax.swing.JFrame  {
         ssDAO.addSession(ss);
         jTFaddcash.setText("");
         addTextLog("Added/Removed cash: " + ss.getCurrentbank());
-    }//GEN-LAST:event_jButton14ActionPerformed
+    }//GEN-LAST:event_addCashBtnActionPerformed
 
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+    private void kickDrawer2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kickDrawer2ActionPerformed
 
-    }//GEN-LAST:event_jButton13ActionPerformed
+    }//GEN-LAST:event_kickDrawer2ActionPerformed
 
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+    private void closingCashBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closingCashBtnActionPerformed
         //TODO: Closing cash button
         ssDAO = new SaleSessDAO();
         ss = new SaleSessions();
@@ -1806,11 +1791,11 @@ public class SellingMain extends javax.swing.JFrame  {
         ssDAO.addSession(ss);
         closingfield.setText("");
         addTextLog("Added closing cash: " + ss.getEndingbank());
-    }//GEN-LAST:event_jButton11ActionPerformed
+    }//GEN-LAST:event_closingCashBtnActionPerformed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+    private void kickDrawer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kickDrawer1ActionPerformed
 
-    }//GEN-LAST:event_jButton10ActionPerformed
+    }//GEN-LAST:event_kickDrawer1ActionPerformed
 
     private void btnPrintEveryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintEveryActionPerformed
 
@@ -1828,7 +1813,7 @@ public class SellingMain extends javax.swing.JFrame  {
 
     }                                          
 
-    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+    private void startBankBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startBankBtnActionPerformed
 
         //Add starting bank into sale sessions
         ssDAO = new SaleSessDAO();
@@ -1845,7 +1830,7 @@ public class SellingMain extends javax.swing.JFrame  {
         addTextLog("\n===================");
         addTextLog("\n Added start bank: " + ss.getCurrentbank());
         addTextLog("\n===================");
-    }//GEN-LAST:event_jButton12ActionPerformed
+    }//GEN-LAST:event_startBankBtnActionPerformed
 
     private void negativebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_negativebtnActionPerformed
         //Sets the text box to a negative value
@@ -1855,7 +1840,12 @@ public class SellingMain extends javax.swing.JFrame  {
     }//GEN-LAST:event_negativebtnActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-
+        lst = new ArrayList<>();
+        String subText = textDisplay.getText();
+        subtotal = Integer.valueOf(subText);
+        txObject = new TxObject(bin, subtotal, 2);
+        lst.add(txObject);
+        System.out.println(lst.get(0).getBin());
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -1879,9 +1869,9 @@ public class SellingMain extends javax.swing.JFrame  {
 
     }//GEN-LAST:event_textDisplayActionPerformed
 
-    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
+    private void tenderBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tenderBtnActionPerformed
 
-    }//GEN-LAST:event_jButton18ActionPerformed
+    }//GEN-LAST:event_tenderBtnActionPerformed
 
     private void btnHundredActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHundredActionPerformed
         String btnHundredText = textDisplay.getText() + btnHundred.getText();
@@ -1953,25 +1943,27 @@ public class SellingMain extends javax.swing.JFrame  {
         textDisplay.setText(btnOneText);
     }//GEN-LAST:event_btnOneActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void setCustBtnActionPerformed(ActionEvent evt) {//GEN-FIRST:event_setCustBtnActionPerformed
         // TODO add your handling code here:
-        String id = jTextField3.getText();
+        String id = custIDtxt.getText();
         Collection<JToggleButton> custButtons = Arrays.asList(cust1,cust2,cust3,cust4,cust5,cust6,cust7,cust8);
         for (JToggleButton button : custButtons) {
             if (button.isSelected()) {
                 button.setText(id);
+                custIDtxt.setText("");
+
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_setCustBtnActionPerformed
 
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField4ActionPerformed
 
-    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
+    private void setSSIDBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setSSIDBtnActionPerformed
         // TODO add your handling code here:
         sessionNum = Integer.parseInt(jTextField4.getText());
-    }//GEN-LAST:event_jButton15ActionPerformed
+    }//GEN-LAST:event_setSSIDBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2010,6 +2002,7 @@ public class SellingMain extends javax.swing.JFrame  {
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addCashBtn;
     private javax.swing.JButton atButton;
     private javax.swing.JTextField bankText;
     private javax.swing.JButton btnClear;
@@ -2034,6 +2027,7 @@ public class SellingMain extends javax.swing.JFrame  {
     private javax.swing.JButton btnTwo;
     private javax.swing.JButton btnUndo;
     private javax.swing.JButton btnZero;
+    private javax.swing.JButton closingCashBtn;
     private javax.swing.JTextField closingfield;
     private javax.swing.JLabel currentTime;
     public javax.swing.JToggleButton cust1;
@@ -2044,15 +2038,8 @@ public class SellingMain extends javax.swing.JFrame  {
     public javax.swing.JToggleButton cust6;
     public javax.swing.JToggleButton cust7;
     public javax.swing.JToggleButton cust8;
-    private javax.swing.JLabel dateLabel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton15;
-    private javax.swing.JButton jButton18;
+    private javax.swing.JTextField custIDtxt;
+    private javax.swing.JLabel invoiceLbl;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -2070,7 +2057,6 @@ public class SellingMain extends javax.swing.JFrame  {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -2115,11 +2101,16 @@ public class SellingMain extends javax.swing.JFrame  {
     private javax.swing.JTextField jTFaddcash;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JButton kickDrawer1;
+    private javax.swing.JButton kickDrawer2;
     private javax.swing.JButton moveButton;
     private javax.swing.JButton negativebtn;
     private javax.swing.JPanel pnlAmount;
+    private javax.swing.JButton setCustBtn;
+    private javax.swing.JButton setSSIDBtn;
+    private javax.swing.JButton startBankBtn;
+    private javax.swing.JButton tenderBtn;
     public static javax.swing.JTextField textDisplay;
     public static javax.swing.JTextArea textLog;
     public static javax.swing.JTextField textTotal;

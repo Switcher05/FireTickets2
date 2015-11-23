@@ -19,6 +19,7 @@ import javax.swing.*;
  * Created by Ryan on 10/13/2015.
  */
 public class LoginGUI extends Application implements EventHandler<ActionEvent> {
+    public static int userID;
     Button button;
     Button loginBtn, cancelBtn;
     Stage window;
@@ -98,6 +99,7 @@ public class LoginGUI extends Application implements EventHandler<ActionEvent> {
             usr.setPassword(pass.getText());
             if (usrDAO.Login(usr) == true){
                 //Close screen and open
+                //userID = usr.getUserId();
                 SellingMain sm = new SellingMain();
                 sm.setVisible(true);
                 this.window.close();

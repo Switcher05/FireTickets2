@@ -24,10 +24,10 @@
 package dao;
 
 import entity.*;
+import gui.SellingMain;
 import main.resources.HibernateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 
@@ -41,18 +41,24 @@ import java.util.List;
  */
 public class Transaction {
     Session session;
-    Query q;
+    Tickets tks;
+    public static GameTemplateDAO gtDAO;
+    public static GameTemplates gt;
+    public static Tickets tk;
+    public static TicketDAO tkDAO;
+    public static Customers cust;
+    public static Transaction tx;
+    public static Users usr;
+    public static UserDAO usrDAO;
+    public static SaleSessions ss;
+    public static SaleSessDAO ssDAO;
+    public static Locations loc;
+    public static CustomerDAO custDAO;
+    public TillTapeDAO ttDAO;
 
     public static java.sql.Timestamp getCurrentTimeStamp() {
         java.util.Date today = new java.util.Date();
         return new java.sql.Timestamp(today.getTime());
-    }
-
-    public Tickets getTicket(String serial){
-        TicketDAO tDAO = new TicketDAO();
-        Tickets tk = new Tickets();
-        tk = tDAO.getTById(serial);
-        return tk;
     }
 
     public Tickets getTicketBin(int bin) {
@@ -139,8 +145,7 @@ public class Transaction {
         TillTapeId ttid = new TillTapeId();
         TillTapeDAO ttDAO = new TillTapeDAO();
         Users usr = new Users();
-        //Customers cust2 = new Customers();
-        //Locations loc = new Locations();
+
         Tickets tk = new Tickets();
         TicketDAO tkDAO = new TicketDAO();
 
@@ -150,16 +155,11 @@ public class Transaction {
         tt.setSaleAmount(sale);
         tt.setPrizeAmount(prize);
 
-        //ttid.getTId();
         ttid.setCustomersCustId(cust.getCustId());
         ttid.setLocationsLocId(loc.getLocId());
         ttid.setUsersUserId(us.getUserId());
-        tt.setId(ttid);
-//        cust.setCustId(3);
-//        loc.setLocId(1);
-//        usr.setUserId(5);
-//        tt.setUsers(usr);
 
+        tt.setId(ttid);
         tt.setTime(getCurrentTimeStamp());
         tt.setCustomers(cust);
         tt.setLocations(loc);
@@ -258,4 +258,41 @@ public class Transaction {
         ttDAO.addTickets(tk);
         return true;
     }
+    public boolean closeTransaction(List<TxObject> lst){
+        ss = new SaleSessions();
+        ssDAO = new SaleSessDAO();
+        tks = new Tickets();
+        final int len = lst.size();
+
+        for (int i = 0; i < len; i++){
+            if (lst.get(i).getType() == 1){
+                //sale
+                tks = getTicketBin(lst.get(i).getBin());
+                Sale(tks, (int)lst.get(i).getValue(), (int)lst.get(i).getValue());
+                tillTape(SellingMain.usr,SellingMain.cust,SellingMain.loc, lst.get(i).getBin(),(int)lst.get(i).getValue(), 0, SellingMain.invoice);
+                ss = ssDAO.getSSById(String.valueOf(SellingMain.sessionNum));
+                double gross = ss.getGrossSales();
+                double bank = ss.getCurrentbank();
+                ss.setGrossSales(gross + lst.get(i).getValue());
+                ss.setCurrentbank(bank + lst.get(i).getValue());
+                ss.setGrossNet(ss.getGrossSales() - ss.getGrossPrizes());
+                ssDAO.addSession(ss);
+            }else if (lst.get(i).getType() == 2){
+                //prize
+                tks = SellingMain.tk;
+                Prize(tks, (int)lst.get(i).getValue());
+                tillTape(SellingMain.usr,SellingMain.cust,SellingMain.loc, lst.get(i).getBin(),0, (int)lst.get(i).getValue(), SellingMain.invoice);
+                ss = ssDAO.getSSById(String.valueOf(SellingMain.sessionNum));
+                double grossSale = ss.getGrossSales();
+                double grossPrize = ss.getGrossPrizes();
+                ss.setGrossPrizes(grossSale + lst.get(i).getValue());
+                ss.setCurrentbank(grossPrize - lst.get(i).getValue());
+                ss.setGrossNet(ss.getGrossSales() - ss.getGrossPrizes());
+                ssDAO.addSession(ss);
+
+            }
+        }
+        return true;
+    }
+
 }
