@@ -1,5 +1,6 @@
 package gui;
 
+//import Util.CashDrawerKick;
 import dao.*;
 import entity.*;
 import org.apache.log4j.Logger;
@@ -48,7 +49,6 @@ public class SellingMain extends javax.swing.JFrame  {
     public static Customers cust;
     public static Transaction tx;
     public static Users usr;
-    public static UserDAO usrDAO;
     public static SaleSessions ss;
     public static SaleSessDAO ssDAO;
     public static Locations loc;
@@ -106,14 +106,15 @@ public class SellingMain extends javax.swing.JFrame  {
 
 
         //Loop through to set the serial and game names
-        for(int i=0; i < tkList.size(); i++){
-            tk = tkList.get(i);
+        for (Tickets aTkList : tkList) {
+            tk = aTkList;
             int binNum = tk.getBin();
             bins[binNum] = tk.getId().getSerial();
             partNum[binNum] = tk.getId().getGameTemplatesPartNum();
             gt = gtDAO.getGTById(partNum[binNum]);
             names[binNum] = gt.getGameName();
             System.out.println("Bin num: " + binNum + " Serial: " + bins[binNum]);
+
         }
         //Set the buttons to game names and serials
         togbtn1.setText(formatString(names[1], bins[1]));
@@ -146,6 +147,7 @@ public class SellingMain extends javax.swing.JFrame  {
         togbtn28.setText(formatString(names[28], bins[28]));
         togbtn29.setText(formatString(names[29], bins[29]));
         togbtn30.setText(formatString(names[30], bins[30]));
+        logger.info("Games Loaded to buttons");
     }
 
 
@@ -161,14 +163,15 @@ public class SellingMain extends javax.swing.JFrame  {
         custDAO = new CustomerDAO();
         bin = getButton();
 
-        String subText = textDisplay.getText();
-        subtotal = Integer.valueOf(subText);
+
+        getSubTotal();
         //Check if prize is in game
         tk = tx.getTicketBin(bin);
         //Is the prize entered a prize from the game template? if not, override?
         boolean templatePrize = tx.findPrizeAmt(tk, subtotal);
+        logger.warn("Found prize amount? " + templatePrize);
         //TODO:if subtotal is negative then we need a reverse prize
-        if (templatePrize != true) {
+        if (!templatePrize) {
             int response = JOptionPane.showConfirmDialog(null, "No prize found. Do you want to continue?", "Confirm",
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.NO_OPTION) {
@@ -191,16 +194,18 @@ public class SellingMain extends javax.swing.JFrame  {
         updateCustomersPrizes();
 
         //check if there is already an invoice, if not create
-        if (saleClosed == true) {
+        if (saleClosed) {
             invoice = tx.getInvoice();
             saleClosed = false;
         }
+        //Set default location and user for now...
         usr.setUserId(3);
         loc.setLocId(1);
 
         addTextLog("\nPRIZE: " + bin + " : " + tk.getId().getSerial() + "\n Amount: " + subtotal);
 
-        txObject = new TxObject(bin, subtotal, 1);
+        logger.info("Added prize to array: Bin: " + bin + "Amount : " + subtotal);
+        txObject = new TxObject(bin, subtotal, 2);
         lst.add(txObject);
 
         togbtnSetEnabledFalse();
@@ -220,6 +225,7 @@ public class SellingMain extends javax.swing.JFrame  {
                 int prizes = cust.getTotalPrizes();
                 cust.setTotalPrizes(prizes + subtotal);
                 custDAO.updateCustomer(cust);
+                logger.info("Updated customer prize amount cust id: " + cusID);
             }
         }
     }
@@ -259,16 +265,18 @@ public class SellingMain extends javax.swing.JFrame  {
 
         }
         //TODO: If more then one button selected cycle through them all
-        //TODO: If the button is blank, do nothing.
+
+
         //If collection of buttons from getText is equal to * then error.
-        //Get the button selected
+        //Get the button selected, will show message dialog if no game is selected.
         if (bin == 0) {
             bin = getButton();
         }
-        String subText = textDisplay.getText();
-        subtotal = Integer.valueOf(subText);
+        getSubTotal();
+
 
         //TODO:needs to be sale * the cost of the tickets
+        //double valueOfTicket = gt.getTicketCost();// wont work because need better method to get a complete "Game"
         total = total + subtotal;
         textDisplay.setText("");
         textTotal.setText(Double.toString(total) + "0");
@@ -282,11 +290,16 @@ public class SellingMain extends javax.swing.JFrame  {
                 int sales = cust.getTotalSales();
                 cust.setTotalSales(sales + subtotal);
                 custDAO.updateCustomer(cust);
-                logger.info("Updated customer id:" + cust.getCustId());
+                logger.info("Updated  sale customer id:" + cust.getCustId() + "value: " + subtotal);
             }
         }
         usr.setUserId(3);
         loc.setLocId(1);
+        //Use text box instead of toggle buttons
+//        if (custIDtxt.getText() == ""){
+//            cust.setCustId(Integer.valueOf(custIDtxt.getText()));
+//        }
+        //if the cust is not set and the text box is empty use the default customer.
         if (cust.getCustId() == null) {
             cust.setCustId(3);
         }
@@ -300,6 +313,7 @@ public class SellingMain extends javax.swing.JFrame  {
         //Add the sale to list of Transaction
         txObject = new TxObject(bin, subtotal, 1);
         lst.add(txObject);
+        logger.info("Added to array:Bin:  " + bin + " Amount: " + subtotal);
 
         togbtnSetEnabledFalse();
         //Set values to 0 to prepare for next sale
@@ -310,8 +324,23 @@ public class SellingMain extends javax.swing.JFrame  {
 
     }//GEN-LAST:event_btnSaleActionPerformed
 
+    private void getSubTotal() {
+        try{
+            String subText = textDisplay.getText();
+            subtotal = Integer.valueOf(subText);
+        }catch (NumberFormatException nfe){
+            logger.warn("No Value");
+            logger.error(nfe);
+            JOptionPane.showMessageDialog(null, "Bad value entered");
+        }catch (NullPointerException npe){
+            JOptionPane.showMessageDialog(null, "Null value entered");
+            logger.warn("Null Value");
+            logger.error(npe);
+        }
+    }
+
     private void checkForInvoice() {
-        if (saleClosed == true) {
+        if (saleClosed) {
             invoice = tx.getInvoice();
             saleClosed = false;
             invoiceLbl.setText(String.valueOf(invoice));
@@ -354,6 +383,7 @@ public class SellingMain extends javax.swing.JFrame  {
             addTextLog("\n===================");
 
         }
+        logger.info("Closed invoice num: " + invoice + " Amount " + total);
 
         //Set values to 0 and clear forms
         invoice = 0;
@@ -1759,6 +1789,7 @@ public class SellingMain extends javax.swing.JFrame  {
         } else{
             System.err.println("No game selected");
             logger.warn("No game button selected");
+            JOptionPane.showMessageDialog(null, "No game button selected!");
         }
         return bin;
     }

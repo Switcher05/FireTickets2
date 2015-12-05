@@ -26,6 +26,7 @@ package dao;
 import entity.*;
 import gui.SellingMain;
 import main.resources.HibernateUtil;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -40,6 +41,7 @@ import java.util.List;
  * @author Ryan
  */
 public class Transaction {
+    private final Logger logger = Logger.getLogger(Transaction.class);
     Session session;
     Tickets tks;
     public static GameTemplateDAO gtDAO;
@@ -55,6 +57,7 @@ public class Transaction {
     public static Locations loc;
     public static CustomerDAO custDAO;
     public TillTapeDAO ttDAO;
+    private double grossSales, grossPrizes, net, bank;
 
     public static java.sql.Timestamp getCurrentTimeStamp() {
         java.util.Date today = new java.util.Date();
@@ -271,28 +274,35 @@ public class Transaction {
                 Sale(tks, (int)lst.get(i).getValue(), (int)lst.get(i).getValue());
                 tillTape(SellingMain.usr,SellingMain.cust,SellingMain.loc, lst.get(i).getBin(),(int)lst.get(i).getValue(), 0, SellingMain.invoice);
                 ss = ssDAO.getSSById(String.valueOf(SellingMain.sessionNum));
-                double gross = ss.getGrossSales();
-                double bank = ss.getCurrentbank();
-                ss.setGrossSales(gross + lst.get(i).getValue());
+                grossSales = ss.getGrossSales() + lst.get(i).getValue();
+                grossPrizes = ss.getGrossPrizes();
+                bank = ss.getCurrentbank();
+                net = ss.getGrossNet();
+                ss.setGrossSales(grossSales);
                 ss.setCurrentbank(bank + lst.get(i).getValue());
-                ss.setGrossNet(ss.getGrossSales() - ss.getGrossPrizes());
+                ss.setGrossNet(grossSales - grossPrizes);
                 ssDAO.addSession(ss);
             }else if (lst.get(i).getType() == 2){
                 //prize
-                tks = SellingMain.tk;
+                tks = getTicketBin(lst.get(i).getBin());
                 Prize(tks, (int)lst.get(i).getValue());
                 tillTape(SellingMain.usr,SellingMain.cust,SellingMain.loc, lst.get(i).getBin(),0, (int)lst.get(i).getValue(), SellingMain.invoice);
                 ss = ssDAO.getSSById(String.valueOf(SellingMain.sessionNum));
-                double grossSale = ss.getGrossSales();
-                double grossPrize = ss.getGrossPrizes();
-                ss.setGrossPrizes(grossSale + lst.get(i).getValue());
-                ss.setCurrentbank(grossPrize - lst.get(i).getValue());
-                ss.setGrossNet(ss.getGrossSales() - ss.getGrossPrizes());
+                grossSales = ss.getGrossSales();
+                grossPrizes = ss.getGrossPrizes()  + lst.get(i).getValue();
+                net = ss.getGrossNet();
+                bank = ss.getCurrentbank();
+                ss.setGrossPrizes(grossPrizes);
+                ss.setCurrentbank(bank - lst.get(i).getValue());
+                ss.setGrossNet(grossSales - grossPrizes);
                 ssDAO.addSession(ss);
 
             }
+
         }
+        logger.info("Processed " + (len)  + " transaction(s) successfully.");
         return true;
     }
+
 
 }

@@ -36,8 +36,7 @@ public class LoginGUI extends Application implements EventHandler<ActionEvent> {
         window = primaryStage;
 
         window.setTitle("LOGIN");
-        GridPane gp = new GridPane()
-                ;
+        GridPane gp = new GridPane();
         gp.setPadding(new Insets(10, 10, 10, 10));
         gp.setHgap(10);
         gp.setVgap(8);

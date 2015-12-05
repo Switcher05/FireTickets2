@@ -8,10 +8,18 @@
             <param name="ConversionPattern" value="%-5p %c{1} - %m%n"/>
         </layout>
     </appender>
-
+    <appender name="FlatFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="append" value="true" />
+        <param name="encoding" value="UTF-8" />
+        <param name="file" value="FireTicketsLog.log" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%-25d{ISO8601}] %-5p %x %C{1} -- %m\n" />
+        </layout>
+    </appender>
     <root>
         <priority value ="info" />
-        <appender-ref ref="console" />
+        <appender-ref ref="FlatFileAppender" />
     </root>
 
 </log4j:configuration>

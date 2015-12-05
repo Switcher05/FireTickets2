@@ -25,6 +25,7 @@ package dao;
 
 import entity.Users;
 import main.resources.HibernateUtil;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -38,6 +39,7 @@ import java.util.List;
  */
 public class UserDAO {
     Transaction trns = null;
+    private static final Logger log = Logger.getLogger(UserDAO.class);
     
     public void addUser(Users user){
         
@@ -53,8 +55,7 @@ public class UserDAO {
             }
             e.printStackTrace();
         }finally {
-            session.flush();
-            session.close();
+            releaseResources(session);
         }
     }
     public void deleteUser(int userid){
@@ -70,8 +71,7 @@ public class UserDAO {
                 trns.rollback();
             }
         } finally {
-            session.flush();
-            session.close();
+            releaseResources(session);
         }
     }
     public void updateUser(Users user){
@@ -86,8 +86,7 @@ public class UserDAO {
             }
             e.printStackTrace();
         } finally {
-            session.flush();
-            session.close();
+            releaseResources(session);
         }
     }
     public List<Users> getAllUsers(){
@@ -98,10 +97,10 @@ public class UserDAO {
             users = session.createQuery("from Users").list();
             
         } catch (RuntimeException e){
+            log.error(e);
             e.printStackTrace();
         } finally {
-            session.flush();
-            session.close();
+            releaseResources(session);
         }
         return users;
     }
@@ -112,13 +111,13 @@ public class UserDAO {
             trns = session.beginTransaction();
             String queryString = "from Users where user_id = :user_id";
             Query q = session.createQuery(queryString);
-            q.setInteger("id", userid);
+            q.setInteger("userid", userid);
             user = (Users) q.uniqueResult();
         }catch (RuntimeException e){
+            log.error(e);
             e.printStackTrace();
         } finally {
-            session.flush();
-            session.close();
+            releaseResources(session);
         }
         return user;
     }
@@ -141,11 +140,17 @@ public class UserDAO {
             }
 
         } catch (RuntimeException e) {
+            log.error(e);
             e.printStackTrace();
         } finally {
-            session.flush();
-            session.close();
+            releaseResources(session);
         }
         return false;
+    }
+
+    private void releaseResources(Session session) {
+        log.info("Session resources released.");
+        session.flush();
+        session.close();
     }
 }
